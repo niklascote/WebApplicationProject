@@ -10,8 +10,9 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.DefaultScheduleModel;
@@ -21,8 +22,8 @@ import org.primefaces.model.ScheduleModel;
  *
  * @author gabri
  */
-@ManagedBean
-@ViewScoped
+@Named("scheduleView") 
+@ViewScoped 
 public class ScheduleView implements Serializable {
         
     @Getter
