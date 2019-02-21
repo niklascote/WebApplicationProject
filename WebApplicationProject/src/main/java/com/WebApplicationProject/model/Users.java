@@ -6,16 +6,21 @@
 package com.WebApplicationProject.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,11 +53,10 @@ public class Users implements Serializable {
     @Size(max = 250)
     @Column(name = "LASTNAME")
     private String lastname;
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
     @Size(max = 20)
     @Column(name = "PHONE")
     private String phone;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -72,6 +76,14 @@ public class Users implements Serializable {
     @NotNull
     @Column(name = "NOTIFICATIONS")
     private Boolean notifications;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
+    private Collection<EventParticipant> eventParticipantCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
+    private Collection<CalendarParticipant> calendarParticipantCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private Collection<Calendar> calendarCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private Collection<Event> eventCollection;
 
     public Users() {
     }
@@ -150,6 +162,42 @@ public class Users implements Serializable {
 
     public void setNotifications(Boolean notifications) {
         this.notifications = notifications;
+    }
+
+    @XmlTransient
+    public Collection<EventParticipant> getEventParticipantCollection() {
+        return eventParticipantCollection;
+    }
+
+    public void setEventParticipantCollection(Collection<EventParticipant> eventParticipantCollection) {
+        this.eventParticipantCollection = eventParticipantCollection;
+    }
+
+    @XmlTransient
+    public Collection<CalendarParticipant> getCalendarParticipantCollection() {
+        return calendarParticipantCollection;
+    }
+
+    public void setCalendarParticipantCollection(Collection<CalendarParticipant> calendarParticipantCollection) {
+        this.calendarParticipantCollection = calendarParticipantCollection;
+    }
+
+    @XmlTransient
+    public Collection<Calendar> getCalendarCollection() {
+        return calendarCollection;
+    }
+
+    public void setCalendarCollection(Collection<Calendar> calendarCollection) {
+        this.calendarCollection = calendarCollection;
+    }
+
+    @XmlTransient
+    public Collection<Event> getEventCollection() {
+        return eventCollection;
+    }
+
+    public void setEventCollection(Collection<Event> eventCollection) {
+        this.eventCollection = eventCollection;
     }
 
     @Override
