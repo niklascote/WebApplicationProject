@@ -6,7 +6,9 @@
 package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.control.AbstractFacade;
+import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.Users;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,5 +31,6 @@ public class UsersFacade extends AbstractFacade<Users> {
     public UsersFacade() {
         super(Users.class);
     }
+
     
 }

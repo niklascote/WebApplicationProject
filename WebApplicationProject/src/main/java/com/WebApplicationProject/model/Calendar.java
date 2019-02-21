@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Calendar.findAll", query = "SELECT c FROM Calendar c")
     , @NamedQuery(name = "Calendar.findById", query = "SELECT c FROM Calendar c WHERE c.id = :id")
     , @NamedQuery(name = "Calendar.findByName", query = "SELECT c FROM Calendar c WHERE c.name = :name")
-    , @NamedQuery(name = "Calendar.findByDescription", query = "SELECT c FROM Calendar c WHERE c.description = :description")})
+    , @NamedQuery(name = "Calendar.findByDescription", query = "SELECT c FROM Calendar c WHERE c.description = :description")
+    , @NamedQuery(name = "Calendar.findByPublicAccess", query = "SELECT c FROM Calendar c WHERE c.publicAccess = :publicAccess")})
 public class Calendar implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,11 +52,12 @@ public class Calendar implements Serializable {
     @Size(max = 250)
     @Column(name = "DESCRIPTION")
     private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PUBLIC_ACCESS")
+    private Boolean publicAccess;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calendar")
     private Collection<CalendarParticipant> calendarParticipantCollection;
-    @JoinColumn(name = "ACCESS", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private Access access;
     @JoinColumn(name = "OWNER", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Users owner;
@@ -69,9 +71,10 @@ public class Calendar implements Serializable {
         this.id = id;
     }
 
-    public Calendar(Long id, String name) {
+    public Calendar(Long id, String name, Boolean publicAccess) {
         this.id = id;
         this.name = name;
+        this.publicAccess = publicAccess;
     }
 
     public Long getId() {
@@ -98,6 +101,14 @@ public class Calendar implements Serializable {
         this.description = description;
     }
 
+    public Boolean getPublicAccess() {
+        return publicAccess;
+    }
+
+    public void setPublicAccess(Boolean publicAccess) {
+        this.publicAccess = publicAccess;
+    }
+
     @XmlTransient
     public Collection<CalendarParticipant> getCalendarParticipantCollection() {
         return calendarParticipantCollection;
@@ -105,14 +116,6 @@ public class Calendar implements Serializable {
 
     public void setCalendarParticipantCollection(Collection<CalendarParticipant> calendarParticipantCollection) {
         this.calendarParticipantCollection = calendarParticipantCollection;
-    }
-
-    public Access getAccess() {
-        return access;
-    }
-
-    public void setAccess(Access access) {
-        this.access = access;
     }
 
     public Users getOwner() {

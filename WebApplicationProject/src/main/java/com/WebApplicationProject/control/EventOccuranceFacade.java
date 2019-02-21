@@ -6,7 +6,10 @@
 package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.control.AbstractFacade;
+import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
+import com.WebApplicationProject.model.Users;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,5 +32,13 @@ public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
     public EventOccuranceFacade() {
         super(EventOccurance.class);
     }
+    
+//    public List<EventOccurance> getUserEvents(Users user) {
+//        List results = em.createNamedQuery("EventOccurance.findByOwner")
+//                .setParameter("owner", user.getId())
+//                .getResultList();
+//                
+//        return results; 
+//    }
     
 }

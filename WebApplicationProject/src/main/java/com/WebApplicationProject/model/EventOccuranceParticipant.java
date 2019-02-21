@@ -23,13 +23,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author gabri
  */
 @Entity
-@Table(name = "EVENT_PARTICIPANT")
+@Table(name = "EVENT_OCCURANCE_PARTICIPANT")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "EventParticipant.findAll", query = "SELECT e FROM EventParticipant e")
-    , @NamedQuery(name = "EventParticipant.findById", query = "SELECT e FROM EventParticipant e WHERE e.id = :id")
-    , @NamedQuery(name = "EventParticipant.findByWritePermission", query = "SELECT e FROM EventParticipant e WHERE e.writePermission = :writePermission")})
-public class EventParticipant implements Serializable {
+    @NamedQuery(name = "EventOccuranceParticipant.findAll", query = "SELECT e FROM EventOccuranceParticipant e")
+    , @NamedQuery(name = "EventOccuranceParticipant.findById", query = "SELECT e FROM EventOccuranceParticipant e WHERE e.id = :id")
+    , @NamedQuery(name = "EventOccuranceParticipant.findByWritePermission", query = "SELECT e FROM EventOccuranceParticipant e WHERE e.writePermission = :writePermission")})
+public class EventOccuranceParticipant implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,20 +37,27 @@ public class EventParticipant implements Serializable {
     @NotNull
     @Column(name = "ID")
     private Long id;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "WRITE_PERMISSION")
-    private Short writePermission;
-    @JoinColumn(name = "EVENT", referencedColumnName = "ID")
-    @ManyToOne
-    private Event event;
+    private Boolean writePermission;
+    @JoinColumn(name = "EVENT_OCCURANCE", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private EventOccurance eventOccurance;
     @JoinColumn(name = "PARTICIPANT", referencedColumnName = "ID")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Users participant;
 
-    public EventParticipant() {
+    public EventOccuranceParticipant() {
     }
 
-    public EventParticipant(Long id) {
+    public EventOccuranceParticipant(Long id) {
         this.id = id;
+    }
+
+    public EventOccuranceParticipant(Long id, Boolean writePermission) {
+        this.id = id;
+        this.writePermission = writePermission;
     }
 
     public Long getId() {
@@ -61,20 +68,20 @@ public class EventParticipant implements Serializable {
         this.id = id;
     }
 
-    public Short getWritePermission() {
+    public Boolean getWritePermission() {
         return writePermission;
     }
 
-    public void setWritePermission(Short writePermission) {
+    public void setWritePermission(Boolean writePermission) {
         this.writePermission = writePermission;
     }
 
-    public Event getEvent() {
-        return event;
+    public EventOccurance getEventOccurance() {
+        return eventOccurance;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setEventOccurance(EventOccurance eventOccurance) {
+        this.eventOccurance = eventOccurance;
     }
 
     public Users getParticipant() {
@@ -95,10 +102,10 @@ public class EventParticipant implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof EventParticipant)) {
+        if (!(object instanceof EventOccuranceParticipant)) {
             return false;
         }
-        EventParticipant other = (EventParticipant) object;
+        EventOccuranceParticipant other = (EventOccuranceParticipant) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -107,7 +114,7 @@ public class EventParticipant implements Serializable {
 
     @Override
     public String toString() {
-        return "com.WebApplicationProject.model.EventParticipant[ id=" + id + " ]";
+        return "com.WebApplicationProject.model.EventOccuranceParticipant[ id=" + id + " ]";
     }
     
 }

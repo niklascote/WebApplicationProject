@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")
     , @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")
     , @NamedQuery(name = "Event.findByNotification", query = "SELECT e FROM Event e WHERE e.notification = :notification")
-    , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")})
+    , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")
+    , @NamedQuery(name = "Event.findByPublicAccess", query = "SELECT e FROM Event e WHERE e.publicAccess = :publicAccess")})
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,13 +59,14 @@ public class Event implements Serializable {
     @Size(max = 250)
     @Column(name = "DESCRIPTION")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PUBLIC_ACCESS")
+    private Boolean publicAccess;
+    @OneToMany(mappedBy = "event")
     private Collection<EventParticipant> eventParticipantCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Collection<EventOccurance> eventOccuranceCollection;
-    @JoinColumn(name = "ACCESS", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private Access access;
     @JoinColumn(name = "CALENDAR", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Calendar calendar;
@@ -79,9 +81,10 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Long id, String title) {
+    public Event(Long id, String title, Boolean publicAccess) {
         this.id = id;
         this.title = title;
+        this.publicAccess = publicAccess;
     }
 
     public Long getId() {
@@ -124,6 +127,14 @@ public class Event implements Serializable {
         this.description = description;
     }
 
+    public Boolean getPublicAccess() {
+        return publicAccess;
+    }
+
+    public void setPublicAccess(Boolean publicAccess) {
+        this.publicAccess = publicAccess;
+    }
+
     @XmlTransient
     public Collection<EventParticipant> getEventParticipantCollection() {
         return eventParticipantCollection;
@@ -140,14 +151,6 @@ public class Event implements Serializable {
 
     public void setEventOccuranceCollection(Collection<EventOccurance> eventOccuranceCollection) {
         this.eventOccuranceCollection = eventOccuranceCollection;
-    }
-
-    public Access getAccess() {
-        return access;
-    }
-
-    public void setAccess(Access access) {
-        this.access = access;
     }
 
     public Calendar getCalendar() {

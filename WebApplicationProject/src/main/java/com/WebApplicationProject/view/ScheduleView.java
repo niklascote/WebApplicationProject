@@ -5,12 +5,18 @@
  */
 package com.WebApplicationProject.view;
 
+import com.WebApplicationProject.control.EventFacade;
+import com.WebApplicationProject.control.EventOccuranceFacade;
 import com.WebApplicationProject.control.UsersFacade;
+import com.WebApplicationProject.model.Event;
+import com.WebApplicationProject.model.EventOccurance;
+import com.WebApplicationProject.model.EventOccuranceParticipant;
 import com.WebApplicationProject.model.Users;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -37,6 +43,9 @@ public class ScheduleView implements Serializable {
     
     @EJB
     private UsersFacade usersFacade;
+    
+    @EJB
+    private EventOccuranceFacade eventOccuranceFacade; 
         
     @Getter
     @Setter
@@ -55,16 +64,33 @@ public class ScheduleView implements Serializable {
     public void init() {
         
         eventModel = new DefaultScheduleModel();
-        //Get events from user
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//            Date start = sdf.parse("21/02/2019");
-//            Date end = sdf.parse("22/02/2019");
-//            eventModel.addEvent(new DefaultScheduleEvent("Champions League Match", start, end));    
-//        }
-//        catch(Exception e) {
-//             
-//        }
+        
+        //TODO: Only for testing. Must be changed to a real user search. 
+        user = usersFacade.find(1L);
+        
+        //Get all events for the user
+        getEvents();
+    }
+    
+    
+    public void getEvents() {
+        
+        //Find all events created by the user       
+        for(Event e : user.getEventCollection()) {            
+            for(EventOccurance eo : e.getEventOccuranceCollection()) {
+                eventModel.addEvent(new DefaultScheduleEvent(e.getTitle(), eo.getStartDate(), eo.getEndDate()));
+            }              
+        }
+
+        
+        //Find all events where the user is included
+        for(EventOccuranceParticipant e : user.getEventOccuranceParticipantCollection()) {
+            
+            eventModel.addEvent(new DefaultScheduleEvent(
+                    e.getEventOccurance().getEvent().getTitle(),
+                    e.getEventOccurance().getStartDate(), 
+                    e.getEventOccurance().getEndDate()));  
+        }
         
     }
     

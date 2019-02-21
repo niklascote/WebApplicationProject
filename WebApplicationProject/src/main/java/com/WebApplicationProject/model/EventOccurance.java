@@ -6,8 +6,10 @@
 package com.WebApplicationProject.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,11 +17,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -51,6 +55,8 @@ public class EventOccurance implements Serializable {
     @Column(name = "END_DATE")
     @Temporal(TemporalType.DATE)
     private Date endDate;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventOccurance")
+    private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
     @JoinColumn(name = "EVENT", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Event event;
@@ -90,6 +96,15 @@ public class EventOccurance implements Serializable {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @XmlTransient
+    public Collection<EventOccuranceParticipant> getEventOccuranceParticipantCollection() {
+        return eventOccuranceParticipantCollection;
+    }
+
+    public void setEventOccuranceParticipantCollection(Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection) {
+        this.eventOccuranceParticipantCollection = eventOccuranceParticipantCollection;
     }
 
     public Event getEvent() {
