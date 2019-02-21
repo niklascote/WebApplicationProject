@@ -5,7 +5,6 @@
  */
 package com.WebApplicationProject.view;
 
-import com.WebApplicationProject.model.ScheduleEvent;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
