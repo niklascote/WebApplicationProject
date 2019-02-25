@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.view;
+package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.control.EventFacade;
-import com.WebApplicationProject.control.EventOccuranceFacade;
 import com.WebApplicationProject.control.UsersFacade;
+import com.WebApplicationProject.model.CalendarParticipant;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.EventOccuranceParticipant;
 import com.WebApplicationProject.model.Users;
+import com.WebApplicationProject.view.EventViewer;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -28,7 +29,6 @@ import lombok.Setter;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
@@ -37,9 +37,9 @@ import org.primefaces.model.ScheduleModel;
  *
  * @author gabri
  */
-@Named("scheduleView") 
+@Named("scheduleController") 
 @ViewScoped 
-public class ScheduleView implements Serializable {
+public class ScheduleController implements Serializable {
     
     @EJB
     private UsersFacade usersFacade;
@@ -53,7 +53,15 @@ public class ScheduleView implements Serializable {
     
     @Getter
     @Setter
-    private ScheduleEvent event = new DefaultScheduleEvent();
+    private ScheduleEvent event = new EventViewer();
+    
+    @Getter
+    @Setter
+    private List<com.WebApplicationProject.model.Calendar> editableCalendars = new ArrayList<com.WebApplicationProject.model.Calendar>();
+    
+    @Getter
+    @Setter
+    private List<com.WebApplicationProject.model.Calendar> nonEditableCalendars = new ArrayList<com.WebApplicationProject.model.Calendar>();
     
     @Getter
     @Setter
@@ -70,6 +78,28 @@ public class ScheduleView implements Serializable {
         
         //Get all events for the user
         getEvents();
+        
+        //Get user's calendars
+        getCalendars();
+    }
+    
+    public void getCalendars() {
+        
+        //All the user's created calendards
+        for (com.WebApplicationProject.model.Calendar c : user.getCalendarCollection()) {
+            editableCalendars.add(c);
+        }
+        
+        //All the user's shared calendars
+        for (CalendarParticipant c : user.getCalendarParticipantCollection()) {
+            
+            if(c.getWritePermission()) {
+                editableCalendars.add(c.getCalendar());
+            }
+            else {
+                nonEditableCalendars.add(c.getCalendar());
+            }
+        }
     }
     
     
@@ -78,7 +108,13 @@ public class ScheduleView implements Serializable {
         //Find all events created by the user       
         for(Event e : user.getEventCollection()) {            
             for(EventOccurance eo : e.getEventOccuranceCollection()) {
-                eventModel.addEvent(new DefaultScheduleEvent(e.getTitle(), eo.getStartDate(), eo.getEndDate()));
+                eventModel.addEvent(new EventViewer(
+                        e.getTitle(), 
+                        eo.getStartDate(), 
+                        eo.getEndDate(), 
+                        e.getLocation(), 
+                        e.getCalendar()
+                ));
             }              
         }
 
@@ -86,12 +122,14 @@ public class ScheduleView implements Serializable {
         //Find all events where the user is included
         for(EventOccuranceParticipant e : user.getEventOccuranceParticipantCollection()) {
             
-            eventModel.addEvent(new DefaultScheduleEvent(
+            eventModel.addEvent(new EventViewer(
                     e.getEventOccurance().getEvent().getTitle(),
                     e.getEventOccurance().getStartDate(), 
-                    e.getEventOccurance().getEndDate()));  
+                    e.getEventOccurance().getEndDate(),
+                    e.getEventOccurance().getEvent().getLocation(),
+                    e.getEventOccurance().getEvent().getCalendar()
+            ));  
         }
-        
     }
     
     public Date getInitialDate() {
@@ -113,7 +151,7 @@ public class ScheduleView implements Serializable {
     }
      
     public void onDateSelect(SelectEvent selectEvent) {
-        event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
+        event = new EventViewer("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
     }
      
     public void onEventMove(ScheduleEntryMoveEvent event) {
@@ -132,4 +170,15 @@ public class ScheduleView implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
     
+    public void addEvent() {
+        
+        //Updates already existing event
+        if(eventModel.getEvents().contains(event)) {
+            eventModel.updateEvent(event);
+        }
+        //Adds event because there is not one already
+        else {
+            eventModel.addEvent(event);
+        }    
+    }
 }
