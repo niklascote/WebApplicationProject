@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -42,8 +44,8 @@ public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "ID")
     private Long id;
     @Size(max = 250)
@@ -78,13 +80,13 @@ public class Users implements Serializable {
     private Boolean notifications;
     @OneToMany(mappedBy = "participant")
     private Collection<EventParticipant> eventParticipantCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
+    @OneToMany(mappedBy = "participant")
     private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
     private Collection<CalendarParticipant> calendarParticipantCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(mappedBy = "owner")
     private Collection<Calendar> calendarCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(mappedBy = "owner")
     private Collection<Event> eventCollection;
 
     public Users() {

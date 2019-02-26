@@ -8,6 +8,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <h:outputStylesheet library="css" name="default.css"  />
+    
 
     <h:panelGrid columns="2" >
         
@@ -37,7 +38,10 @@
                 </p:schedule>
             </h:panelGrid>
 
-            <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
+            <p:dialog widgetVar="eventDialog" 
+                      header="Event Details" 
+                      showEffect="clip" 
+                      hideEffect="clip">
                 <h:panelGrid id="eventDetails" columns="2">
                     <p:outputLabel for="title" value="Title:" />
                     <p:inputText id="title" value="#{scheduleController.event.title}" required="true" />
@@ -52,7 +56,7 @@
                     <h:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" />
                     
                     <p:outputLabel for="console" value="Calendar:" />
-                    <p:selectOneMenu id="console" value="#{scheduleController.editableCalendars}" style="width:125px">
+                    <p:selectOneMenu id="console" value="#{scheduleController.event.calendar}" style="width:125px">
                         <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                     </p:selectOneMenu>
 
@@ -60,7 +64,7 @@
                     <p:inputText id="location" value="#{scheduleController.event.location}"/>                    
                     
                     <h:outputLink id="moreButton" value="#{root}/schedule/eventView.xhtml">More information</h:outputLink>                    
-                    <p:commandButton id="addButton" value="Save" action="#{scheduleController.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                    <p:commandButton ajax="false" id="addButton" value="Save"  action="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
                 </h:panelGrid>
             </p:dialog>    
         </h:form>
@@ -71,6 +75,5 @@
             window.location.href = "#{root}/schedule/eventView.xhtml";
         }
     </script>
-
 </html>
 

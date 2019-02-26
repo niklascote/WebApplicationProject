@@ -45,15 +45,18 @@ public class ScheduleController implements Serializable {
     private UsersFacade usersFacade;
     
     @EJB
-    private EventOccuranceFacade eventOccuranceFacade; 
-        
+    private EventFacade eventFacade;
+    
+    @EJB
+    private EventOccuranceFacade eventOccuranceFacade;
+                
     @Getter
     @Setter
     private ScheduleModel eventModel;
     
     @Getter
     @Setter
-    private ScheduleEvent event = new EventViewer();
+    private EventViewer event = new EventViewer();
     
     @Getter
     @Setter
@@ -147,7 +150,7 @@ public class ScheduleController implements Serializable {
     }
     
     public void onEventSelect(SelectEvent selectEvent) {
-        event = (ScheduleEvent) selectEvent.getObject();
+        event = (EventViewer) selectEvent.getObject();
     }
      
     public void onDateSelect(SelectEvent selectEvent) {
@@ -170,15 +173,23 @@ public class ScheduleController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
     
+    public void clearEvent() {
+        event = new EventViewer();
+    }
+    
     public void addEvent() {
+        eventModel.addEvent(event);
         
-        //Updates already existing event
-        if(eventModel.getEvents().contains(event)) {
-            eventModel.updateEvent(event);
-        }
-        //Adds event because there is not one already
-        else {
-            eventModel.addEvent(event);
-        }    
+        Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation());
+        
+        eventFacade.create(e);
+        
+//        eventOccuranceFacade.create(new EventOccurance(
+//                e.getId(), 
+//                event.getStartDate(), 
+//                event.getEndDate())
+//        );
+        
+        clearEvent(); 
     }
 }

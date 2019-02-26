@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,24 +35,19 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e")
     , @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id")
-    , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")
     , @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")
     , @NamedQuery(name = "Event.findByNotification", query = "SELECT e FROM Event e WHERE e.notification = :notification")
     , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")
-    , @NamedQuery(name = "Event.findByPublicAccess", query = "SELECT e FROM Event e WHERE e.publicAccess = :publicAccess")})
+    , @NamedQuery(name = "Event.findByPublicAccess", query = "SELECT e FROM Event e WHERE e.publicAccess = :publicAccess")
+    , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "ID")
     private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "TITLE")
-    private String title;
     @Size(max = 250)
     @Column(name = "LOCATION")
     private String location;
@@ -63,6 +60,9 @@ public class Event implements Serializable {
     @NotNull
     @Column(name = "PUBLIC_ACCESS")
     private Boolean publicAccess;
+    @Size(max = 250)
+    @Column(name = "TITLE")
+    private String title;
     @OneToMany(mappedBy = "event")
     private Collection<EventParticipant> eventParticipantCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
@@ -71,7 +71,7 @@ public class Event implements Serializable {
     @ManyToOne(optional = false)
     private Calendar calendar;
     @JoinColumn(name = "OWNER", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Users owner;
 
     public Event() {
@@ -81,10 +81,16 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Long id, String title, Boolean publicAccess) {
+    public Event(Long id, Boolean publicAccess) {
         this.id = id;
-        this.title = title;
         this.publicAccess = publicAccess;
+    }
+    
+    public Event(String title, Calendar cal, String location) {
+        this.title = title;
+        this.calendar = cal; 
+        this.location = location; 
+        //this.eventOccuranceCollection.add(occurance);
     }
 
     public Long getId() {
@@ -93,14 +99,6 @@ public class Event implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getLocation() {
@@ -133,6 +131,14 @@ public class Event implements Serializable {
 
     public void setPublicAccess(Boolean publicAccess) {
         this.publicAccess = publicAccess;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @XmlTransient
