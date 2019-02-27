@@ -6,11 +6,13 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
+    <head>
+        <!--Not working??-->
+    <!--<h:outputStylesheet library="../resources/css" name="default.css" />-->
+    <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+</head>
 
-    <h:outputStylesheet library="css" name="default.css"  />
-
-
-        
+    <h:body>
         <f:view>
 
 
@@ -33,10 +35,12 @@
                     <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required."/>
                     <h:outputLabel value="Notifications:" for="notifications" />
                     <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
-                    <h:commandButton value="Register user" />
+                    
                 </h:panelGrid>
+                <h:commandButton value="Register user" styleClass="registerViewButtons"/>
+                <h:commandButton value="Back" styleClass="registerViewButtons"/>
             </h:form>
         </f:view>
-
+    </h:body>
 
 </html>

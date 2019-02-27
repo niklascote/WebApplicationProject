@@ -12,12 +12,27 @@
         <title>Calendar</title>
     </h:head>
 
+        <h1>Calendar application</h1>
+        <h5>(Under construction)</h5>
     
+        
+        <h:outputLabel value="First time user?"/>
+        <br></br>
+        <h:link value="Sign up" outcome="/schedule/registerView.xhtml"/>
+        
+        <br></br>
+        <br></br>
+        
+        <h:outputLabel value="Already signed up?"/>
+        <br></br>
+        <h:link value="Log in" outcome="/schedule/loginView.xhtml"/>
+        
+
     <!-- If user is logged in-->
-    <h:body>        
-        <ui:include src="/schedule/registerView.xhtml"/>
-    </h:body>
-    
+    <!--    <h:body>        
+            <ui:include src="/schedule/registerView.xhtml"/>
+        </h:body>-->
+
     <!-- If user is not logged in-->
 
 </html>
