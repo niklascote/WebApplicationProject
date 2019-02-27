@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"   
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <h:outputStylesheet library="css" name="default.css"  />
+
+
+        
+        <f:view>
+
+
+            <h:form>
+                <h1><h:outputText value="Register" styleClass="registerViewText"/></h1>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="Id:" for="id" />
+                    <h:inputText id="id" value="#{usersController.selected.id}" title="Id" required="true" requiredMessage="The Id field is required."/>
+                    <h:outputLabel value="Firstname:" for="firstname" />
+                    <h:inputText id="firstname" value="#{usersController.selected.firstname}" title="Firstname" />
+                    <h:outputLabel value="Lastname:" for="lastname" />
+                    <h:inputText id="lastname" value="#{usersController.selected.lastname}" title="Lastname" />
+                    <h:outputLabel value="Phone:" for="phone" />
+                    <h:inputText id="phone" value="#{usersController.selected.phone}" title="Phone" />
+                    <h:outputLabel value="Email:" for="email" />
+                    <h:inputText id="email" value="#{usersController.selected.email}" title="Email" required="true" requiredMessage="The Email field is required."/>
+                    <h:outputLabel value="Password:" for="password" />
+                    <h:inputText id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
+                    <h:outputLabel value="Timezone:" for="timezone" />
+                    <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required."/>
+                    <h:outputLabel value="Notifications:" for="notifications" />
+                    <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
+                    <h:commandButton value="Register user" />
+                </h:panelGrid>
+            </h:form>
+        </f:view>
+
+
+</html>

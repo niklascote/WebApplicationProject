@@ -1,3 +1,9 @@
 .value {
     width: 1000px;
 }
+
+.registerViewText {
+    font-size: 50px;
+    padding: 20px;
+    font-weight: 900;
+}

@@ -3,9 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"      
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:b="http://bootsfaces.net/ui"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <c:set var="root" value="#{request.contextPath}" /> 
 
@@ -17,7 +15,7 @@
     
     <!-- If user is logged in-->
     <h:body>        
-        <ui:include src="/schedule/scheduleView.xhtml"/>
+        <ui:include src="/schedule/registerView.xhtml"/>
     </h:body>
     
     <!-- If user is not logged in-->
