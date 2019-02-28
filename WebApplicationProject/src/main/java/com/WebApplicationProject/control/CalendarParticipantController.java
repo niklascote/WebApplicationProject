@@ -1,5 +1,6 @@
 package com.WebApplicationProject.control;
 
+import com.WebApplicationProject.db.CalendarParticipantFacade;
 import com.WebApplicationProject.model.CalendarParticipant;
 import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
@@ -24,7 +25,7 @@ public class CalendarParticipantController implements Serializable {
     private CalendarParticipant current;
     private DataModel items = null;
     @EJB
-    private com.WebApplicationProject.control.CalendarParticipantFacade ejbFacade;
+    private com.WebApplicationProject.db.CalendarParticipantFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 

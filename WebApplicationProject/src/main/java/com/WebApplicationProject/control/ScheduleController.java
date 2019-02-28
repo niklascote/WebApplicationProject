@@ -5,7 +5,9 @@
  */
 package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.control.UsersFacade;
+import com.WebApplicationProject.db.EventOccuranceFacade;
+import com.WebApplicationProject.db.EventFacade;
+import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.CalendarParticipant;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;

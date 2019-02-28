@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.control;
+package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.control.AbstractFacade;
+import com.WebApplicationProject.db.AbstractFacade;
 import com.WebApplicationProject.model.CalendarParticipant;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

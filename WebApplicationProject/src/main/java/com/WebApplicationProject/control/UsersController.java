@@ -1,5 +1,6 @@
 package com.WebApplicationProject.control;
 
+import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
@@ -24,7 +25,7 @@ public class UsersController implements Serializable {
     private Users current;
     private DataModel items = null;
     @EJB
-    private com.WebApplicationProject.control.UsersFacade ejbFacade;
+    private com.WebApplicationProject.db.UsersFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 

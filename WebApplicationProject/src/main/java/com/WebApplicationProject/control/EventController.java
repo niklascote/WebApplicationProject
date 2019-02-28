@@ -1,5 +1,6 @@
 package com.WebApplicationProject.control;
 
+import com.WebApplicationProject.db.EventFacade;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
@@ -24,7 +25,7 @@ public class EventController implements Serializable {
     private Event current;
     private DataModel items = null;
     @EJB
-    private com.WebApplicationProject.control.EventFacade ejbFacade;
+    private com.WebApplicationProject.db.EventFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
 

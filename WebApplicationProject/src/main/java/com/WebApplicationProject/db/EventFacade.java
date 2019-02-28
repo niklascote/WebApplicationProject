@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.control;
+package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.control.AbstractFacade;
+import com.WebApplicationProject.db.AbstractFacade;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.Users;
@@ -19,7 +19,7 @@ import javax.persistence.PersistenceContext;
  * @author gabri
  */
 @Stateless
-public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
+public class EventFacade extends AbstractFacade<Event> {
 
     @PersistenceContext(unitName = "com_WebApplicationProject_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -29,16 +29,8 @@ public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
         return em;
     }
 
-    public EventOccuranceFacade() {
-        super(EventOccurance.class);
-    }
-    
-//    public List<EventOccurance> getUserEvents(Users user) {
-//        List results = em.createNamedQuery("EventOccurance.findByOwner")
-//                .setParameter("owner", user.getId())
-//                .getResultList();
-//                
-//        return results; 
-//    }
+    public EventFacade() {
+        super(Event.class);
+    }    
     
 }

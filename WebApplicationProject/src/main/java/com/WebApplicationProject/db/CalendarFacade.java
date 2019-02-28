@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.control;
+package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.control.AbstractFacade;
-import com.WebApplicationProject.model.EventOccurance;
-import com.WebApplicationProject.model.Users;
-import java.util.List;
+import com.WebApplicationProject.db.AbstractFacade;
+import com.WebApplicationProject.model.Calendar;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author gabri
  */
 @Stateless
-public class UsersFacade extends AbstractFacade<Users> {
+public class CalendarFacade extends AbstractFacade<Calendar> {
 
     @PersistenceContext(unitName = "com_WebApplicationProject_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -28,9 +26,8 @@ public class UsersFacade extends AbstractFacade<Users> {
         return em;
     }
 
-    public UsersFacade() {
-        super(Users.class);
+    public CalendarFacade() {
+        super(Calendar.class);
     }
-
     
 }
