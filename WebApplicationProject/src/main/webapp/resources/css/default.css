@@ -12,3 +12,11 @@
 .registerViewButtons{
     margin: 20px;
 }
+
+.topAligned {
+    vertical-align: top;
+}
+
+.ui-panelgrid tr {
+    margin-bottom: 50px;
+}

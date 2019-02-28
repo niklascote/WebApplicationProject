@@ -69,21 +69,19 @@ public class EventOccurance implements Serializable {
     public EventOccurance() {
     }
 
-    public EventOccurance(Long id) {
-        this.id = id;
-    }
-
-    public EventOccurance(Long id, Date startDate, Date endDate) {
-        this.id = id;
+    public EventOccurance(Event event, Date startDate, Date endDate) {
+        this.event = event; 
         this.startDate = startDate;
         this.endDate = endDate;
     }
     
     public EventOccurance(Date startDate, Date endDate) {
+        this.event = event; 
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
+    
+    
     public Long getId() {
         return id;
     }

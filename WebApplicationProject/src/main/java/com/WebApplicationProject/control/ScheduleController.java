@@ -17,11 +17,12 @@ import com.WebApplicationProject.view.EventViewer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -32,7 +33,6 @@ import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 /**
@@ -40,7 +40,7 @@ import org.primefaces.model.ScheduleModel;
  * @author gabri
  */
 @Named("scheduleController") 
-@ViewScoped 
+@ConversationScoped  
 public class ScheduleController implements Serializable {
     
     @EJB
@@ -67,6 +67,11 @@ public class ScheduleController implements Serializable {
     @Getter
     @Setter
     private List<com.WebApplicationProject.model.Calendar> nonEditableCalendars = new ArrayList<com.WebApplicationProject.model.Calendar>();
+    
+    @Getter
+    @Setter
+    private List<com.WebApplicationProject.model.Calendar> selectedCalendars = new ArrayList<com.WebApplicationProject.model.Calendar>();
+    
     
     @Getter
     @Setter
@@ -109,7 +114,7 @@ public class ScheduleController implements Serializable {
     
     
     public void getEvents() {
-        
+                
         //Find all events created by the user       
         for(Event e : user.getEventCollection()) {            
             for(EventOccurance eo : e.getEventOccuranceCollection()) {
@@ -180,18 +185,22 @@ public class ScheduleController implements Serializable {
     }
     
     public void addEvent() {
+        
+        //Add event to schedule model, for it to be able to be shown i schedule
         eventModel.addEvent(event);
         
-        Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation());
-        
+        //Add event to Event-table in DB        
+        Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation(), user);        
         eventFacade.create(e);
         
-//        eventOccuranceFacade.create(new EventOccurance(
-//                e.getId(), 
-//                event.getStartDate(), 
-//                event.getEndDate())
-//        );
+        //Add event occurance to EventOccurance-table in DB        
+        eventOccuranceFacade.create(new EventOccurance(
+                eventFacade.find(e.getId()), 
+                event.getStartDate(), 
+                event.getEndDate())
+        );
         
+        //Remove temporary event in view
         clearEvent(); 
     }
 }

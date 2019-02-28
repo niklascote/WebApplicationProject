@@ -3,77 +3,90 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"   
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:b="http://bootsfaces.net/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"    
       xmlns:p="http://primefaces.org/ui">
 
-    <h:outputStylesheet library="css" name="default.css"  />
-    
+    <h:head>
+        <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+        <title>Calendar</title>
 
-    <h:panelGrid columns="2" >
-        
-        <h:form>
-            <p:calendar id="inline" mode="inline"/>
+    </h:head>
+
+    <h:body>
+        <p:panelGrid columnClasses="topAligned" columns="2" styleClass="ui-panelgrid-blank">
             
-            <p:outputLabel value="CALENDARS" />
-            <p:dataList value="#{scheduleController.editableCalendars}"  var="cal" type="definition" rendered="#{scheduleController.editableCalendars.size() > 0}">
-                #{cal.name}
-            </p:dataList>
-            <p:dataList value="#{scheduleController.nonEditableCalendars}" var="cal" type="definition" rendered="#{scheduleController.nonEditableCalendars.size() > 0}">
-                #{cal.name}
-            </p:dataList>
-        </h:form>
-        
-        <h:form>
-            <p:growl id="messages" showDetail="true" />
+            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid">
+                <p:row>
+                    <h:form>
+                        <p:calendar id="inline" mode="inline"/>
+                    </h:form>
+                </p:row>
+                <p:row/>
 
-            <h:panelGrid columnClasses="value">
-                <p:schedule id="schedule" value="#{scheduleController.eventModel}" widgetVar="myschedule" timeZone="#{scheduleController.user.timezone}">
+                <p:row>            
+                    <h:form>
+                        <p:outputLabel value="CALENDARS"/>
+                        <p:selectManyCheckbox id="calendarSelection" value="#{scheduleController.selectedCalendars}" layout="grid" columns="1">
+                            <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                            <f:selectItems value="#{scheduleController.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                        </p:selectManyCheckbox>
+                    </h:form>
+                </p:row>
+                
+            </p:panelGrid>
 
-                    <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-                    <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}" oncomplete="editEvent()" />
-                    <p:ajax event="eventMove" listener="#{scheduleController.onEventMove}" update="messages" />
-                    <p:ajax event="eventResize" listener="#{scheduleController.onEventResize}" update="messages" />
+            <h:form>
+                <p:growl id="messages" showDetail="true" />
 
-                </p:schedule>
-            </h:panelGrid>
+                <p:panelGrid>
+                    <p:schedule showWeekNumbers="true" id="schedule" value="#{scheduleController.eventModel}" widgetVar="myschedule" timeZone="#{scheduleController.user.timezone}">
 
-            <p:dialog widgetVar="eventDialog" 
-                      header="Event Details" 
-                      showEffect="clip" 
-                      hideEffect="clip">
-                <h:panelGrid id="eventDetails" columns="2">
-                    <p:outputLabel for="title" value="Title:" />
-                    <p:inputText id="title" value="#{scheduleController.event.title}" required="true" />
+                        <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                        <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}" oncomplete="editEvent()" />
+                        <p:ajax event="eventMove" listener="#{scheduleController.onEventMove}" update="messages" />
+                        <p:ajax event="eventResize" listener="#{scheduleController.onEventResize}" update="messages" />
 
-                    <p:outputLabel for="from" value="From:" />
-                    <p:calendar id="from" value="#{scheduleController.event.startDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                    </p:schedule>
+                </p:panelGrid>
 
-                    <p:outputLabel for="to" value="To:" />
-                    <p:calendar id="to" value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                <p:dialog widgetVar="eventDialog" 
+                          header="Event Details" 
+                          showEffect="clip" 
+                          hideEffect="clip">
+                    <p:panelGrid id="eventDetails" columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel for="title" value="Title:" />
+                        <p:inputText id="title" value="#{scheduleController.event.title}" required="true" />
 
-                    <p:outputLabel for="allDay" value="All Day:" />
-                    <h:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" />
-                    
-                    <p:outputLabel for="console" value="Calendar:" />
-                    <p:selectOneMenu id="console" value="#{scheduleController.event.calendar}" style="width:125px">
-                        <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
-                    </p:selectOneMenu>
+                        <p:outputLabel for="from" value="From:" />
+                        <p:calendar id="from" value="#{scheduleController.event.startDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
-                    <p:outputLabel for="location" value="Location:" />
-                    <p:inputText id="location" value="#{scheduleController.event.location}"/>                    
-                    
-                    <h:outputLink id="moreButton" value="#{root}/schedule/eventView.xhtml">More information</h:outputLink>                    
-                    <p:commandButton ajax="false" id="addButton" value="Save"  action="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
-                </h:panelGrid>
-            </p:dialog>    
-        </h:form>
-    </h:panelGrid>
-    
-    <script type="text/javascript">
-        editEvent = function() {
-            window.location.href = "#{root}/schedule/eventView.xhtml";
-        }
-    </script>
+                        <p:outputLabel for="to" value="To:" />
+                        <p:calendar id="to" value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+
+                        <p:outputLabel for="allDay" value="All Day:" />
+                        <h:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" />
+
+                        <p:outputLabel for="console" value="Calendar:" />
+                        <p:selectOneMenu id="console" value="#{scheduleController.event.calendar}" style="width:125px">
+                            <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="location" value="Location:" />
+                        <p:inputText id="location" value="#{scheduleController.event.location}"/>                    
+
+                        <h:outputLink id="moreButton" value="#{root}/schedule/eventView.xhtml">More information</h:outputLink>                    
+                        <p:commandButton ajax="false" id="addButton" value="Save"  action="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                    </p:panelGrid>
+                </p:dialog>    
+            </h:form>
+        </p:panelGrid>
+
+        <script type="text/javascript">
+            editEvent = function () {
+                window.location.href = "#{root}/schedule/eventView.xhtml";
+            }
+        </script>
+
+    </h:body>
 </html>
 
