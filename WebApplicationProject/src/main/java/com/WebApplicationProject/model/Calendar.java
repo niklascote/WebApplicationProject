@@ -41,28 +41,31 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Calendar implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
+    
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false, length = 250)
     private String name;
-    @Size(max = 250)
-    @Column(name = "DESCRIPTION")
+    
+    @Column(name = "DESCRIPTION", length = 250)
     private String description;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "PUBLIC_ACCESS")
-    private Boolean publicAccess;
+    @Column(name = "PUBLIC_ACCESS", nullable = false)
+    private Boolean publicAccess = false;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calendar")
     private Collection<CalendarParticipant> calendarParticipantCollection;
-    @JoinColumn(name = "OWNER", referencedColumnName = "ID")
+    
+    @JoinColumn(name = "OWNER", referencedColumnName = "ID", nullable = false)
     @ManyToOne
     private Users owner;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calendar")
     private Collection<Event> eventCollection;
 

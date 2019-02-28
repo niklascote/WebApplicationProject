@@ -34,18 +34,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class EventOccuranceParticipant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "WRITE_PERMISSION")
-    private Boolean writePermission;
+    @Column(name = "WRITE_PERMISSION", nullable = false)
+    private Boolean writePermission = false;
+    
     @JoinColumn(name = "EVENT_OCCURANCE", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private EventOccurance eventOccurance;
+    
     @JoinColumn(name = "PARTICIPANT", referencedColumnName = "ID")
     @ManyToOne
     private Users participant;

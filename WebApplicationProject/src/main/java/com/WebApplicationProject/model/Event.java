@@ -43,34 +43,41 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
-    @Size(max = 250)
-    @Column(name = "LOCATION")
+    
+    //@Size(max = 250)
+    @Column(name = "LOCATION", length = 250)
     private String location;
+    
     @Column(name = "NOTIFICATION")
     private Integer notification;
-    @Size(max = 250)
-    @Column(name = "DESCRIPTION")
+    
+    @Column(name = "DESCRIPTION", length = 250)
     private String description;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "PUBLIC_ACCESS")
-    private Boolean publicAccess;
-    @Size(max = 250)
-    @Column(name = "TITLE")
+    @Column(name = "PUBLIC_ACCESS", nullable = false)
+    private Boolean publicAccess = false;
+    
+    @Column(name = "TITLE", length = 250, nullable = false)
     private String title;
+    
     @OneToMany(mappedBy = "event")
     private Collection<EventParticipant> eventParticipantCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Collection<EventOccurance> eventOccuranceCollection;
+    
     @JoinColumn(name = "CALENDAR", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Calendar calendar;
-    @JoinColumn(name = "OWNER", referencedColumnName = "ID")
+    
+    @JoinColumn(name = "OWNER", referencedColumnName = "ID", nullable = false)
     @ManyToOne
     private Users owner;
 
@@ -86,11 +93,11 @@ public class Event implements Serializable {
         this.publicAccess = publicAccess;
     }
     
-    public Event(String title, Calendar cal, String location) {
+    public Event(String title, Calendar cal, String location, Users owner) {
         this.title = title;
         this.calendar = cal; 
         this.location = location; 
-        //this.eventOccuranceCollection.add(occurance);
+        this.owner = owner;
     }
 
     public Long getId() {

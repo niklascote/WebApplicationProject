@@ -42,23 +42,26 @@ import javax.xml.bind.annotation.XmlTransient;
 public class EventOccurance implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "START_DATE")
+    @Column(name = "START_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "END_DATE")
+    @Column(name = "END_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventOccurance")
     private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
+    
     @JoinColumn(name = "EVENT", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Event event;

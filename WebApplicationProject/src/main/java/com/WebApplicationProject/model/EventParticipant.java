@@ -33,16 +33,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class EventParticipant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
-    @Column(name = "WRITE_PERMISSION")
-    private Short writePermission;
+    
+    @Column(name = "WRITE_PERMISSION", nullable = false)
+    private Boolean writePermission = false;
+    
     @JoinColumn(name = "EVENT", referencedColumnName = "ID")
     @ManyToOne
     private Event event;
+    
     @JoinColumn(name = "PARTICIPANT", referencedColumnName = "ID")
     @ManyToOne
     private Users participant;
@@ -62,11 +66,11 @@ public class EventParticipant implements Serializable {
         this.id = id;
     }
 
-    public Short getWritePermission() {
+    public Boolean getWritePermission() {
         return writePermission;
     }
 
-    public void setWritePermission(Short writePermission) {
+    public void setWritePermission(Boolean writePermission) {
         this.writePermission = writePermission;
     }
 

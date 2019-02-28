@@ -43,49 +43,50 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
-    @Size(max = 250)
-    @Column(name = "FIRSTNAME")
+    
+    @Column(name = "FIRSTNAME", length = 250, nullable = false)
     private String firstname;
-    @Size(max = 250)
-    @Column(name = "LASTNAME")
+    
+    @Column(name = "LASTNAME", length = 250, nullable = false) 
     private String lastname;
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
-    @Size(max = 20)
-    @Column(name = "PHONE")
+
+    @Column(name = "PHONE", length = 20)
     private String phone;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", nullable = false, length = 100)
     private String email;
+    
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 250)
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", length = 250, nullable = false)
     private String password;
+    
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "TIMEZONE")
+    @Column(name = "TIMEZONE", nullable = false, length = 10)
     private String timezone;
+    
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "NOTIFICATIONS")
-    private Boolean notifications;
+    @Column(name = "NOTIFICATIONS", nullable = false)
+    private Boolean notifications = true;
+    
     @OneToMany(mappedBy = "participant")
     private Collection<EventParticipant> eventParticipantCollection;
+    
     @OneToMany(mappedBy = "participant")
     private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
     private Collection<CalendarParticipant> calendarParticipantCollection;
+    
     @OneToMany(mappedBy = "owner")
     private Collection<Calendar> calendarCollection;
+    
     @OneToMany(mappedBy = "owner")
     private Collection<Event> eventCollection;
 
