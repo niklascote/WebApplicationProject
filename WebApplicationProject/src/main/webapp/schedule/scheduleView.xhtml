@@ -4,15 +4,16 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"   
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"    
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
         <title>Calendar</title>
-
     </h:head>
 
     <h:body>
+        <c:set var="root" value="#{request.contextPath}" /> 
         <p:panelGrid columnClasses="topAligned" columns="2" styleClass="ui-panelgrid-blank">
             
             <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid">
@@ -40,12 +41,10 @@
 
                 <p:panelGrid>
                     <p:schedule showWeekNumbers="true" id="schedule" value="#{scheduleController.eventModel}" widgetVar="myschedule" timeZone="#{scheduleController.user.timezone}">
-
                         <p:ajax event="dateSelect" listener="#{scheduleController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
                         <p:ajax event="eventSelect" listener="#{scheduleController.onEventSelect}" oncomplete="editEvent()" />
                         <p:ajax event="eventMove" listener="#{scheduleController.onEventMove}" update="messages" />
-                        <p:ajax event="eventResize" listener="#{scheduleController.onEventResize}" update="messages" />
-
+                        <p:ajax event="eventResize" listener="#{scheduleController.onEventResize}" update="messages"  />
                     </p:schedule>
                 </p:panelGrid>
 
@@ -75,7 +74,8 @@
                         <p:inputText id="location" value="#{scheduleController.event.location}"/>                    
 
                         <h:outputLink id="moreButton" value="#{root}/schedule/eventView.xhtml">More information</h:outputLink>                    
-                        <p:commandButton ajax="false" id="addButton" value="Save"  action="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                        <p:commandButton ajax="false" id="addButton" value="Save"  actionListener="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                    
                     </p:panelGrid>
                 </p:dialog>    
             </h:form>

@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -40,7 +41,7 @@ import org.primefaces.model.ScheduleModel;
  * @author gabri
  */
 @Named("scheduleController") 
-@ConversationScoped  
+@SessionScoped  
 public class ScheduleController implements Serializable {
     
     @EJB
@@ -51,11 +52,11 @@ public class ScheduleController implements Serializable {
     
     @EJB
     private EventOccuranceFacade eventOccuranceFacade;
-                
+           
     @Getter
     @Setter
     private ScheduleModel eventModel;
-    
+        
     @Getter
     @Setter
     private EventViewer event = new EventViewer();
@@ -202,5 +203,6 @@ public class ScheduleController implements Serializable {
         
         //Remove temporary event in view
         clearEvent(); 
+         
     }
 }
