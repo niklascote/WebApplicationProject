@@ -33,6 +33,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         String user = request.getParameter("user"); //Fetches data from loginView.xhtml
         String pass = request.getParameter("pass");
+        
         try{
             Class.forName("com.derby.jdbc.Driver");
             Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
@@ -45,10 +46,10 @@ public class Login extends HttpServlet {
             while (rs.next()) {
                 HttpSession session =request.getSession();
                 session.setAttribute("user", user);
-                response.sendRedirect("success.html"); //Direction if login is successful (PLACEHOLDER)
+                response.sendRedirect("schedule/scheduleView.xhtml"); //Direction if login is successful (PLACEHOLDER)
 		return;
             }
-            response.sendRedirect("error.html");//Direction if login is NOT successful (PLACEHOLDER)
+            response.sendRedirect("schedule/loginView.xhtml");//Direction if login is NOT successful (PLACEHOLDER)
         }
         catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
