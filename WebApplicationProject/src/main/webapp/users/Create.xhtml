@@ -8,9 +8,9 @@
 
     <head>
         <!--Not working??-->
-    <!--<h:outputStylesheet library="../resources/css" name="default.css" />-->
-    <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
-</head>
+        <!--<h:outputStylesheet library="../resources/css" name="default.css" />-->
+        <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+    </head>
 
     <h:body>
         <f:view>
@@ -35,10 +35,11 @@
                     <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required."/>
                     <h:outputLabel value="Notifications:" for="notifications" />
                     <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
-                    
+
                 </h:panelGrid>
-                <h:commandButton value="Register user" styleClass="registerViewButtons"/>
-                <h:commandButton value="Back" styleClass="registerViewButtons"/>
+<!--                <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.prepareCreate()}" action="pretty:home"/>-->
+                    <h:commandLink value="Register user" action="#{usersController.create}"/>
+                <h:button value="Back" outcome="pretty:home"/>
             </h:form>
         </f:view>
     </h:body>
