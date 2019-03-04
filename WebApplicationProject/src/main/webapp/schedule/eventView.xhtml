@@ -21,11 +21,11 @@
         <h:form>
             <p:growl id="messages" showDetail="true" />
 
-            <p:megaMenu orientation="horizontal" style="margin-top:20px; ">
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;">
                 <p:menuitem value="Add event" disabled="true" style="background: white;"/> 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 <p:menuitem value="Save" update="messages" icon="fa fa-fw fa-save"/> <!-- action-->
-                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.deleteEvent()}"/><!-- action-->
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="#{scheduleController.deleteEvent()}"/><!-- action-->
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> <!-- action-->
                 <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" url="/calendar" />

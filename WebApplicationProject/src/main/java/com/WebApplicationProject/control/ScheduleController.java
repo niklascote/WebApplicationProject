@@ -190,6 +190,7 @@ public class ScheduleController implements Serializable {
 //            eventFacade.remove(entity);
 //        }        
         clearEvent();
+        
         return "/schedule/scheduleView.xhtml";
     }
     

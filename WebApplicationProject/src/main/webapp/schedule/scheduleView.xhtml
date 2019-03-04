@@ -15,6 +15,17 @@
     <h:body>
         <c:set var="root" value="#{request.contextPath}" /> 
 
+
+        <h:form>
+            <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
+                <p:menuitem value="#{scheduleController.user.firstname} #{scheduleController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
+                <f:facet name="options">
+                    <p:menuitem icon="fa fa-cog"/>            
+                    <p:commandButton type="button" value="Logout"/>
+                </f:facet>
+            </p:menubar>
+        </h:form>
+
         <div class="ui-g">
 
             <div class="ui-g-3">
@@ -84,7 +95,7 @@
 
         <script type="text/javascript">
             editEvent = function () {
-                window.location.href = "#{root}/schedule/eventView.xhtml";
+                window.location.href = "#{root}/calendar/event";
             };
         </script>
 
