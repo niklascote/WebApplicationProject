@@ -8,6 +8,16 @@
         <pattern value="/" /> 
         <view-id value="/index.xhtml" />
     </url-mapping> 
+    
+    <url-mapping id="calendar">
+        <pattern value="/calendar" />
+        <view-id value="/schedule/scheduleView.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="eventview">
+        <pattern value="/calendar/event" />
+        <view-id value="/schedule/eventView.xhtml" />
+    </url-mapping>
       
     
 </pretty-config>    

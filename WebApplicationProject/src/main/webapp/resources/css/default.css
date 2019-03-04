@@ -8,15 +8,49 @@
     font-weight: 900;
 }
 
-
 .registerViewButtons{
     margin: 20px;
 }
 
-.topAligned {
-    vertical-align: top;
-}
-
 .ui-panelgrid tr {
     margin-bottom: 50px;
+}
+
+
+/*Submenu css*/
+.ui-menu.ui-widget .ui-menuitem-link .ui-menuitem-text {
+    padding-right: 0.4em;
+    padding-left: 0.4em;
+    margin: 0;
+}
+
+.ui-panelgrid {
+    border-collapse: separate;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    border-width: 0;
+    border-style: none;
+}
+
+.ui-menu.ui-menubar {
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: 20px;
+}
+
+.ui-menuitem:last-child {
+    float: right; 
+}
+
+.global-margin-event-components {
+    margin-bottom: 10px;
+}
+
+.global-margin-event-components-row {
+    margin-right: 10px;
+}
+
+::placeholder {
+    color: gray;
 }

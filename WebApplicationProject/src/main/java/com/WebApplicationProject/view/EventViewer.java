@@ -6,6 +6,7 @@
 package com.WebApplicationProject.view;
 
 import com.WebApplicationProject.model.Calendar;
+import com.WebApplicationProject.model.ReminderTypes;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,7 @@ import org.primefaces.model.ScheduleEvent;
  *
  * @author gabri
  */
+
 public class EventViewer extends DefaultScheduleEvent implements Serializable {
 
     @Getter
@@ -27,6 +29,10 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
     @Getter
     @Setter
     private Calendar calendar; 
+    
+    @Getter
+    @Setter
+    private String reminder; 
        
         
     public EventViewer() {

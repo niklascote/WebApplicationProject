@@ -72,8 +72,7 @@ public class ScheduleController implements Serializable {
     @Getter
     @Setter
     private List<com.WebApplicationProject.model.Calendar> selectedCalendars = new ArrayList<com.WebApplicationProject.model.Calendar>();
-    
-    
+        
     @Getter
     @Setter
     private Users user = new Users(); 
@@ -183,6 +182,15 @@ public class ScheduleController implements Serializable {
     
     public void clearEvent() {
         event = new EventViewer();
+    }
+    
+    public String deleteEvent() {
+//        if(eventModel.getEvent(event.getId()) != null) {
+//            Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation(), user); 
+//            eventFacade.remove(entity);
+//        }        
+        clearEvent();
+        return "/schedule/scheduleView.xhtml";
     }
     
     public void addEvent() {
