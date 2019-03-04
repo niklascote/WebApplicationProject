@@ -17,10 +17,12 @@
 
 
         <h:form>
-            <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                <p:menuitem value="#{scheduleController.user.firstname} #{scheduleController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
-                <f:facet name="options">
-                    <p:menuitem icon="fa fa-cog"/>            
+            <p:menubar style="background: #30383c; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
+                <p:menuitem value="#{scheduleController.user.firstname} #{scheduleController.user.lastname}" disabled="true" style="background: #30383c; color:white;"/> 
+                
+                <p:menuitem icon="fa fa-cog" style="color:white;"/>
+                
+                <f:facet name="options">     
                     <p:commandButton type="button" value="Logout"/>
                 </f:facet>
             </p:menubar>
