@@ -1,3 +1,11 @@
+
+.index {
+    border: 1px solid black;
+    border-radius:3px;
+    box-shadow: inset 60px 0 120px #dbdbdb, inset -60px 0 120px #dbdbdb;
+}
+
+
 .value {
     width: 1000px;
 }

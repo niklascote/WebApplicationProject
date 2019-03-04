@@ -17,9 +17,10 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 
 @Named("usersController")
-@SessionScoped
+@ViewScoped
 public class UsersController implements Serializable {
 
     private Users current;
