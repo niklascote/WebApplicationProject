@@ -10,16 +10,17 @@
     </h:head>
     <h:panelGroup layout="block" class="header_container">
         <h:link value="HOME" outcome="/index.xhtml"/>
-
+        <h:link value="LOG IN" outcome="/users/loginView.xhtml"/>
+        
         <c:choose>
             <c:when test="#{sessionScope.user == null}">
-                <h:link value="LOG IN" outcome="/users/Create.xhtml"/>
+                <h:link value="SIGN UP" outcome="/users/Create.xhtml"/>
             </c:when>
             <c:otherwise>
                 <h:outputText value="Logged in as user"/>
             </c:otherwise>
         </c:choose>
         
-        <h:link value="SIGN UP" outcome="/users/loginView.xhtml"/>
+        
     </h:panelGroup>
 </ui:composition>
