@@ -56,6 +56,10 @@ label, p, a {
     border-radius: 6px;
 }
 
+.footer_container > p {
+    font-size:10pt;
+}
+
 .value {
     width: 1000px;
 }
