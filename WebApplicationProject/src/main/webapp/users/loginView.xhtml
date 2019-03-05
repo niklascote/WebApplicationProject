@@ -15,10 +15,13 @@
             <ui:include src="/partials/header.xhtml"/>
         </h:panelGroup>
         <h:panelGroup layout="block" class="container">
-            <form action="Login" method="post">
+            <form action="login" method="post">
                 Username : <input type="text" name="user"/> <br/>
                 Password : <input type="password" name="pass"/> <br/>
                 <input type="submit" value="Login" ></input>
+            </form>
+            <form>
+                <h:link value="Sign Up" outcome="Create.xhtml"/>
             </form>
         </h:panelGroup>
         <h:panelGroup layout="block" class="footer">

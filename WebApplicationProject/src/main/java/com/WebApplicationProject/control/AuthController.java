@@ -35,7 +35,7 @@ public class AuthController extends HttpServlet {
         String pass = request.getParameter("pass");
         
         try{
-            Class.forName("com.derby.jdbc.Driver");
+            Class.forName("com.derby.jdbc.Drivers");
             Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
             PreparedStatement ps = c.prepareStatement("select FIRSTNAME,PASSWORD from USERS where FIRSTNAME=? and PASSWORD=?");
             ps.setString(1, user); //Currently uses FIRSTNAME as User
