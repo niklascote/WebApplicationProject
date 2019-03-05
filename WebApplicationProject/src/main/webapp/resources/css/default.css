@@ -1,61 +1,67 @@
-body {
+html, body.index{
+    margin: 0;
     height: 100%;
     width: 100%;
-    margin: 0;
+}
+
+body.index {
     padding: 0;
     background-color: white;
     font-family: Arial;
+    font-size: 12pt;
+    box-shadow: inset 160px 0 130px #eeeeee,
+        inset -160px 0 130px #eeeeee;
 }
 
-.header , .footer{
-    overflow: hidden;
-    background-color: #000000;
-    position: relative;
-    top: 0;
-    box-shadow: inset 160px 0 80px #494949,
-        inset -160px 0 80px #494949;
-}
-/*
-h1, h2, h5, label, p, a{
+body.index > .container {
+    padding: 50px;
     text-align: center;
+}
+
+body.index > .container > p,
+body.index > .container > a,
+body.index > .container > h1 {
+    color: black;
+}
+
+body.index > .container > a {
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    
+    margin: 5px;
+    padding: 5px;
+    
+    border: 1px solid transparent;
+    border-radius: 0px;
+    transition: 0.1s;
+}
+
+body.index > .container > a:hover {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+body.index > .container > .login_container > form {
+    display: inline-block;
+}
+
+body.index > .container > .login_container > form > input {
+    margin: 5px;
+    padding: 5px;
     display: block;
 }
 
-label, p, a {
-    font-size: 12pt;
-}*/
-
-.footer_container, .header_container {
-    margin:auto;
-    text-align:center;
-    padding: 14px;
+body.index > .container > .login_container > form > input.button,
+body.index > .container > .register,
+body.index > .container > .sign_up {
+    display: inline-block;
 }
 
-.footer_container > p, .header_container > a {
-    text-decoration: none;
-    margin: 10px;
-    padding: 10px;
-    font-weight: bold;
-    color: white;
-    display: inline;
-}
-
-.header_container  a {
-    border: 1px solid transparent;
-    border-radius: 0px;
-}
-
-.header_container > a {
-    transition: 0.2s;
-}
-
-.header_container > a:hover {
-    border: 1px solid white;
-    border-radius: 6px;
-}
-
-.footer_container > p {
-    font-size:10pt;
+body.index > .container > .register,
+body.index > .container > .sign_up { 
+    margin: 5px;
+    margin-top: 20px;
 }
 
 .value {
