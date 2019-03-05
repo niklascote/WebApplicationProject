@@ -5,6 +5,7 @@
  */
 package com.WebApplicationProject.view;
 
+import com.WebApplicationProject.control.Reminder;
 import com.WebApplicationProject.model.Calendar;
 import com.WebApplicationProject.model.ReminderTypes;
 import java.io.Serializable;
@@ -31,11 +32,16 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
     private Calendar calendar; 
     
     @Getter
-    private Integer reminder; 
-        
-    public void setReminder(Integer reminder) {
-        this.reminder = reminder;      
-    }
+    @Setter
+    private Reminder reminder; 
+    
+    @Getter
+    @Setter
+    private Long eventId; 
+    
+    @Getter
+    @Setter
+    private Long eventOccuranceId;
         
     public EventViewer() {
         super();
@@ -62,14 +68,18 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
         super.setAllDay(true);
     }
     
-    public EventViewer(String title, Date start, Date end, String location, Calendar calendar) {
+    public EventViewer(String title, Date start, Date end, String location, Calendar calendar, Reminder reminder, String description, Long eventOccuranceId, Long eventId) {
         super.setAllDay(true);
         super.setTitle(title);
         super.setStartDate(start);
         super.setEndDate(end);
+        super.setDescription(description);
+        super.setId(eventOccuranceId.toString());
         this.location = location; 
         this.calendar = calendar; 
         this.reminder = reminder;
+        this.eventId = eventId;
+        this.eventOccuranceId = eventOccuranceId;
     }
     
     @Override
@@ -84,18 +94,15 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
         super.setAllDay(false);
     }        
     
-    @Override
-    public void setAllDay(boolean allDay) {
-        
-        if(allDay) {
+    public void changeAllDay() {
+        if(super.isAllDay()) {
             
             //Set start date to 00:00
             java.util.Calendar cal = java.util.Calendar.getInstance();  
             cal.setTime(super.getStartDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 0);  
             cal.set(java.util.Calendar.MINUTE, 0);
-            super.setStartDate(cal.getTime());
-            
+            super.setStartDate(cal.getTime());            
             
             //Set end date to 23:59
             cal.setTime(super.getEndDate());  
@@ -118,7 +125,5 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             cal.set(java.util.Calendar.MINUTE, 30);  
             super.setEndDate(cal.getTime());
         }
-    }
-    
-    
+    }    
 }

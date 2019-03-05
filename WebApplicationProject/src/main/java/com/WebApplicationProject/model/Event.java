@@ -5,6 +5,7 @@
  */
 package com.WebApplicationProject.model;
 
+import com.WebApplicationProject.control.Reminder;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -39,7 +40,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e")
     , @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id")
     , @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")
-    , @NamedQuery(name = "Event.findByNotification", query = "SELECT e FROM Event e WHERE e.notification = :notification")
     , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")
     , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
 public class Event implements Serializable {
@@ -54,11 +54,10 @@ public class Event implements Serializable {
     
     @Column(name = "LOCATION", length = 250)
     private String location;
-    
-    @Basic(optional = false)
-    @Column(name = "NOTIFICATION")
-    @Temporal(TemporalType.DATE)
-    private Date notification;
+        
+    @JoinColumn(name = "REMINDER", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Reminder reminder;
     
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
@@ -87,12 +86,12 @@ public class Event implements Serializable {
         this.id = id;
     }
     
-    public Event(String title, Calendar cal, String location, Users owner, Date notification, String description) {
+    public Event(String title, Calendar cal, String location, Users owner, Reminder reminder, String description) {
         this.title = title;
         this.calendar = cal; 
         this.location = location; 
         this.owner = owner;
-        this.notification = notification; 
+        this.reminder = reminder; 
         this.description = description; 
     }
     
@@ -112,12 +111,12 @@ public class Event implements Serializable {
         this.location = location;
     }
 
-    public Date getNotification() {
-        return notification;
+    public Reminder getReminder() {
+        return reminder;
     }
 
-    public void setNotification(Date notification) {
-        this.notification = notification;
+    public void setReminder(Reminder reminder) {
+        this.reminder = reminder;
     }
 
     public String getDescription() {

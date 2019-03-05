@@ -18,6 +18,16 @@
         <pattern value="/calendar/event" />
         <view-id value="/schedule/eventView.xhtml" />
     </url-mapping>
+    
+    <url-mapping id="updateeventview">
+        <pattern value="/calendar/event/update" />
+        <view-id value="/schedule/eventView.xhtml?update=true" />
+    </url-mapping>
+    
+    <url-mapping id="addeventview">
+        <pattern value="/calendar/event/add" />
+        <view-id value="/schedule/eventView.xhtml?update=false" />
+    </url-mapping>
       
     
 </pretty-config>    

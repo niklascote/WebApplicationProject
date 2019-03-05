@@ -7,6 +7,7 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventOccuranceFacade;
 import com.WebApplicationProject.db.EventFacade;
+import com.WebApplicationProject.db.ReminderFacade;
 import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
@@ -25,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
@@ -44,6 +46,9 @@ public class ScheduleController implements Serializable {
     
     @EJB
     private EventFacade eventFacade;
+    
+    @EJB
+    private ReminderFacade reminderFacade;
     
     @EJB
     private EventOccuranceFacade eventOccuranceFacade;
@@ -117,7 +122,11 @@ public class ScheduleController implements Serializable {
                         eo.getStartDate(),
                         eo.getEndDate(),
                         e.getLocation(), 
-                        e.getCalendar()
+                        e.getCalendar(), 
+                        e.getReminder(),
+                        e.getDescription(),
+                        eo.getId(), 
+                        e.getId()
                 ));
             });
         });
@@ -129,9 +138,19 @@ public class ScheduleController implements Serializable {
                     e.getEventOccurance().getStartDate(), 
                     e.getEventOccurance().getEndDate(),
                     e.getEventOccurance().getEvent().getLocation(),
-                    e.getEventOccurance().getEvent().getCalendar()
+                    e.getEventOccurance().getEvent().getCalendar(),
+                    e.getEventOccurance().getEvent().getReminder(),
+                    e.getEventOccurance().getEvent().getDescription(),
+                    e.getEventOccurance().getId(),
+                    e.getEventOccurance().getEvent().getId()
             ));
         });
+    }
+    
+    public List<Reminder> getReminders() {  
+        //Returns all reminder types from database to be shown in interface
+        List<Reminder> reminders = reminderFacade.findAll();
+        return reminders;                 
     }
     
     public Date getInitialDate() {
@@ -175,35 +194,86 @@ public class ScheduleController implements Serializable {
     }
     
     public void clearEvent() {
+        //Clear temporary event
         event = new EventViewer();
     }
     
-    public String deleteEvent() {
-//        if(eventModel.getEvent(event.getId()) != null) {
-//            Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation(), user); 
-//            eventFacade.remove(entity);
-//        }        
+    public void deleteAllEvents() {
+        //Find choosen event in database
+        Event e = eventFacade.find(event.getEventId());
+        
+        //Remove event and occurances from database en event model
+        e.getEventOccuranceCollection().forEach((eo) -> {
+            eventModel.deleteEvent(eventModel.getEvent(eo.getId().toString()));
+            eventOccuranceFacade.remove(eo);
+        });        
+        eventFacade.remove(e);
+                
+        //Clear temporary event
+        clearEvent();
+        PrimeFaces.current().ajax().update("form:schedule");
+        
+    }
+        
+    public void deleteThisEvent() {
+        //Find choosen event in database
+        Event e = eventFacade.find(event.getEventId());
+        EventOccurance eo = eventOccuranceFacade.find(event.getEventOccuranceId());
+        
+        //Delete event and occurances from database
+        eventOccuranceFacade.remove(eo);
+        
+        //Only remove event if it is there is only one occurance
+        if(e.getEventOccuranceCollection().size() > 1) {
+            eventFacade.remove(e);
+        }        
+        
+        //Delete event from event model
+        eventModel.deleteEvent(event);
+        
+        //Clear temporary event
         clearEvent();
         
-        return "/schedule/scheduleView.xhtml";
     }
     
-    public void addEvent() {
+    public void updateEvent() {
+        
+        //Update event in event model
+        eventModel.updateEvent(event);
+        
+        //Get event entity
+        Event e = eventFacade.find(event.getEventId());
+        
+        //Update entity
+        e.setCalendar(event.getCalendar());
+        e.setDescription(event.getDescription());
+        e.setLocation(event.getLocation());
+        e.setReminder(event.getReminder());
+        e.setTitle(event.getTitle());        
+        eventFacade.edit(e);
+        
+        //TODO: Update event occurances
+        
+        clearEvent();
+    }
+    
+    public void addEvent() {        
         
         //Add event to schedule model, for it to be able to be shown i schedule
-        eventModel.addEvent(event);
-        
+        eventModel.addEvent(event);        
+                
         //Add event to Event-table in DB        
         Event e = new Event(
                 event.getTitle(), 
                 event.getCalendar(), 
                 event.getLocation(), 
                 user, 
-                new Date(event.getStartDate().getTime() - event.getReminder()),
+                event.getReminder(),
                 event.getDescription());        
     
         eventFacade.create(e);
         
+        //Todo: When repeating this must be change to multiple occurances
         //Add event occurance to EventOccurance-table in DB        
         eventOccuranceFacade.create(new EventOccurance(
                 eventFacade.find(e.getId()), 
@@ -212,7 +282,6 @@ public class ScheduleController implements Serializable {
         );
         
         //Remove temporary event in view
-        clearEvent(); 
-         
+        clearEvent();          
     }
 }

@@ -4,12 +4,7 @@
  * and open the template in the editor.
  */
 package com.WebApplicationProject.db;
-
-import com.WebApplicationProject.db.AbstractFacade;
-import com.WebApplicationProject.model.Event;
-import com.WebApplicationProject.model.EventOccurance;
-import com.WebApplicationProject.model.Users;
-import java.util.List;
+import com.WebApplicationProject.control.Reminder;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +14,7 @@ import javax.persistence.PersistenceContext;
  * @author gabri
  */
 @Stateless
-public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
+public class ReminderFacade extends AbstractFacade<Reminder> {
 
     @PersistenceContext(unitName = "com_WebApplicationProject_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -29,8 +24,9 @@ public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
         return em;
     }
 
-    public EventOccuranceFacade() {
-        super(EventOccurance.class);
+    public ReminderFacade() {
+        super(Reminder.class);
     }
-           
+
+    
 }

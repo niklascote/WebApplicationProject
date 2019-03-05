@@ -14,34 +14,42 @@
     </h:head>
     <h:body>
 
-        <c:set var="root" value="#{request.contextPath}" /> 
-        <f:metadata>
-            <f:viewParam name="event" value="#{scheduleController.event}"/>
-        </f:metadata>
+        <c:set var="root" value="#{request.contextPath}" />         
 
         <h:form>
             <p:growl id="messages" showDetail="true" />
 
             <p:megaMenu orientation="horizontal" style="margin-top:20px;">
-                <p:menuitem value="Add event" disabled="true" style="background: white;"/> 
+                <p:menuitem value="Update event" disabled="true" style="background: white;" rendered="#{param.update == true}" /> 
+                <p:menuitem value="Add event" disabled="true" style="background: white;" rendered="#{param.update == false}" /> 
+
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                <p:menuitem value="Save" update="messages" icon="fa fa-fw fa-save"/> <!-- action-->
-                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="#{scheduleController.deleteEvent()}"/><!-- action-->
+                
+                <p:menuitem value="Save" update="inputForm" icon="fa fa-fw fa-save" actionListener="#{scheduleController.updateEvent()}" action="pretty:calendar" rendered="#{param.update == true}"/> 
+                <p:menuitem value="Save" update="inputForm" icon="fa fa-fw fa-save" actionListener="#{scheduleController.addEvent()}" action="pretty:calendar" rendered="#{param.update == false}"/> 
+                
+                <p:menuitem value="Delete this occurance" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.deleteThisEvent()}" action="pretty:calendar" rendered="#{param.update == true}"/>
+                <p:menuitem value="Delete all occurances" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.deleteAllEvents()}" action="pretty:calendar" rendered="#{param.update == true}"/>
+                <p:menuitem value="Delete" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.clearEvent()}" action="pretty:calendar" rendered="#{param.update == false}"/>
+                
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> <!-- action-->
+                
+                <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> 
+                
                 <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" url="/calendar" />
             </p:megaMenu>
 
         </h:form>
 
-        <h:form>
+        <h:form id="inputForm">
             <div class="ui-g">
 
                 <div class="ui-g-7">
 
                     <p:inputText id="title" placeholder="Event name" class="global-margin-event-components" 
                                  value="#{scheduleController.event.title}"
-                                 style="height: 50px; font-size: 24px; width:100%;"/>
+                                 style="height: 50px; font-size: 24px; width:100%;">
+                    </p:inputText>
 
                     <p:inputText id="location" class="global-margin-event-components" placeholder="Location" 
                                  value="#{scheduleController.event.location}"
@@ -59,21 +67,15 @@
                         <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
                                     value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
-                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;"/> 
+                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;">
+                            <p:ajax update="to, from" listener="#{scheduleController.event.changeAllDay()}" /> 
+                        </p:selectBooleanCheckbox>
                     </div>
 
                     <div class="global-margin-event-components" style="display:inline-block;">
                         <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
                         <p:selectOneMenu class="global-margin-event-components-row" value="#{scheduleController.event.reminder}" id="reminder" style="vertical-align: middle;" >
-                            <f:selectItem itemLabel="None" itemValue="none" />
-                            <f:selectItem itemLabel="0 minutes" itemValue="0" />
-                            <f:selectItem itemLabel="5 minutes" itemValue="5" />
-                            <f:selectItem itemLabel="15 minutes" itemValue="15" />
-                            <f:selectItem itemLabel="30 minutes" itemValue="30"/>
-                            <f:selectItem itemLabel="1 hour" itemValue="1" />
-                            <f:selectItem itemLabel="12 hours" itemValue="12" />
-                            <f:selectItem itemLabel="1 day" itemValue="day"/>
-                            <f:selectItem itemLabel="1 week" itemValue="week"/>
+                            <f:selectItems value="#{scheduleController.getReminders()}" var="rem" itemLabel="#{rem.type}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>
