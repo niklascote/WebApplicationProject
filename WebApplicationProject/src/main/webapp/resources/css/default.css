@@ -6,6 +6,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: white;
+    font-family: Arial;
+
 }
 
 body {
@@ -23,11 +25,28 @@ body {
         inset -160px 0 150px #666666;
 }
 
-h1, h2, h5, label, p, a {
+h1, h2, h5, label, p, a{
     text-align:center;
     display: block;
 }
 
+label, p, a {
+    font-size: 12pt;
+}
+
+.footer_container, .header_container {
+    margin:auto;
+    text-align:center;
+    padding: 10px;
+}
+
+.footer_container > p, .header_container > a {
+    margin: 10px;
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    display: inline;
+}
 
 .value {
     width: 1000px;
