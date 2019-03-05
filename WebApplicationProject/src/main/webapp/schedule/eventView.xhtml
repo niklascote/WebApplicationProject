@@ -14,99 +14,84 @@
     </h:head>
     <h:body>
 
-<c:set var="root" value="#{request.contextPath}" /> 
-            <f:metadata>
-                <f:viewParam name="event" value="#{scheduleController.event}"/>
-            </f:metadata>
-        <h:panelGroup layout="block" class="header">
-            <ui:include src="/partials/header.xhtml"/>
-        </h:panelGroup>
-        <h:panelGroup layout="block" class="container">
-            
+        <c:set var="root" value="#{request.contextPath}" /> 
+        <f:metadata>
+            <f:viewParam name="event" value="#{scheduleController.event}"/>
+        </f:metadata>
 
-            <h:form>
-                <p:growl id="messages" showDetail="true" />
+        <h:form>
+            <p:growl id="messages" showDetail="true" />
 
-                <p:megaMenu orientation="horizontal" style="margin-top:20px;">
-                    <p:menuitem value="Add event" disabled="true" style="background: white;"/> 
-                    <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                    <p:menuitem value="Save" update="messages" icon="fa fa-fw fa-save"/> <!-- action-->
-                    <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="#{scheduleController.deleteEvent()}"/><!-- action-->
-                    <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                    <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> <!-- action-->
-                    <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" url="/calendar" />
-                </p:megaMenu>
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;">
+                <p:menuitem value="Add event" disabled="true" style="background: white;"/> 
+                <p:menuitem value="|" disabled="true" style="background: white;"/> 
+                <p:menuitem value="Save" update="messages" icon="fa fa-fw fa-save"/> <!-- action-->
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="#{scheduleController.deleteEvent()}"/><!-- action-->
+                <p:menuitem value="|" disabled="true" style="background: white;"/> 
+                <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> <!-- action-->
+                <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" url="/calendar" />
+            </p:megaMenu>
 
-            </h:form>
+        </h:form>
 
-            <h:form>
-                <div class="ui-g">
+        <h:form>
+            <div class="ui-g">
 
-                    <div class="ui-g-7">
+                <div class="ui-g-7">
 
-                        <p:inputText id="title" placeholder="Event name" class="global-margin-event-components" 
-                                     value="#{scheduleController.event.title}"
-                                     style="height: 50px; font-size: 24px; width:100%;"/>
+                    <p:inputText id="title" placeholder="Event name" class="global-margin-event-components" 
+                                 value="#{scheduleController.event.title}"
+                                 style="height: 50px; font-size: 24px; width:100%;"/>
 
-                        <p:inputText id="location" class="global-margin-event-components" placeholder="Location" 
-                                     value="#{scheduleController.event.location}"
-                                     style="width:100%"/>
+                    <p:inputText id="location" class="global-margin-event-components" placeholder="Location" 
+                                 value="#{scheduleController.event.location}"
+                                 style="width:100%"/>
 
-                        <p:inputTextarea id="description" class="global-margin-event-components" 
-                                         rows="10" style="width:100%" placeholder="Description"
-                                         value="#{scheduleController.event.description}"/>
+                    <p:inputTextarea id="description" class="global-margin-event-components" 
+                                     rows="10" style="width:100%" placeholder="Description"
+                                     value="#{scheduleController.event.description}"/>
 
-                        <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
-                            <p:calendar id="from" class="global-margin-event-components-row" placeholder="Start date"  
-                                        value="#{scheduleController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
-                                        timeZone="#{scheduleController.user.timezone}"/>
+                    <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
+                        <p:calendar id="from" class="global-margin-event-components-row" placeholder="Start date"  
+                                    value="#{scheduleController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
+                                    timeZone="#{scheduleController.user.timezone}"/>
 
-                            <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
-                                        value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                        <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
+                                    value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
-                            <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;"/> 
-                        </div>
-
-                        <div class="global-margin-event-components" style="display:inline-block;">
-                            <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
-                            <p:selectOneMenu class="global-margin-event-components-row" value="#{scheduleController.event.reminder}" id="reminder" style="vertical-align: middle;" >
-                                <f:selectItem itemLabel="None" itemValue="none" />
-                                <f:selectItem itemLabel="0 minutes" itemValue="0" />
-                                <f:selectItem itemLabel="5 minutes" itemValue="5" />
-                                <f:selectItem itemLabel="15 minutes" itemValue="15" />
-                                <f:selectItem itemLabel="30 minutes" itemValue="30"/>
-                                <f:selectItem itemLabel="1 hour" itemValue="1" />
-                                <f:selectItem itemLabel="12 hours" itemValue="12" />
-                                <f:selectItem itemLabel="1 day" itemValue="day"/>
-                                <f:selectItem itemLabel="1 week" itemValue="week"/>
-                            </p:selectOneMenu>
-
-                            <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>
-                            <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{scheduleController.event.calendar}">
-                                <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
-                            </p:selectOneMenu>
-                        </div>
+                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;"/> 
                     </div>
 
-                    <div class="ui-g-5" style="padding-left: 60px;">
-                        <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
-                        <p:separator class="global-margin-event-components"/>
-                        <p:autoComplete class="global-margin-event-components" inputStyle="height: 40px; width: 300px;" id="userList" dropdown="true" value="" placeholder="Invite people to event" 
-                                         /> <!-- completeMethod="#{autoCompleteView.completeText}"-->
+                    <div class="global-margin-event-components" style="display:inline-block;">
+                        <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
+                        <p:selectOneMenu class="global-margin-event-components-row" value="#{scheduleController.event.reminder}" id="reminder" style="vertical-align: middle;" >
+                            <f:selectItem itemLabel="None" itemValue="none" />
+                            <f:selectItem itemLabel="0 minutes" itemValue="0" />
+                            <f:selectItem itemLabel="5 minutes" itemValue="5" />
+                            <f:selectItem itemLabel="15 minutes" itemValue="15" />
+                            <f:selectItem itemLabel="30 minutes" itemValue="30"/>
+                            <f:selectItem itemLabel="1 hour" itemValue="1" />
+                            <f:selectItem itemLabel="12 hours" itemValue="12" />
+                            <f:selectItem itemLabel="1 day" itemValue="day"/>
+                            <f:selectItem itemLabel="1 week" itemValue="week"/>
+                        </p:selectOneMenu>
 
+                        <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>
+                        <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{scheduleController.event.calendar}">
+                            <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                        </p:selectOneMenu>
                     </div>
                 </div>
-            </h:form>
-        </h:panelGroup>
-        <h:panelGroup layout="block" class="footer">
-            <ui:include src="/partials/footer.xhtml"/>
-        </h:panelGroup>
 
+                <div class="ui-g-5" style="padding-left: 60px;">
+                    <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
+                    <p:separator class="global-margin-event-components"/>
+                    <p:autoComplete class="global-margin-event-components" inputStyle="height: 40px; width: 300px;" id="userList" dropdown="true" value="" placeholder="Invite people to event" 
+                                     /> <!-- completeMethod="#{autoCompleteView.completeText}"-->
 
-
-
-
-
+                </div>
+            </div>
+        </h:form>
     </h:body>
 
 </html>

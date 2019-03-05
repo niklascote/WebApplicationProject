@@ -5,8 +5,6 @@ body {
     padding: 0;
     background-color: white;
     font-family: Arial;
-    box-shadow: inset 160px 0 130px #949494,
-        inset -160px 0 130px #949494;
 }
 
 .header , .footer{
@@ -17,7 +15,7 @@ body {
     box-shadow: inset 160px 0 80px #494949,
         inset -160px 0 80px #494949;
 }
-
+/*
 h1, h2, h5, label, p, a{
     text-align: center;
     display: block;
@@ -25,7 +23,7 @@ h1, h2, h5, label, p, a{
 
 label, p, a {
     font-size: 12pt;
-}
+}*/
 
 .footer_container, .header_container {
     margin:auto;
