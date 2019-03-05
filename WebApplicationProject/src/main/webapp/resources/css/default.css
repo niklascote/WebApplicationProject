@@ -1,10 +1,64 @@
-
-.index {
-    border: 1px solid black;
-    border-radius:3px;
-    box-shadow: inset 60px 0 120px #dbdbdb, inset -60px 0 120px #dbdbdb;
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: Arial;
+    box-shadow: inset 160px 0 130px #949494,
+        inset -160px 0 130px #949494;
 }
 
+.header , .footer{
+    overflow: hidden;
+    background-color: #000000;
+    position: relative;
+    top: 0;
+    box-shadow: inset 160px 0 80px #494949,
+        inset -160px 0 80px #494949;
+}
+
+h1, h2, h5, label, p, a{
+    text-align: center;
+    display: block;
+}
+
+label, p, a {
+    font-size: 12pt;
+}
+
+.footer_container, .header_container {
+    margin:auto;
+    text-align:center;
+    padding: 14px;
+}
+
+.footer_container > p, .header_container > a {
+    text-decoration: none;
+    margin: 10px;
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    display: inline;
+}
+
+.header_container  a {
+    border: 1px solid transparent;
+    border-radius: 0px;
+}
+
+.header_container > a {
+    transition: 0.2s;
+}
+
+.header_container > a:hover {
+    border: 1px solid white;
+    border-radius: 6px;
+}
+
+.footer_container > p {
+    font-size:10pt;
+}
 
 .value {
     width: 1000px;
@@ -23,7 +77,6 @@
 .ui-panelgrid tr {
     margin-bottom: 50px;
 }
-
 
 /*Submenu css*/
 .ui-menu.ui-widget .ui-menuitem-link .ui-menuitem-text {

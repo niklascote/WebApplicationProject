@@ -6,7 +6,10 @@ import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -36,9 +39,21 @@ public class UsersController implements Serializable {
     public Users getSelected() {
         if (current == null) {
             current = new Users();
+            current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
             selectedItemIndex = -1;
         }
         return current;
+    }
+    
+    public String shortenTimeZone(String name){
+        StringBuilder sB = new StringBuilder();
+        char[] arr = name.toCharArray();
+        for(char c : arr){
+            if(Character.isUpperCase(c)){
+                sB.append(c);
+            }
+        }
+        return sB.toString();
     }
 
     private UsersFacade getFacade() {
