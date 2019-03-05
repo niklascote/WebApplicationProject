@@ -7,15 +7,13 @@
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
-        <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+        <h:outputStylesheet library="css" name="default.css"  />
         <title>Login to Calendar</title>
     </h:head>
-    
     <form action="Login" method="post">
         <input type="text" name="user" placeholder="Username (email)"/>
         <input type="password" name="pass" placeholder="Password"/>
         <input type="submit" class="button" value="Login" ></input>
     </form>
-
 </html>
 
