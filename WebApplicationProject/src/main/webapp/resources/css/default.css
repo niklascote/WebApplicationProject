@@ -5,17 +5,17 @@ body {
     padding: 0;
     background-color: white;
     font-family: Arial;
-    box-shadow: inset 160px 0 150px #dbdbdb,
-        inset -160px 0 150px #dbdbdb;
+    box-shadow: inset 160px 0 130px #949494,
+        inset -160px 0 130px #949494;
 }
 
 .header , .footer{
     overflow: hidden;
-    background-color: #e0e0e0;
+    background-color: #000000;
     position: relative;
     top: 0;
-    box-shadow: inset 160px 0 150px #666666,
-        inset -160px 0 150px #666666;
+    box-shadow: inset 160px 0 80px #494949,
+        inset -160px 0 80px #494949;
 }
 
 h1, h2, h5, label, p, a{
@@ -30,7 +30,7 @@ label, p, a {
 .footer_container, .header_container {
     margin:auto;
     text-align:center;
-    padding: 10px;
+    padding: 14px;
 }
 
 .footer_container > p, .header_container > a {
@@ -53,7 +53,7 @@ label, p, a {
 
 .header_container > a:hover {
     border: 1px solid white;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .value {
