@@ -15,15 +15,8 @@
     <h:body>
         <c:set var="root" value="#{request.contextPath}" /> 
 
-
-
-        <h:panelGroup layout="block" class="header">
-            <ui:include src="/partials/header.xhtml"/>
-        </h:panelGroup>
         <h:panelGroup layout="block" class="container">
-
-
-
+            
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
                     <p:menuitem value="#{scheduleController.user.firstname} #{scheduleController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
@@ -100,19 +93,8 @@
                     </h:form>
                 </div>
             </div>
-
-
-
-
         </h:panelGroup>
-        <h:panelGroup layout="block" class="footer">
-            <ui:include src="/partials/footer.xhtml"/>
-        </h:panelGroup>
-
-
-
-
-
+        
         <script type="text/javascript">
             editEvent = function () {
                 window.location.href = "#{root}/calendar/event";

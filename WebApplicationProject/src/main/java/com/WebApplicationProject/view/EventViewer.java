@@ -69,7 +69,7 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
         super.setEndDate(end);
         this.location = location; 
         this.calendar = calendar; 
-        
+        this.reminder = reminder;
     }
     
     @Override
