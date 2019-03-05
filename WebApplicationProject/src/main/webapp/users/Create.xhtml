@@ -37,7 +37,7 @@
                         <h:outputLabel value="Email:" for="email" />
                         <h:inputText id="email" value="#{usersController.selected.email}" title="Email" required="true" requiredMessage="The Email field is required."/>
                         <h:outputLabel value="Password:" for="password" />
-                        <h:inputText id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
+                        <h:inputSecret id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
                         <h:outputLabel value="Timezone:" for="timezone" />
                         <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="true"/>
                         <h:outputLabel value="Notifications:" for="notifications" />
