@@ -64,7 +64,7 @@
                     <p:dialog widgetVar="eventDialog" 
                               header="Event Details" 
                               showEffect="clip" 
-                              hideEffect="clip">
+                              hideEffect="clip" >
                         <p:panelGrid id="eventDetails" columns="2" styleClass="ui-panelgrid-blank">
                             <p:outputLabel for="title" value="Event name:" />
                             <p:inputText id="title" value="#{scheduleController.event.title}" required="true" />
@@ -76,7 +76,7 @@
                             <p:calendar id="to" value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                             <p:outputLabel for="allDay" value="All Day:" />
-                            <h:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" />
+                            <h:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}"/>
 
                             <p:outputLabel for="console" value="Calendar:" />
                             <p:selectOneMenu id="console" value="#{scheduleController.event.calendar}" style="width:125px">
@@ -86,7 +86,7 @@
                             <p:outputLabel for="location" value="Location:" />
                             <p:inputText id="location" value="#{scheduleController.event.location}"/>                    
 
-                            <h:outputLink id="moreButton" value="#{root}/calendar/event" >More information</h:outputLink>                    
+                            <h:outputLink id="moreButton" value="#{root}/calendar/event" >More information</h:outputLink>    
                             <p:commandButton ajax="false" id="addButton" value="Save"  actionListener="#{scheduleController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
 
                         </p:panelGrid>

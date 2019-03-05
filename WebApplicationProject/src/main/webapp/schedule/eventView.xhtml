@@ -58,21 +58,21 @@
                         <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
                                     value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
                         
-                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;"/> 
+                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" immediate="true" itemLabel="All day" style="vertical-align: middle;">
                     </div>
 
                     <div class="global-margin-event-components" style="display:inline-block;">
                         <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
                         <p:selectOneMenu class="global-margin-event-components-row" value="#{scheduleController.event.reminder}" id="reminder" style="vertical-align: middle;" >
-                            <f:selectItem itemLabel="None" itemValue="none" />
+                            <f:selectItem itemLabel="None" itemValue="" />
                             <f:selectItem itemLabel="0 minutes" itemValue="0" />
-                            <f:selectItem itemLabel="5 minutes" itemValue="5" />
-                            <f:selectItem itemLabel="15 minutes" itemValue="15" />
-                            <f:selectItem itemLabel="30 minutes" itemValue="30"/>
-                            <f:selectItem itemLabel="1 hour" itemValue="1" />
-                            <f:selectItem itemLabel="12 hours" itemValue="12" />
-                            <f:selectItem itemLabel="1 day" itemValue="day"/>
-                            <f:selectItem itemLabel="1 week" itemValue="week"/>
+                            <f:selectItem itemLabel="5 minutes" itemValue="300000" />
+                            <f:selectItem itemLabel="15 minutes" itemValue="900000" />
+                            <f:selectItem itemLabel="30 minutes" itemValue="1800000"/>
+                            <f:selectItem itemLabel="1 hour" itemValue="3600000" />
+                            <f:selectItem itemLabel="12 hours" itemValue="43200000" />
+                            <f:selectItem itemLabel="1 day" itemValue="86400000"/>
+                            <f:selectItem itemLabel="1 week" itemValue="604800000"/>
                         </p:selectOneMenu>
                         
                         <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>

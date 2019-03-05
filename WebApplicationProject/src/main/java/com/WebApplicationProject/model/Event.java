@@ -7,6 +7,7 @@ package com.WebApplicationProject.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")
     , @NamedQuery(name = "Event.findByNotification", query = "SELECT e FROM Event e WHERE e.notification = :notification")
     , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")
-    , @NamedQuery(name = "Event.findByPublicAccess", query = "SELECT e FROM Event e WHERE e.publicAccess = :publicAccess")
     , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
 public class Event implements Serializable {
 
@@ -50,20 +52,17 @@ public class Event implements Serializable {
     @Column(name = "ID")
     private Long id;
     
-    //@Size(max = 250)
     @Column(name = "LOCATION", length = 250)
     private String location;
     
+    @Basic(optional = false)
     @Column(name = "NOTIFICATION")
-    private Integer notification;
+    @Temporal(TemporalType.DATE)
+    private Date notification;
     
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
-    
-    @Basic(optional = false)
-    @Column(name = "PUBLIC_ACCESS", nullable = false)
-    private Boolean publicAccess = false;
-    
+        
     @Column(name = "TITLE", length = 250, nullable = false)
     private String title;
     
@@ -87,19 +86,16 @@ public class Event implements Serializable {
     public Event(Long id) {
         this.id = id;
     }
-
-    public Event(Long id, Boolean publicAccess) {
-        this.id = id;
-        this.publicAccess = publicAccess;
-    }
     
-    public Event(String title, Calendar cal, String location, Users owner) {
+    public Event(String title, Calendar cal, String location, Users owner, Date notification, String description) {
         this.title = title;
         this.calendar = cal; 
         this.location = location; 
         this.owner = owner;
+        this.notification = notification; 
+        this.description = description; 
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -116,11 +112,11 @@ public class Event implements Serializable {
         this.location = location;
     }
 
-    public Integer getNotification() {
+    public Date getNotification() {
         return notification;
     }
 
-    public void setNotification(Integer notification) {
+    public void setNotification(Date notification) {
         this.notification = notification;
     }
 
@@ -130,14 +126,6 @@ public class Event implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Boolean getPublicAccess() {
-        return publicAccess;
-    }
-
-    public void setPublicAccess(Boolean publicAccess) {
-        this.publicAccess = publicAccess;
     }
 
     public String getTitle() {

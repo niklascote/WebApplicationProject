@@ -31,9 +31,11 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
     private Calendar calendar; 
     
     @Getter
-    @Setter
-    private String reminder; 
-       
+    private Integer reminder; 
+        
+    public void setReminder(Integer reminder) {
+        this.reminder = reminder;      
+    }
         
     public EventViewer() {
         super();
@@ -91,12 +93,15 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             java.util.Calendar cal = java.util.Calendar.getInstance();  
             cal.setTime(super.getStartDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 0);  
-            cal.set(java.util.Calendar.MINUTE, 0);              
+            cal.set(java.util.Calendar.MINUTE, 0);
+            super.setStartDate(cal.getTime());
+            
             
             //Set end date to 23:59
-            cal.setTime(super.getStartDate());  
+            cal.setTime(super.getEndDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 23);  
             cal.set(java.util.Calendar.MINUTE, 59);  
+            super.setEndDate(cal.getTime());
         }  
         
         else {
@@ -104,12 +109,14 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             java.util.Calendar cal = java.util.Calendar.getInstance();  
             cal.setTime(super.getStartDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 8);  
-            cal.set(java.util.Calendar.MINUTE, 0);              
+            cal.set(java.util.Calendar.MINUTE, 0);     
+            super.setStartDate(cal.getTime());
             
             //Set end date to 23:59
-            cal.setTime(super.getStartDate());  
+            cal.setTime(super.getEndDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 8);  
             cal.set(java.util.Calendar.MINUTE, 30);  
+            super.setEndDate(cal.getTime());
         }
     }
     

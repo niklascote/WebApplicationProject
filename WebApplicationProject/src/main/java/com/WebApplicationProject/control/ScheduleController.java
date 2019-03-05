@@ -8,10 +8,8 @@ package com.WebApplicationProject.control;
 import com.WebApplicationProject.db.EventOccuranceFacade;
 import com.WebApplicationProject.db.EventFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.CalendarParticipant;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
-import com.WebApplicationProject.model.EventOccuranceParticipant;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.EventViewer;
 import java.io.Serializable;
@@ -21,12 +19,9 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -96,53 +91,51 @@ public class ScheduleController implements Serializable {
     public void getCalendars() {
         
         //All the user's created calendards
-        for (com.WebApplicationProject.model.Calendar c : user.getCalendarCollection()) {
+        user.getCalendarCollection().forEach((c) -> {
             editableCalendars.add(c);
-        }
+        });
         
         //All the user's shared calendars
-        for (CalendarParticipant c : user.getCalendarParticipantCollection()) {
-            
+        user.getCalendarParticipantCollection().forEach((c) -> {
             if(c.getWritePermission()) {
                 editableCalendars.add(c.getCalendar());
             }
             else {
                 nonEditableCalendars.add(c.getCalendar());
             }
-        }
+        });
     }
     
     
     public void getEvents() {
                 
-        //Find all events created by the user       
-        for(Event e : user.getEventCollection()) {            
-            for(EventOccurance eo : e.getEventOccuranceCollection()) {
+        //Find all events created by the user
+        user.getEventCollection().forEach((e) -> {            
+            e.getEventOccuranceCollection().forEach((eo) -> {
                 eventModel.addEvent(new EventViewer(
-                        e.getTitle(), 
-                        eo.getStartDate(), 
-                        eo.getEndDate(), 
+                        e.getTitle(),
+                        eo.getStartDate(),
+                        eo.getEndDate(),
                         e.getLocation(), 
                         e.getCalendar()
                 ));
-            }              
-        }
-
+            });
+        });
         
         //Find all events where the user is included
-        for(EventOccuranceParticipant e : user.getEventOccuranceParticipantCollection()) {
-            
+        user.getEventOccuranceParticipantCollection().forEach((e) -> {
             eventModel.addEvent(new EventViewer(
                     e.getEventOccurance().getEvent().getTitle(),
                     e.getEventOccurance().getStartDate(), 
                     e.getEventOccurance().getEndDate(),
                     e.getEventOccurance().getEvent().getLocation(),
                     e.getEventOccurance().getEvent().getCalendar()
-            ));  
-        }
+            ));
+        });
     }
     
     public Date getInitialDate() {
+        //Todo: must be based on user, not server
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), Calendar.FEBRUARY, calendar.get(Calendar.DATE), 0, 0, 0);
          
@@ -150,6 +143,7 @@ public class ScheduleController implements Serializable {
     }
     
     private Calendar today() {
+        //Todo: must be based on user, not server
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
  
@@ -200,7 +194,14 @@ public class ScheduleController implements Serializable {
         eventModel.addEvent(event);
         
         //Add event to Event-table in DB        
-        Event e = new Event(event.getTitle(), event.getCalendar(), event.getLocation(), user);        
+        Event e = new Event(
+                event.getTitle(), 
+                event.getCalendar(), 
+                event.getLocation(), 
+                user, 
+                new Date(event.getStartDate().getTime() - event.getReminder()),
+                event.getDescription());        
+    
         eventFacade.create(e);
         
         //Add event occurance to EventOccurance-table in DB        
