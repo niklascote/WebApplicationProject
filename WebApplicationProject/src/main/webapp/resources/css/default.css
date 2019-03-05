@@ -1,5 +1,3 @@
-
-
 body {
     height: 100%;
     width: 100%;
@@ -7,10 +5,6 @@ body {
     padding: 0;
     background-color: white;
     font-family: Arial;
-
-}
-
-body {
     box-shadow: inset 160px 0 150px #dbdbdb,
         inset -160px 0 150px #dbdbdb;
 }
@@ -20,13 +14,12 @@ body {
     background-color: #e0e0e0;
     position: relative;
     top: 0;
-    width: 100%;
     box-shadow: inset 160px 0 150px #666666,
         inset -160px 0 150px #666666;
 }
 
 h1, h2, h5, label, p, a{
-    text-align:center;
+    text-align: center;
     display: block;
 }
 
@@ -41,11 +34,26 @@ label, p, a {
 }
 
 .footer_container > p, .header_container > a {
+    text-decoration: none;
     margin: 10px;
     padding: 10px;
     font-weight: bold;
     color: white;
     display: inline;
+}
+
+.header_container  a {
+    border: 1px solid transparent;
+    border-radius: 0px;
+}
+
+.header_container > a {
+    transition: 0.2s;
+}
+
+.header_container > a:hover {
+    border: 1px solid white;
+    border-radius: 10px;
 }
 
 .value {
@@ -65,7 +73,6 @@ label, p, a {
 .ui-panelgrid tr {
     margin-bottom: 50px;
 }
-
 
 /*Submenu css*/
 .ui-menu.ui-widget .ui-menuitem-link .ui-menuitem-text {
