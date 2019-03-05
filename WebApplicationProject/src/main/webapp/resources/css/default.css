@@ -1,8 +1,31 @@
 
-.index {
-    border: 1px solid black;
-    border-radius:3px;
-    box-shadow: inset 60px 0 120px #dbdbdb, inset -60px 0 120px #dbdbdb;
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+body {
+    box-shadow: inset 160px 0 150px #dbdbdb,
+        inset -160px 0 150px #dbdbdb;
+}
+
+.header , .footer{
+    overflow: hidden;
+    background-color: #e0e0e0;
+    position: relative;
+    top: 0;
+    width: 100%;
+    box-shadow: inset 160px 0 150px #666666,
+        inset -160px 0 150px #666666;
+}
+
+h1, h2, h5, label, p, a {
+    text-align:center;
+    display: block;
 }
 
 

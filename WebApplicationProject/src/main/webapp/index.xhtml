@@ -12,32 +12,17 @@
         <h:outputStylesheet library="css" name="default.css"  />
         <title>Calendar</title>
     </h:head>
-    <h:body class="index">
-        <h:panelGroup layout="block" class="container">
-            <ui:include src="/partials/header.xhtml" class="header"/>
+    <h:body>
+        <h:panelGroup layout="block" class="header">
+            <ui:include src="/partials/header.xhtml"/>
         </h:panelGroup>
         <h:panelGroup layout="block" class="container">
             <h1>Calendar application</h1>
             <h5>(Under construction)</h5>
-
-            <h:outputLabel value="First time user?"/>
-            <br></br>
-            <h:link value="Sign up" outcome="/users/Create.xhtml"/>
-
-            <br></br>
-            <br></br>
-
-            <h:outputLabel value="Already signed up?"/>
-            <br></br>
-            <h:link value="Log in" outcome="/users/loginView.xhtml"/>
-
-            <br></br>
-            <br></br>
-            <br></br>
             <h:link value="Calendar" outcome="/schedule/scheduleView.xhtml"/>
         </h:panelGroup>
-        <h:panelGroup layout="block" class="container">
-            <ui:include src="/partials/footer.xhtml" class="footer"/>
+        <h:panelGroup layout="block" class="footer">
+            <ui:include src="/partials/footer.xhtml"/>
         </h:panelGroup>
 
     </h:body>
