@@ -44,7 +44,7 @@
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
-                    <p:remoteCommand  update="@form" name="test" autoRun="true" action="#{usersController.onSetTimezone}">
+                    <p:remoteCommand update="@form" name="test" autoRun="true" action="#{usersController.onSetTimezone}">
                             
                     </p:remoteCommand>>
                     <script>test();</script>
