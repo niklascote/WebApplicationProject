@@ -1,15 +1,26 @@
 package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventFacade;
+import com.WebApplicationProject.db.EventOccuranceFacade;
+import com.WebApplicationProject.db.ReminderFacade;
+import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Event;
+import com.WebApplicationProject.model.EventOccurance;
+import com.WebApplicationProject.model.Users;
+import com.WebApplicationProject.view.EventViewer;
 import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -17,219 +28,182 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import lombok.Getter;
+import lombok.Setter;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.ScheduleEntryMoveEvent;
+import org.primefaces.event.ScheduleEntryResizeEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleModel;
 
 @Named("eventController")
 @SessionScoped
 public class EventController implements Serializable {
 
-    private Event current;
-    private DataModel items = null;
     @EJB
-    private com.WebApplicationProject.db.EventFacade ejbFacade;
-    private PaginationHelper pagination;
-    private int selectedItemIndex;
+    private UsersFacade usersFacade;
 
-    public EventController() {
+    @EJB
+    private EventFacade eventFacade;
+
+    @EJB
+    private EventOccuranceFacade eventOccuranceFacade;
+
+    @Getter
+    @Setter
+    private ScheduleModel eventModel = new DefaultScheduleModel();
+    ;
+        
+    @Getter
+    @Setter
+    private EventViewer event = new EventViewer();
+
+    @Getter
+    @Setter
+    private Users user = new Users();
+
+    @PostConstruct
+    public void init() {
+        //TODO: Only for testing. Must be changed to a real user search. 
+        user = usersFacade.find(1L);
+
+        //Get all events for the user
+        getEvents();
     }
 
-    public Event getSelected() {
-        if (current == null) {
-            current = new Event();
-            selectedItemIndex = -1;
-        }
-        return current;
+    public void addEvent() {
+
+        //Add event to Event-table in DB        
+        Event e = new Event(event.getEvent().getTitle(),
+                event.getEvent().getCalendar(),
+                event.getEvent().getLocation(),
+                user,
+                event.getEvent().getReminder(),
+                event.getEvent().getDescription()
+        );
+
+        eventFacade.create(e);
+
+        //Todo: When repeating this must be change to multiple occurances
+        //Add event occurance to EventOccurance-table in DB    
+        EventOccurance eo = new EventOccurance(
+                eventFacade.find(e.getId()),
+                event.getEventOccurance().getStartDate(),
+                event.getEventOccurance().getEndDate());
+                
+        eventOccuranceFacade.create(eo);
+        
+        eventModel.addEvent(new EventViewer(e, eo));
     }
 
-    private EventFacade getFacade() {
-        return ejbFacade;
+    public String deleteAllEvents() {
+        //Find choosen event in database
+        Event e = eventFacade.find(event.getEvent().getId());
+
+        //Remove event and occurances from database 
+        e.getEventOccuranceCollection().forEach((eo) -> {
+            eventOccuranceFacade.remove(eo);
+        });
+        eventFacade.remove(e);
+
+        updateEventModel();
+
+        return "pretty:calendar";
     }
 
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
-        }
-        return pagination;
+    public void updateEventModel() {
+        eventModel = new DefaultScheduleModel();
+        getEvents();
     }
 
-    public String prepareList() {
-        recreateModel();
-        return "List";
-    }
+    public String deleteThisEvent() {
+        //Find choosen event in database
+        Event e = eventFacade.find(event.getEvent().getId());
+        EventOccurance eo = eventOccuranceFacade.find(event.getEventOccurance().getId());
 
-    public String prepareView() {
-        current = (Event) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "View";
-    }
+        //Delete event and occurances from database
+        eventOccuranceFacade.remove(eo);
 
-    public String prepareCreate() {
-        current = new Event();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EventCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String prepareEdit() {
-        current = (Event) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "Edit";
-    }
-
-    public String update() {
-        try {
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EventUpdated"));
-            return "View";
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String destroy() {
-        current = (Event) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        performDestroy();
-        recreatePagination();
-        recreateModel();
-        return "List";
-    }
-
-    public String destroyAndView() {
-        performDestroy();
-        recreateModel();
-        updateCurrentItem();
-        if (selectedItemIndex >= 0) {
-            return "View";
-        } else {
-            // all items were removed - go back to list
-            recreateModel();
-            return "List";
-        }
-    }
-
-    private void performDestroy() {
-        try {
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("EventDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
-
-    private void updateCurrentItem() {
-        int count = getFacade().count();
-        if (selectedItemIndex >= count) {
-            // selected index cannot be bigger than number of items:
-            selectedItemIndex = count - 1;
-            // go to previous page if last page disappeared:
-            if (pagination.getPageFirstItem() >= count) {
-                pagination.previousPage();
-            }
-        }
-        if (selectedItemIndex >= 0) {
-            current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
-        }
-    }
-
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
-    }
-
-    private void recreateModel() {
-        items = null;
-    }
-
-    private void recreatePagination() {
-        pagination = null;
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
-
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
-    }
-
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
-    }
-
-    public Event getEvent(java.lang.Long id) {
-        return ejbFacade.find(id);
-    }
-
-    @FacesConverter(forClass = Event.class)
-    public static class EventControllerConverter implements Converter {
-
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-            EventController controller = (EventController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "eventController");
-            return controller.getEvent(getKey(value));
+        //Only remove event if it is there is only one occurance
+        if (e.getEventOccuranceCollection().size() > 1) {
+            eventFacade.remove(e);
+            eventModel.deleteEvent(event);
         }
 
-        java.lang.Long getKey(String value) {
-            java.lang.Long key;
-            key = Long.valueOf(value);
-            return key;
-        }
-
-        String getStringKey(java.lang.Long value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
-
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Event) {
-                Event o = (Event) object;
-                return getStringKey(o.getId());
-            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Event.class.getName());
-            }
-        }
+        return "pretty:calendar";
 
     }
 
+    public String updateEvent() {
+
+        //Get event entity
+        Event e = eventFacade.find(event.getEvent().getId());
+
+        //Update entity
+        e.setCalendar(event.getEvent().getCalendar());
+        e.setDescription(event.getEvent().getDescription());
+        e.setLocation(event.getEvent().getLocation());
+        e.setReminder(event.getEvent().getReminder());
+        e.setTitle(event.getEvent().getTitle());
+        eventFacade.edit(e);
+
+        eventModel.updateEvent(event);
+
+        //TODO: Update event occurances
+        return "pretty:calendar";
+    }
+
+    public String deleteTempEvent() {
+        clearEvent();
+        return "pretty:calendar";
+    }
+
+    public void getEvents() {
+
+        //Find all events created by the user
+        user.getEventCollection().forEach((e) -> {
+            e.getEventOccuranceCollection().forEach((eo) -> {
+                eventModel.addEvent(new EventViewer(e, eo));
+            });
+        });
+
+        //Find all events where the user is included
+        user.getEventOccuranceParticipantCollection().forEach((eo) -> {
+            eventModel.addEvent(new EventViewer(eo.getEventOccurance().getEvent(), eo.getEventOccurance()));
+        });
+    }
+    
+    public void setSelectedEvent(EventViewer selected) {
+        
+        event = selected; 
+    }
+
+    public void onEventSelect(SelectEvent selectEvent) {
+        event = (EventViewer) selectEvent.getObject();
+    }
+
+    public void onDateSelect(SelectEvent selectEvent) {
+        event = new EventViewer("", (Date)selectEvent.getObject(), (Date)selectEvent.getObject());
+    }
+
+    public void onEventMove(ScheduleEntryMoveEvent event) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
+        addMessage(message);
+    }
+
+    public void onEventResize(ScheduleEntryResizeEvent event) {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event resized", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
+        addMessage(message);
+    }
+
+    private void addMessage(FacesMessage message) {
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+
+    public void clearEvent() {
+        //Clear temporary event
+        event = new EventViewer();
+    }
 }

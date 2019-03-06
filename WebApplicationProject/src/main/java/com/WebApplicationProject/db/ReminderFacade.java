@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.WebApplicationProject.db;
-import com.WebApplicationProject.control.Reminder;
+import com.WebApplicationProject.model.Reminder;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

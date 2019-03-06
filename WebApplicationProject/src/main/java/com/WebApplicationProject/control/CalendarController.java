@@ -1,235 +1,67 @@
 package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.db.CalendarFacade;
+import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.model.Calendar;
-import com.WebApplicationProject.view.util.JsfUtil;
-import com.WebApplicationProject.view.util.PaginationHelper;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import lombok.Getter;
+import lombok.Setter;
 
 @Named("calendarController")
-@SessionScoped
+@ViewScoped
 public class CalendarController implements Serializable {
-
-    private Calendar current;
-    private DataModel items = null;
+    
     @EJB
-    private com.WebApplicationProject.db.CalendarFacade ejbFacade;
-    private PaginationHelper pagination;
-    private int selectedItemIndex;
+    private UsersFacade usersFacade;
 
-    public CalendarController() {
+    @Getter
+    @Setter
+    private Users user = new Users(); 
+    
+    @Getter
+    @Setter
+    private List<Calendar> editableCalendars = new ArrayList<Calendar>();
+    
+    @Getter
+    @Setter
+    private List<Calendar> nonEditableCalendars = new ArrayList<Calendar>();
+    
+    @Getter
+    @Setter
+    private List<Calendar> selectedCalendars = new ArrayList<Calendar>();
+    
+    @PostConstruct
+    public void init() {
+        
+        //TODO: Only for testing. Must be changed to a real user search. 
+        user = usersFacade.find(1L);
+        setCalendars();
+        
     }
-
-    public Calendar getSelected() {
-        if (current == null) {
-            current = new Calendar();
-            selectedItemIndex = -1;
-        }
-        return current;
-    }
-
-    private CalendarFacade getFacade() {
-        return ejbFacade;
-    }
-
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
-        }
-        return pagination;
-    }
-
-    public String prepareList() {
-        recreateModel();
-        return "List";
-    }
-
-    public String prepareView() {
-        current = (Calendar) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "View";
-    }
-
-    public String prepareCreate() {
-        current = new Calendar();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("CalendarCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String prepareEdit() {
-        current = (Calendar) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "Edit";
-    }
-
-    public String update() {
-        try {
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("CalendarUpdated"));
-            return "View";
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String destroy() {
-        current = (Calendar) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        performDestroy();
-        recreatePagination();
-        recreateModel();
-        return "List";
-    }
-
-    public String destroyAndView() {
-        performDestroy();
-        recreateModel();
-        updateCurrentItem();
-        if (selectedItemIndex >= 0) {
-            return "View";
-        } else {
-            // all items were removed - go back to list
-            recreateModel();
-            return "List";
-        }
-    }
-
-    private void performDestroy() {
-        try {
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("CalendarDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-        }
-    }
-
-    private void updateCurrentItem() {
-        int count = getFacade().count();
-        if (selectedItemIndex >= count) {
-            // selected index cannot be bigger than number of items:
-            selectedItemIndex = count - 1;
-            // go to previous page if last page disappeared:
-            if (pagination.getPageFirstItem() >= count) {
-                pagination.previousPage();
+    
+    public void setCalendars() {
+        
+        //All the user's created calendards
+        user.getCalendarCollection().forEach((c) -> {
+            editableCalendars.add(c);
+        });
+        
+        //All the user's shared calendars
+        user.getCalendarParticipantCollection().forEach((c) -> {
+            if(c.getWritePermission()) {
+                editableCalendars.add(c.getCalendar());
             }
-        }
-        if (selectedItemIndex >= 0) {
-            current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
-        }
-    }
-
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
-    }
-
-    private void recreateModel() {
-        items = null;
-    }
-
-    private void recreatePagination() {
-        pagination = null;
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
-
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
-    }
-
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
-    }
-
-    public Calendar getCalendar(java.lang.Long id) {
-        return ejbFacade.find(id);
-    }
-
-    @FacesConverter(forClass = Calendar.class)
-    public static class CalendarControllerConverter implements Converter {
-
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
+            else {
+                nonEditableCalendars.add(c.getCalendar());
             }
-            CalendarController controller = (CalendarController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "calendarController");
-            return controller.getCalendar(getKey(value));
-        }
-
-        java.lang.Long getKey(String value) {
-            java.lang.Long key;
-            key = Long.valueOf(value);
-            return key;
-        }
-
-        String getStringKey(java.lang.Long value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
-
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Calendar) {
-                Calendar o = (Calendar) object;
-                return getStringKey(o.getId());
-            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Calendar.class.getName());
-            }
-        }
-
-    }
+        });
+    }   
 
 }

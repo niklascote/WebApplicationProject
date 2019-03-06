@@ -25,62 +25,61 @@
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 
-                <p:menuitem value="Save" update="inputForm" icon="fa fa-fw fa-save" actionListener="#{scheduleController.updateEvent()}" action="pretty:calendar" rendered="#{param.update == true}"/> 
-                <p:menuitem value="Save" update="inputForm" icon="fa fa-fw fa-save" actionListener="#{scheduleController.addEvent()}" action="pretty:calendar" rendered="#{param.update == false}"/> 
+                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.updateEvent()}" rendered="#{param.update == true}"/> 
+                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.addEvent()}" rendered="#{param.update == false}"/>
                 
-                <p:menuitem value="Delete this occurance" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.deleteThisEvent()}" action="pretty:calendar" rendered="#{param.update == true}"/>
-                <p:menuitem value="Delete all occurances" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.deleteAllEvents()}" action="pretty:calendar" rendered="#{param.update == true}"/>
-                <p:menuitem value="Delete" ajax="false" update="inputForm" icon="fa fa-fw fa-trash" actionListener="#{scheduleController.clearEvent()}" action="pretty:calendar" rendered="#{param.update == false}"/>
+                <p:menuitem value="Delete this occurance" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteThisEvent()}" rendered="#{param.update == true}"/>
+                <p:menuitem value="Delete all occurances" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteAllEvents()}" rendered="#{param.update == true}"/>
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="pretty:calendar" rendered="#{param.update == false}"/>
                 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 
                 <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> 
                 
-                <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" url="/calendar" />
+                <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" action="pretty:calendar" />
             </p:megaMenu>
 
-        </h:form>
-
-        <h:form id="inputForm">
             <div class="ui-g">
 
                 <div class="ui-g-7">
 
                     <p:inputText id="title" placeholder="Event name" class="global-margin-event-components" 
-                                 value="#{scheduleController.event.title}"
+                                 value="#{eventController.event.title}"
                                  style="height: 50px; font-size: 24px; width:100%;">
                     </p:inputText>
 
                     <p:inputText id="location" class="global-margin-event-components" placeholder="Location" 
-                                 value="#{scheduleController.event.location}"
+                                 value="#{eventController.event.event.location}"
                                  style="width:100%"/>
 
                     <p:inputTextarea id="description" class="global-margin-event-components" 
                                      rows="10" style="width:100%" placeholder="Description"
-                                     value="#{scheduleController.event.description}"/>
+                                     value="#{eventController.event.event.description}"/>
 
                     <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
                         <p:calendar id="from" class="global-margin-event-components-row" placeholder="Start date"  
-                                    value="#{scheduleController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
-                                    timeZone="#{scheduleController.user.timezone}"/>
+                                    value="#{eventController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
+                                    timeZone="#{eventController.user.timezone}"/>
 
                         <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
-                                    value="#{scheduleController.event.endDate}" timeZone="#{scheduleController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                    value="#{eventController.event.endDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
-                        <p:selectBooleanCheckbox id="allDay" value="#{scheduleController.event.allDay}" itemLabel="All day" style="vertical-align: middle;">
-                            <p:ajax update="to, from" listener="#{scheduleController.event.changeAllDay()}" /> 
+                        <p:selectBooleanCheckbox id="allDay" value="#{eventController.event.allDay}" itemLabel="All day" style="vertical-align: middle;">
+                            <p:ajax update="to, from" listener="#{eventController.event.changeAllDay()}" /> 
                         </p:selectBooleanCheckbox>
                     </div>
 
                     <div class="global-margin-event-components" style="display:inline-block;">
                         <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
-                        <p:selectOneMenu class="global-margin-event-components-row" value="#{scheduleController.event.reminder}" id="reminder" style="vertical-align: middle;" >
-                            <f:selectItems value="#{scheduleController.getReminders()}" var="rem" itemLabel="#{rem.type}"/>
+                        <p:selectOneMenu class="global-margin-event-components-row" value="#{eventController.event.event.reminder}" id="reminder" style="vertical-align: middle;" 
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItems value="#{reminderController.getReminders()}" var="rem" itemLabel="#{rem.type}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>
-                        <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{scheduleController.event.calendar}">
-                            <f:selectItems value="#{scheduleController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                        <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{eventController.event.event.calendar}"
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItems value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -88,7 +87,7 @@
                 <div class="ui-g-5" style="padding-left: 60px;">
                     <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
                     <p:separator class="global-margin-event-components"/>
-                    <p:autoComplete class="global-margin-event-components" inputStyle="height: 40px; width: 300px;" id="userList" dropdown="true" value="" placeholder="Invite people to event" 
+                    <p:autoComplete class="global-margin-event-components" inputStyle="height: 40px; width: 300px;" id="userList" dropdown="true" placeholder="Invite people to event" 
                                      /> <!-- completeMethod="#{autoCompleteView.completeText}"-->
 
                 </div>

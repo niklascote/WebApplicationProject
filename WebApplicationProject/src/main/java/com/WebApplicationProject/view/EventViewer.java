@@ -5,16 +5,13 @@
  */
 package com.WebApplicationProject.view;
 
-import com.WebApplicationProject.control.Reminder;
-import com.WebApplicationProject.model.Calendar;
-import com.WebApplicationProject.model.ReminderTypes;
+import com.WebApplicationProject.model.Event;
+import com.WebApplicationProject.model.EventOccurance;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.DefaultScheduleEvent;
-import org.primefaces.model.ScheduleEvent;
 
 /**
  *
@@ -25,23 +22,12 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
 
     @Getter
     @Setter
-    private String location; 
+    private Event event = new Event(); 
     
-    @Getter
+    @Getter 
     @Setter
-    private Calendar calendar; 
-    
-    @Getter
-    @Setter
-    private Reminder reminder; 
-    
-    @Getter
-    @Setter
-    private Long eventId; 
-    
-    @Getter
-    @Setter
-    private Long eventOccuranceId;
+    private EventOccurance eventOccurance = new EventOccurance();
+       
         
     public EventViewer() {
         super();
@@ -53,46 +39,16 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
         super.setAllDay(true);
     }
     
-    public EventViewer(String title, Date start, Date end, boolean allDay) {
-        super(title, start, end, allDay);
+    public EventViewer(Event e, EventOccurance eo) {
         super.setAllDay(true);
+        super.setTitle(e.getTitle());
+        super.setStartDate(eo.getStartDate());
+        super.setEndDate(eo.getEndDate());
+        super.setDescription(e.getDescription());
+        super.setId(eo.getId().toString());
+        this.event = e;
+        this.eventOccurance = eo;
     }
-
-    public EventViewer(String title, Date start, Date end, String styleClass) {
-        super(title, start, end, styleClass);
-        super.setAllDay(true);
-    }
-
-    public EventViewer(String title, Date start, Date end, Object data) {
-        super(title, start, end, data);
-        super.setAllDay(true);
-    }
-    
-    public EventViewer(String title, Date start, Date end, String location, Calendar calendar, Reminder reminder, String description, Long eventOccuranceId, Long eventId) {
-        super.setAllDay(true);
-        super.setTitle(title);
-        super.setStartDate(start);
-        super.setEndDate(end);
-        super.setDescription(description);
-        super.setId(eventOccuranceId.toString());
-        this.location = location; 
-        this.calendar = calendar; 
-        this.reminder = reminder;
-        this.eventId = eventId;
-        this.eventOccuranceId = eventOccuranceId;
-    }
-    
-    @Override
-    public void setStartDate(Date startDate) {
-        super.setStartDate(startDate);
-        super.setAllDay(false);
-    }
-    
-    @Override
-    public void setEndDate(Date endDate) {
-        super.setEndDate(endDate);
-        super.setAllDay(false);
-    }        
     
     public void changeAllDay() {
         if(super.isAllDay()) {
@@ -126,4 +82,22 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             super.setEndDate(cal.getTime());
         }
     }    
+    
+    @Override
+    public void setTitle(String title) {
+        super.setTitle(title);
+        event.setTitle(title);
+    }
+    
+    @Override
+    public void setStartDate(Date startDate) {
+        super.setStartDate(startDate);
+        eventOccurance.setStartDate(startDate);
+    }
+    
+    @Override
+    public void setEndDate(Date endDate) {
+        super.setEndDate(endDate);
+        eventOccurance.setEndDate(endDate);
+    }
 }

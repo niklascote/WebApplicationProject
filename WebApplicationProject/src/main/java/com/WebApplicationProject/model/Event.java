@@ -5,7 +5,6 @@
  */
 package com.WebApplicationProject.model;
 
-import com.WebApplicationProject.control.Reminder;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -107,7 +106,7 @@ public class Event implements Serializable {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(String location) {        
         this.location = location;
     }
 
