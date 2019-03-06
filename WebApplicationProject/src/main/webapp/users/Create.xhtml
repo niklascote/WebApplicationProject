@@ -4,9 +4,12 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"   
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-    <h:head>
+      <h:head>
         <h:outputStylesheet library="css" name="default.css"  />
     </h:head>
 
@@ -30,11 +33,21 @@
                         <h:outputLabel value="Password:" for="password" />
                         <h:inputSecret id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
                         <h:outputLabel value="Timezone:" for="timezone" />
+                            
+                        <script>
+                            var getTimeZone = function() {
+                                return new Date().getTimezoneOffset();
+                            };
+                        </script>
                         <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="true"/>
                         <h:outputLabel value="Notifications:" for="notifications" />
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
+                    <p:remoteCommand  update="@form" name="test" autoRun="true" action="#{usersController.onSetTimezone}">
+                            
+                    </p:remoteCommand>>
+                    <script>test();</script>
                     <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" action="pretty:home"/>
                         <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
                     <h:button value="Back" outcome="pretty:home"/>

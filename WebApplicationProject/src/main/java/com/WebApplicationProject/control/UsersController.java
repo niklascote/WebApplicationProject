@@ -8,6 +8,7 @@ import com.WebApplicationProject.view.util.PaginationHelper;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import javax.ejb.EJB;
@@ -21,6 +22,7 @@ import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
 
 @Named("usersController")
 @ViewScoped
@@ -39,10 +41,29 @@ public class UsersController implements Serializable {
     public Users getSelected() {
         if (current == null) {
             current = new Users();
-            current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
+            //current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
+            
+            System.out.println("test");
+            
+            current.setTimezone(getTimezone());
+            
             selectedItemIndex = -1;
         }
         return current;
+    }
+    
+    public String getTimezone(){
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Locale locale = request.getLocale();
+        return null;
+    }
+    
+    public void onSetTimezone(){
+        //String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("timezone");
+        //System.out.println(timezone);
+        System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
+        //Locale locale = request.getLocale();
+        //current.setTimezone(request.);
     }
     
     public String shortenTimeZone(String name){
