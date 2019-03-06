@@ -33,7 +33,8 @@ public class UsersFacade extends AbstractFacade<Users> {
     }
 
     public List<Users> users(String email, String pass){
-        List users = em.createNamedQuery("Users.findUser").setParameter("Email",email).setParameter("Password",pass).getResultList();
+        List users = em.createNamedQuery("Users.findUser").setParameter("Email",email)
+                .setParameter("Password",pass).getResultList();
         return users;
     }
     
