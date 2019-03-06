@@ -60,7 +60,7 @@ public class Users implements Serializable {
     private String phone;
 
     @Basic(optional = false)
-    @Column(name = "EMAIL", nullable = false, length = 100)
+    @Column(unique = true, name = "EMAIL", nullable = false, length = 100)
     private String email;
     
     @Basic(optional = false)
