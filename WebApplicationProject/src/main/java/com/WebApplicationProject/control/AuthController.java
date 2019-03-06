@@ -5,14 +5,18 @@
  */
 package com.WebApplicationProject.control;
 
+import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Users;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,31 +32,31 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "Auth", urlPatterns = {"/Auth"})
 public class AuthController extends HttpServlet {
 
+    @EJB
+    private com.WebApplicationProject.db.UsersFacade ufacade;
+    
+    
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String user = request.getParameter("user"); //Fetches data from loginView.xhtml
+        String email = request.getParameter("user"); //Fetches data from loginView.xhtml
         String pass = request.getParameter("pass");
         
-        try{
-            Class.forName("com.derby.jdbc.Drivers");
-            Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
-            PreparedStatement ps = c.prepareStatement("select FIRSTNAME,PASSWORD from USERS where FIRSTNAME=? and PASSWORD=?");
-            ps.setString(1, user); //Currently uses FIRSTNAME as User
-            ps.setString(2, pass);
- 
-            ResultSet rs = ps.executeQuery();
- 
-            while (rs.next()) {
-                HttpSession session =request.getSession();
-                session.setAttribute("user", user);
-                response.sendRedirect("schedule/scheduleView.xhtml"); //Direction if login is successful (PLACEHOLDER)
-		return;
-            }
+        //Class.forName("com.derby.jdbc.Drivers");
+        //Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
+        //PreparedStatement ps = c.prepareStatement("select FIRSTNAME,PASSWORD from USERS where FIRSTNAME=? and PASSWORD=?");
+        List user = ufacade.users(email,pass);
+        //ps.setString(1, user); //Currently uses FIRSTNAME as User
+        //ps.setString(2, pass);
+        
+        //ResultSet rs = ps.executeQuery();
+        
+        if(user.size()>0) {
+            HttpSession session =request.getSession();
+            session.setAttribute("user", email);
+            response.sendRedirect("schedule/scheduleView.xhtml"); //Direction if login is successful (PLACEHOLDER)
+        }else
             response.sendRedirect("schedule/loginView.xhtml");//Direction if login is NOT successful (PLACEHOLDER)
-        }
-        catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(AuthController.class.getName()).log(Level.SEVERE, null, ex);
-        }   
     }
 }
