@@ -9,8 +9,6 @@ body.index {
     background-color: white;
     font-family: Arial;
     font-size: 12pt;
-    box-shadow: inset 160px 0 130px #eeeeee,
-        inset -160px 0 130px #eeeeee;
 }
 
 body.index > .container {
