@@ -40,7 +40,7 @@ public class AuthController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("user"); //Fetches data from loginView.xhtml
+        String email = request.getParameter("email"); //Fetches data from loginView.xhtml
         String pass = request.getParameter("pass");
         
         //Class.forName("com.derby.jdbc.Drivers");
