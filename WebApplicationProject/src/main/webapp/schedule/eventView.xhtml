@@ -8,7 +8,7 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
-        <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+        <h:outputStylesheet library="css" name="default.css"  />
         <title>Calendar</title>
 
     </h:head>
@@ -24,36 +24,35 @@
                 <p:menuitem value="Add event" disabled="true" style="background: white;" rendered="#{param.update == false}" /> 
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                
+
                 <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.updateEvent()}" rendered="#{param.update == true}"/> 
                 <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.addEvent()}" rendered="#{param.update == false}"/>
-                
+
                 <p:menuitem value="Delete this occurance" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteThisEvent()}" rendered="#{param.update == true}"/>
                 <p:menuitem value="Delete all occurances" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteAllEvents()}" rendered="#{param.update == true}"/>
                 <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteTemporaryEvent()}" rendered="#{param.update == false}"/>
-                
+
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
-                
+
                 <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> 
-                
-                <p:menuitem class="quit" value="Quit" icon="fa fa-fw fa-close" action="pretty:calendar" />
+
+                <p:menuitem class="quit" icon="fa fa-fw fa-close" outcome="pretty:calendar" />
             </p:megaMenu>
 
             <div class="ui-g">
 
                 <div class="ui-g-7">
 
-                    <p:inputText id="title" placeholder="Event name" class="global-margin-event-components" 
+                    <p:inputText id="title" placeholder="Event name" 
                                  value="#{eventController.event.title}"
                                  style="height: 50px; font-size: 24px; width:100%;">
                     </p:inputText>
 
-                    <p:inputText id="location" class="global-margin-event-components" placeholder="Location" 
+                    <p:inputText id="location" placeholder="Location" 
                                  value="#{eventController.event.event.location}"
-                                 style="width:100%"/>
+                                 style="width:100%; margin-top: 10px; margin-bottom: 10px;"/>
 
-                    <p:inputTextarea id="description" class="global-margin-event-components" 
-                                     rows="10" style="width:100%" placeholder="Description"
+                    <p:inputTextarea id="description" rows="10" style="width:100%" placeholder="Description"
                                      value="#{eventController.event.event.description}"/>
 
                     <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
@@ -85,10 +84,52 @@
                 </div>
 
                 <div class="ui-g-5" style="padding-left: 60px;">
+
                     <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
                     <p:separator class="global-margin-event-components"/>
-                    <p:autoComplete class="global-margin-event-components" inputStyle="height: 40px; width: 300px;" id="userList" dropdown="true" placeholder="Invite people to event" 
-                                     /> <!-- completeMethod="#{autoCompleteView.completeText}"-->
+
+                    <h:panelGrid class="global-margin-event-components">
+                        <p:autoComplete id="autocomplete" multiple="true" value="#{eventController.selectedAttendees}" 
+                                        completeMethod="#{usersController.completeAttendees}"
+                                        var="attendees" itemLabel="#{attendees.firstname} #{attendees.lastname}" itemValue="#{attendees}" 
+                                        converter="omnifaces.SelectItemsConverter" forceSelection="true" placeholder="Invite users..."
+                                        dropdown="true" maxResults="10" rendered="true" >
+
+                            <p:ajax event="itemSelect" process="@this" update="autocomplete, attendeesSelection" /> 
+
+                            <p:column style="width:10%;">
+                                <h:graphicImage library="img" name="profile.png" styleClass="ui-theme" height="30px;" width="30px;"/>
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{attendees.firstname} #{attendees.lastname}" />
+                            </p:column>
+                        </p:autoComplete>
+                    </h:panelGrid>
+
+                    <p:dataList id="attendeesSelection" value="#{eventController.selectedEventAttendees}" var="attendee" 
+                                class="global-margin-event-components" rendered="#{eventController.selectedAttendees.size() > 0}">
+
+                        <p:column>
+                            <p:selectBooleanCheckbox/>
+                        </p:column>
+                        
+                        <p:column style="width:10%;">
+                            <h:graphicImage library="img" name="profile.png" styleClass="ui-theme" height="30px;" width="30px;"/>
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{attendee.participant.firstname} #{attendee.participant.lastname}" />
+                        </p:column>
+
+                        <p:column>
+                            <p:selectOneMenu id="access" value="#{attendee.writePermission}" style="width:50px">
+                                <f:selectItem itemLabel="Can edit" itemValue="true" />
+                                <f:selectItem itemLabel="Can view" itemValue="false" />
+                            </p:selectOneMenu>
+                        </p:column>
+
+                    </p:dataList>
 
                 </div>
             </div>
@@ -96,4 +137,3 @@
     </h:body>
 
 </html>
-

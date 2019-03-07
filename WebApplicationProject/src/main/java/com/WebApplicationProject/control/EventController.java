@@ -11,6 +11,7 @@ import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.EventViewer;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,6 +26,7 @@ import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.ScheduleModel;
 
 @Named("eventController")
@@ -54,7 +56,23 @@ public class EventController implements Serializable {
     @Getter
     @Setter
     private Users user = new Users();
-
+        
+    @Getter
+    private List<Users> selectedAttendees = new ArrayList<Users>();
+    
+    public void setSelectedAttendees(List<Users> selectedAttendees ){
+        this.selectedAttendees = selectedAttendees;
+        
+        for(Users u : selectedAttendees) {
+            if(!selectedAttendees.contains(u)){
+                selectedEventAttendees.add(new EventParticipant(u));
+            }   
+        }
+        
+    }
+    
+    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
+    
     @PostConstruct
     public void init() {
         
@@ -63,6 +81,8 @@ public class EventController implements Serializable {
         
         //Get all events for the user
         getEvents();
+        
+        
     }
 
     public String addEvent() {

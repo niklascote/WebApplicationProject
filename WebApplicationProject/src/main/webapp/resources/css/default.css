@@ -103,11 +103,11 @@ body.index > .container > .sign_up {
 }
 
 .ui-menuitem:last-child {
-    float: right; 
+    float: right !important;
 }
 
 .global-margin-event-components {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .global-margin-event-components-row {
@@ -116,4 +116,11 @@ body.index > .container > .sign_up {
 
 ::placeholder {
     color: gray;
+}
+.ui-autocomplete-input-token > input {
+    width: 100% !important;
+}
+
+.ui-autocomplete-token  {
+    display: none !important;
 }

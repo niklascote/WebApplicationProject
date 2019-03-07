@@ -60,6 +60,10 @@ public class EventParticipant implements Serializable {
     public EventParticipant(Long id) {
         this.id = id;
     }
+    
+    public EventParticipant(Users participant) {
+        this.participant = participant;
+    }
 
     public Long getId() {
         return id;

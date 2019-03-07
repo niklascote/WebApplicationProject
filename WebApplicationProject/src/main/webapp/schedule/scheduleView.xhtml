@@ -87,7 +87,7 @@
                                 <p:outputLabel for="location" value="Location:" />
                                 <p:inputText id="location" value="#{eventController.event.event.location}"/>                    
 
-                                <p:commandButton value="More details" action="pretty:addeventview"/>
+                                <p:commandLink id="ajax" value="More information" update="eventDetails" action="pretty:addeventview"/>
                                 <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
 
                             </p:panelGrid>
