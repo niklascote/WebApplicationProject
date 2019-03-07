@@ -32,5 +32,13 @@ public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
     public EventOccuranceFacade() {
         super(EventOccurance.class);
     }
+    
+    public List<EventOccurance> getEventOccurancesByEvent(Long eventId) {
+       List results = em.createNamedQuery("EventOccurance.findByEvent")
+               .setParameter("eventId", eventId)
+               .getResultList();
+
+       return results;
+   }
            
 }

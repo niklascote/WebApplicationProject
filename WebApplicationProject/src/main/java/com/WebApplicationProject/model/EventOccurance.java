@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "EventOccurance.findById", query = "SELECT e FROM EventOccurance e WHERE e.id = :id")
     , @NamedQuery(name = "EventOccurance.findByStartDate", query = "SELECT e FROM EventOccurance e WHERE e.startDate = :startDate")
     , @NamedQuery(name = "EventOccurance.findByEndDate", query = "SELECT e FROM EventOccurance e WHERE e.endDate = :endDate")
-    , @NamedQuery(name = "EventOccurance.findByEvent", query = "SELECT e FROM EventOccurance e WHERE e.event = :eventId")
+    , @NamedQuery(name = "EventOccurance.findByEvent", query = "SELECT e FROM EventOccurance e WHERE e.event.id = :eventId")
 })
 public class EventOccurance implements Serializable {
 
@@ -60,10 +60,7 @@ public class EventOccurance implements Serializable {
     @Column(name = "END_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventOccurance")
-    private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
-    
+        
     @JoinColumn(name = "EVENT", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Event event;
@@ -107,16 +104,7 @@ public class EventOccurance implements Serializable {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-
-    @XmlTransient
-    public Collection<EventOccuranceParticipant> getEventOccuranceParticipantCollection() {
-        return eventOccuranceParticipantCollection;
-    }
-
-    public void setEventOccuranceParticipantCollection(Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection) {
-        this.eventOccuranceParticipantCollection = eventOccuranceParticipantCollection;
-    }
-
+   
     public Event getEvent() {
         return event;
     }

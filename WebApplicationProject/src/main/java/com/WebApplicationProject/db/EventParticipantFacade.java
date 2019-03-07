@@ -5,10 +5,8 @@
  */
 package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.db.AbstractFacade;
 import com.WebApplicationProject.model.Event;
-import com.WebApplicationProject.model.EventOccurance;
-import com.WebApplicationProject.model.Users;
+import com.WebApplicationProject.model.EventParticipant;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,7 +17,7 @@ import javax.persistence.PersistenceContext;
  * @author gabri
  */
 @Stateless
-public class EventFacade extends AbstractFacade<Event> {
+public class EventParticipantFacade extends AbstractFacade<EventParticipant> {
 
     @PersistenceContext(unitName = "com_WebApplicationProject_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -29,16 +27,15 @@ public class EventFacade extends AbstractFacade<Event> {
         return em;
     }
 
-    public EventFacade() {
-        super(Event.class);
-    }    
+    public EventParticipantFacade() {
+        super(EventParticipant.class);
+    }
     
-    public List<Event> getEventByOwner(Long userId) {
-       List results = em.createNamedQuery("Event.findByOwner")
-               .setParameter("ownerId", userId)
+    public List<EventParticipant> getEventParticipantByParticipant(Long userId) {
+       List results = em.createNamedQuery("EventParticipant.findByParticipant")
+               .setParameter("participantId", userId)
                .getResultList();
 
        return results;
    }
-    
 }

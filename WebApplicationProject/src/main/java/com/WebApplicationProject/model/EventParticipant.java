@@ -29,7 +29,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "EventParticipant.findAll", query = "SELECT e FROM EventParticipant e")
     , @NamedQuery(name = "EventParticipant.findById", query = "SELECT e FROM EventParticipant e WHERE e.id = :id")
-    , @NamedQuery(name = "EventParticipant.findByWritePermission", query = "SELECT e FROM EventParticipant e WHERE e.writePermission = :writePermission")})
+    , @NamedQuery(name = "EventParticipant.findByWritePermission", query = "SELECT e FROM EventParticipant e WHERE e.writePermission = :writePermission")
+    , @NamedQuery(name = "EventParticipant.findByParticipant", query = "SELECT e FROM EventParticipant e WHERE e.participant.id = :participantId")
+
+})
 public class EventParticipant implements Serializable {
 
     private static final long serialVersionUID = 1L;

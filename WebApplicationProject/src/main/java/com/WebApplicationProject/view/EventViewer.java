@@ -45,7 +45,6 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
         super.setStartDate(eo.getStartDate());
         super.setEndDate(eo.getEndDate());
         super.setDescription(e.getDescription());
-        super.setId(eo.getId().toString());
         this.event = e;
         this.eventOccurance = eo;
     }
@@ -58,13 +57,13 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             cal.setTime(super.getStartDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 0);  
             cal.set(java.util.Calendar.MINUTE, 0);
-            super.setStartDate(cal.getTime());            
+            setStartDate(cal.getTime());            
             
             //Set end date to 23:59
             cal.setTime(super.getEndDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 23);  
             cal.set(java.util.Calendar.MINUTE, 59);  
-            super.setEndDate(cal.getTime());
+            setEndDate(cal.getTime());
         }  
         
         else {
@@ -73,13 +72,13 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
             cal.setTime(super.getStartDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 8);  
             cal.set(java.util.Calendar.MINUTE, 0);     
-            super.setStartDate(cal.getTime());
+            setStartDate(cal.getTime());
             
             //Set end date to 23:59
             cal.setTime(super.getEndDate());  
             cal.set(java.util.Calendar.HOUR_OF_DAY, 8);  
             cal.set(java.util.Calendar.MINUTE, 30);  
-            super.setEndDate(cal.getTime());
+            setEndDate(cal.getTime());
         }
     }    
     

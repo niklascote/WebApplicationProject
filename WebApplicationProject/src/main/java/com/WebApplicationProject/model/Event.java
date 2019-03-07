@@ -40,7 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id")
     , @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")
     , @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description")
-    , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
+    , @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")
+    , @NamedQuery(name = "Event.findByOwner", query = "SELECT e FROM Event e WHERE e.owner.id = :ownerId")
+})
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -78,10 +78,7 @@ public class Users implements Serializable {
     
     @OneToMany(mappedBy = "participant")
     private Collection<EventParticipant> eventParticipantCollection;
-    
-    @OneToMany(mappedBy = "participant")
-    private Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection;
-    
+        
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
     private Collection<CalendarParticipant> calendarParticipantCollection;
     
@@ -177,15 +174,6 @@ public class Users implements Serializable {
 
     public void setEventParticipantCollection(Collection<EventParticipant> eventParticipantCollection) {
         this.eventParticipantCollection = eventParticipantCollection;
-    }
-
-    @XmlTransient
-    public Collection<EventOccuranceParticipant> getEventOccuranceParticipantCollection() {
-        return eventOccuranceParticipantCollection;
-    }
-
-    public void setEventOccuranceParticipantCollection(Collection<EventOccuranceParticipant> eventOccuranceParticipantCollection) {
-        this.eventOccuranceParticipantCollection = eventOccuranceParticipantCollection;
     }
 
     @XmlTransient

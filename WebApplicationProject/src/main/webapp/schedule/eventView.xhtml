@@ -30,7 +30,7 @@
                 
                 <p:menuitem value="Delete this occurance" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteThisEvent()}" rendered="#{param.update == true}"/>
                 <p:menuitem value="Delete all occurances" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteAllEvents()}" rendered="#{param.update == true}"/>
-                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash" action="pretty:calendar" rendered="#{param.update == false}"/>
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteTemporaryEvent()}" rendered="#{param.update == false}"/>
                 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 

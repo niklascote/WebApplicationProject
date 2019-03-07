@@ -2,36 +2,25 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventFacade;
 import com.WebApplicationProject.db.EventOccuranceFacade;
-import com.WebApplicationProject.db.ReminderFacade;
+import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
+import com.WebApplicationProject.model.EventParticipant;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.EventViewer;
-import com.WebApplicationProject.view.util.JsfUtil;
-import com.WebApplicationProject.view.util.PaginationHelper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
-import javax.faces.view.ViewScoped;
 import lombok.Getter;
 import lombok.Setter;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
@@ -50,11 +39,13 @@ public class EventController implements Serializable {
 
     @EJB
     private EventOccuranceFacade eventOccuranceFacade;
+    
+    @EJB
+    private EventParticipantFacade eventParticipantFacade;
 
     @Getter
     @Setter
     private ScheduleModel eventModel = new DefaultScheduleModel();
-    ;
         
     @Getter
     @Setter
@@ -66,14 +57,15 @@ public class EventController implements Serializable {
 
     @PostConstruct
     public void init() {
+        
         //TODO: Only for testing. Must be changed to a real user search. 
         user = usersFacade.find(1L);
-
+        
         //Get all events for the user
         getEvents();
     }
 
-    public void addEvent() {
+    public String addEvent() {
 
         //Add event to Event-table in DB        
         Event e = new Event(event.getEvent().getTitle(),
@@ -96,62 +88,57 @@ public class EventController implements Serializable {
         eventOccuranceFacade.create(eo);
         
         eventModel.addEvent(new EventViewer(e, eo));
+        clearEvent();
+        
+        return "pretty:calendar";
+    }
+    
+    public String deleteTemporaryEvent() {
+        clearEvent();        
+        return "pretty:calendar";
     }
 
     public String deleteAllEvents() {
-        //Find choosen event in database
-        Event e = eventFacade.find(event.getEvent().getId());
-
-        //Remove event and occurances from database 
-        e.getEventOccuranceCollection().forEach((eo) -> {
+        
+        List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(event.getEvent().getId());
+        
+        //Remove event and occurances from database         
+        for(EventOccurance eo : occurances) {
             eventOccuranceFacade.remove(eo);
-        });
-        eventFacade.remove(e);
-
-        updateEventModel();
-
-        return "pretty:calendar";
-    }
-
-    public void updateEventModel() {
-        eventModel = new DefaultScheduleModel();
-        getEvents();
-    }
-
-    public String deleteThisEvent() {
-        //Find choosen event in database
-        Event e = eventFacade.find(event.getEvent().getId());
-        EventOccurance eo = eventOccuranceFacade.find(event.getEventOccurance().getId());
-
-        //Delete event and occurances from database
-        eventOccuranceFacade.remove(eo);
-
-        //Only remove event if it is there is only one occurance
-        if (e.getEventOccuranceCollection().size() > 1) {
-            eventFacade.remove(e);
-            eventModel.deleteEvent(event);
         }
+        eventFacade.remove(event.getEvent());
+        
+        getEvents();
+        clearEvent();
+        
+        return "pretty:calendar";
+    }
+    
+    public String deleteThisEvent() {
+        //Delete event and occurances from database
+        eventOccuranceFacade.remove(event.getEventOccurance());
+        
+        //Only remove event if it is there is only one occurance
+        if (event.getEvent().getEventOccuranceCollection().size() <= 1) {
+            eventFacade.remove(event.getEvent());
+        }
+        
+        eventModel.deleteEvent(event);
+        clearEvent();
 
         return "pretty:calendar";
-
     }
 
     public String updateEvent() {
 
-        //Get event entity
-        Event e = eventFacade.find(event.getEvent().getId());
+        //Update entities
+        eventFacade.edit(event.getEvent());
+        eventOccuranceFacade.edit(event.getEventOccurance());
 
-        //Update entity
-        e.setCalendar(event.getEvent().getCalendar());
-        e.setDescription(event.getEvent().getDescription());
-        e.setLocation(event.getEvent().getLocation());
-        e.setReminder(event.getEvent().getReminder());
-        e.setTitle(event.getEvent().getTitle());
-        eventFacade.edit(e);
-
+        //Update event model
         eventModel.updateEvent(event);
-
-        //TODO: Update event occurances
+        clearEvent();
+        
         return "pretty:calendar";
     }
 
@@ -161,22 +148,30 @@ public class EventController implements Serializable {
     }
 
     public void getEvents() {
-
+        
+        eventModel.clear();
+        
         //Find all events created by the user
-        user.getEventCollection().forEach((e) -> {
-            e.getEventOccuranceCollection().forEach((eo) -> {
+        List<Event> events = eventFacade.getEventByOwner(user.getId());
+        
+        for(Event e : events) {
+            List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(e.getId());
+            for (EventOccurance eo : occurances) {
                 eventModel.addEvent(new EventViewer(e, eo));
-            });
-        });
+            }
+        }
 
         //Find all events where the user is included
-        user.getEventOccuranceParticipantCollection().forEach((eo) -> {
-            eventModel.addEvent(new EventViewer(eo.getEventOccurance().getEvent(), eo.getEventOccurance()));
-        });
+        List<EventParticipant> participantEvents = eventParticipantFacade.getEventParticipantByParticipant(user.getId());
+        for (EventParticipant ep : participantEvents) {
+            List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(ep.getEvent().getId());
+            for (EventOccurance eo : occurances) {
+                eventModel.addEvent(new EventViewer(ep.getEvent(), eo));
+            }
+        }
     }
     
     public void setSelectedEvent(EventViewer selected) {
-        
         event = selected; 
     }
 
