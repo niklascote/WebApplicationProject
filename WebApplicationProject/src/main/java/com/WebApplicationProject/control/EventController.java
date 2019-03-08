@@ -26,7 +26,6 @@ import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.ScheduleModel;
 
 @Named("eventController")
@@ -60,18 +59,22 @@ public class EventController implements Serializable {
     @Getter
     private List<Users> selectedAttendees = new ArrayList<Users>();
     
+    @Getter
+    @Setter
+    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
+    
     public void setSelectedAttendees(List<Users> selectedAttendees ){
         this.selectedAttendees = selectedAttendees;
+        this.selectedEventAttendees.clear();
         
         for(Users u : selectedAttendees) {
-            if(!selectedAttendees.contains(u)){
+            if(!selectedEventAttendees.contains(u)){
                 selectedEventAttendees.add(new EventParticipant(u));
             }   
         }
-        
     }
     
-    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
+   
     
     @PostConstruct
     public void init() {
@@ -80,9 +83,7 @@ public class EventController implements Serializable {
         user = usersFacade.find(1L);
         
         //Get all events for the user
-        getEvents();
-        
-        
+        getEvents();        
     }
 
     public String addEvent() {

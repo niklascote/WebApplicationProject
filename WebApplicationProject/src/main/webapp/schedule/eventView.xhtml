@@ -5,7 +5,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"    
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:o="http://omnifaces.org/ui">
 
     <h:head>
         <h:outputStylesheet library="css" name="default.css"  />
@@ -83,20 +84,21 @@
                     </div>
                 </div>
 
-                <div class="ui-g-5" style="padding-left: 60px;">
+                <div class="ui-g-5" style="padding-left: 60px;" id="column2">
 
                     <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
-                    <p:separator class="global-margin-event-components"/>
+                    <p:separator class="global-margin-event-components" />
 
                     <h:panelGrid class="global-margin-event-components">
                         <p:autoComplete id="autocomplete" multiple="true" value="#{eventController.selectedAttendees}" 
-                                        completeMethod="#{usersController.completeAttendees}"
-                                        var="attendees" itemLabel="#{attendees.firstname} #{attendees.lastname}" itemValue="#{attendees}" 
-                                        converter="omnifaces.SelectItemsConverter" forceSelection="true" placeholder="Invite users..."
-                                        dropdown="true" maxResults="10" rendered="true" >
+                                        completeMethod="#{usersController.completeAttendees}" var="attendees" 
+                                        itemLabel="#{attendees.firstname} #{attendees.lastname}"  forceSelection="true" 
+                                        placeholder="Invite users..." dropdown="true" maxResults="10" itemValue="#{attendees}"
+                                        >
+                            <o:converter converterId="omnifaces.ListConverter" list="#{usersController.attendeesList}"/>
 
-                            <p:ajax event="itemSelect" process="@this" update="autocomplete, attendeesSelection" /> 
-
+                            <p:ajax event="itemSelect" process="@this" update="attendeesSelection" immediate="true"/> 
+                            <!--                         oncomplete="PF('attendeesSelection').update()"-->
                             <p:column style="width:10%;">
                                 <h:graphicImage library="img" name="profile.png" styleClass="ui-theme" height="30px;" width="30px;"/>
                             </p:column>
@@ -105,31 +107,47 @@
                                 <h:outputText value="#{attendees.firstname} #{attendees.lastname}" />
                             </p:column>
                         </p:autoComplete>
+                        <p:dataList id="attendeesSelection" widgetVar="selection" value="#{eventController.selectedEventAttendees}" var="attendee" 
+                                    class="global-margin-event-components" rendered="#{eventController.selectedEventAttendees.size() > 0}"
+                                    >
+
+                            <p:panel style="height:50px; padding-top:0px;" styleClass="padding-top:0px; padding-bottom:0px;">
+
+                                <div class="ui-g" align="center">
+
+                                    <div class="ui-g-1">
+                                        <h:graphicImage library="img" name="profile.png" 
+                                                        styleClass="ui-theme" height="30px;" width="30px; "
+                                                        style="vertical-align:middle;"/>
+                                    </div>
+
+                                    <div class="ui-g-6">
+                                        <h:outputText value="#{attendee.participant.firstname} #{attendee.participant.lastname}" 
+                                                      style="vertical-align:middle"/>
+                                    </div>
+
+                                    <div class="ui-g-4"> 
+                                        <p:selectOneMenu id="access" value="#{attendee.writePermission}" style="width:100px">
+                                            <f:selectItem itemLabel="Can edit" itemValue="true" />
+                                            <f:selectItem itemLabel="Can view" itemValue="false" />
+                                        </p:selectOneMenu>
+                                    </div>
+
+                                    <div class="ui-g-1">
+                                        <p:commandLink>
+                                            <i class="fa fa-fw fa-trash" style="color:black"/>
+                                        </p:commandLink>
+
+                                    </div>
+
+
+                                </div>
+                            </p:panel>
+
+                        </p:dataList>
                     </h:panelGrid>
 
-                    <p:dataList id="attendeesSelection" value="#{eventController.selectedEventAttendees}" var="attendee" 
-                                class="global-margin-event-components" rendered="#{eventController.selectedAttendees.size() > 0}">
 
-                        <p:column>
-                            <p:selectBooleanCheckbox/>
-                        </p:column>
-                        
-                        <p:column style="width:10%;">
-                            <h:graphicImage library="img" name="profile.png" styleClass="ui-theme" height="30px;" width="30px;"/>
-                        </p:column>
-
-                        <p:column>
-                            <h:outputText value="#{attendee.participant.firstname} #{attendee.participant.lastname}" />
-                        </p:column>
-
-                        <p:column>
-                            <p:selectOneMenu id="access" value="#{attendee.writePermission}" style="width:50px">
-                                <f:selectItem itemLabel="Can edit" itemValue="true" />
-                                <f:selectItem itemLabel="Can view" itemValue="false" />
-                            </p:selectOneMenu>
-                        </p:column>
-
-                    </p:dataList>
 
                 </div>
             </div>

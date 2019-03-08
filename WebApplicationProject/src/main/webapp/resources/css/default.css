@@ -124,3 +124,20 @@ body.index > .container > .sign_up {
 .ui-autocomplete-token  {
     display: none !important;
 }
+
+.ui-datalist-item {
+    list-style-type: none;
+    
+}
+
+.ui-datalist-data{
+    padding-inline-start: 0px;
+}
+
+.ui-panel .ui-panel-content {
+     padding: 0px !important;
+}
+
+.ui-panel-content .ui-widget-content {
+    padding:0 !important;
+}

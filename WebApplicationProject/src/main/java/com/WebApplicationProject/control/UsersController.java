@@ -71,17 +71,17 @@ public class UsersController implements Serializable {
     
     public List<Users> completeAttendees(String query) {
         List<Users> allUsers = setAttendeesList();
-        List<Users> filteredUsers = new ArrayList<>();
+        attendeesList = new ArrayList<>();
          
         for (int i = 0; i < allUsers.size(); i++) {
             Users skin = allUsers.get(i);
             
             if(skin.getFirstname().toLowerCase().contains(query) || skin.getLastname().toLowerCase().contains(query)) {
-                filteredUsers.add(skin);
+                attendeesList.add(skin);
             }
         }
          
-        return filteredUsers;
+        return attendeesList;
     }
     
     public List<Users> setAttendeesList() {
