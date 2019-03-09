@@ -9,8 +9,7 @@ import com.WebApplicationProject.jsf.beans.SessionUtil;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 /**
@@ -18,8 +17,6 @@ import javax.servlet.http.HttpSession;
  * @author niklascote
  */
 
-
-@ManagedBean
 @SessionScoped
 public class Login implements Serializable {
 
