@@ -4,15 +4,8 @@
  * and open the template in the editor.
  */
 package com.WebApplicationProject.jsf.beans;
-
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-
-/**
- *
- * @author niklascote
- */
-
+import com.WebApplicationProject.control.AuthController;
+import com.WebApplicationProject.jsf.beans.SessionUtil;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
@@ -20,9 +13,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+/**
+ *
+ * @author niklascote
+ */
 
-//import com.WebApplicationProject.jsf.dao.LoginDAO;
-//import com.journaldev.jsf.util.SessionUtils;
 
 @ManagedBean
 @SessionScoped
@@ -58,27 +53,27 @@ public class Login implements Serializable {
 		this.email = email;
 	}
 
-	//validate login
+//	//Validate login
 	public String validateUsernamePassword() {
-		boolean valid = LoginDAO.validate(email, pass);
+		boolean valid = AuthController.validate(email, pass);
 		if (valid) {
-			HttpSession session = SessionUtils.getSession();
-			session.setAttribute("username", email);
-			return "admin";
+			HttpSession session = SessionUtil.getSession();
+			session.setAttribute("email", email);
+			return "schedule/scheduleView";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_WARN,
-							"Incorrect Username and Passowrd",
-							"Please enter correct username and Password"));
-			return "login";
+							"Incorrect Email and Password",
+							"Please enter correct Email and Password"));
+			return "users/loginView";
 		}
 	}
 
-	//logout event, invalidate session
+	//Logout event, invalidate session
 	public String logout() {
-		HttpSession session = SessionUtils.getSession();
+		HttpSession session = SessionUtil.getSession();
 		session.invalidate();
-		return "login";
+		return "users/loginView";
 	}
 }
