@@ -34,14 +34,8 @@ public class AuthController extends HttpServlet {
 
     @EJB
     private com.WebApplicationProject.db.UsersFacade ufacade;
-    
-    
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String email = request.getParameter("email"); //Fetches data from loginView.xhtml
-        String pass = request.getParameter("pass");
+
+    public static boolean validate(String email, String pass){
         
         //Class.forName("com.derby.jdbc.Drivers");
         //Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
