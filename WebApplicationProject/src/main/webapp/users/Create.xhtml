@@ -35,26 +35,32 @@
                         <h:outputLabel value="Timezone:" for="timezone" />
                             
                         
-                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." readonly="true"/>
+                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="true"/>
                         <h:outputLabel value="Notifications:" for="notifications" />
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
                     
+                    <p:remoteCommand name="remote" action="#{usersController.onSetTimezone}" process="@this" partialSubmit="true">
+                                                </p:remoteCommand>
+                    
                     <script id="test" type="text/javascript">
-                            var getTimeZone = function() {
+                            function getTimeZone() {
+                                                                                                
                                 console.log(new Date().getTimezoneOffset());
                                 var input = document.getElementById('registerForm:timezone');
                                 input.value = "GMT +" + new Date().getTimezoneOffset()/(-60);
-                                return new Date().getTimezoneOffset();
+                                
+                                remote([
+                                    {name: 'timezone', value: input.value}
+                                ]);
                             };
                         </script>
                         <script>getTimeZone();</script>
                         
-<!--                        <p:remoteCommand update="@form" name="test" action="#{usersController.onSetTimezone}">
-                                                </p:remoteCommand>-->
+                        
                     
-                    <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="" action="pretty:home"/>
+                        <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="getTimeZone()" action="pretty:home"/>
                         <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
                     <h:button value="Back" outcome="pretty:home"/>
                 </h:form>

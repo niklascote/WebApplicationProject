@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import javax.ejb.EJB;
@@ -53,19 +54,20 @@ public class UsersController implements Serializable {
         return current;
     }
     
+    
     public String getTimezone(){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Locale locale = request.getLocale();
-        return null;
+        return current.getTimezone();
     }
     
     public void onSetTimezone(){
         
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         
+        String timezone = params.get("timezone");
         
-        String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("getTimeZone");
+        //String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("timezone");
         System.out.println("Timezone: " + timezone);
-        current.setTimezone(timezone);
+        getSelected().setTimezone(timezone);
         //System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
         //Locale locale = request.getLocale();
         //current.setTimezone(request.);
