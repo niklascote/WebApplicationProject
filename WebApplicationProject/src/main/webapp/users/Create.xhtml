@@ -17,7 +17,7 @@
 
         <h:panelGroup layout="block" class="container">
             <f:view>
-                <h:form>
+                <h:form id="registerForm">
                     <h1><h:outputText value="Register" styleClass="registerViewText"/></h1>
                     <h:panelGrid columns="2">
                         <!--                    <h:outputLabel value="Id:" for="id" />
@@ -34,21 +34,27 @@
                         <h:inputSecret id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
                         <h:outputLabel value="Timezone:" for="timezone" />
                             
-                        <script>
-                            var getTimeZone = function() {
-                                return new Date().getTimezoneOffset();
-                            };
-                        </script>
-                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="true"/>
+                        
+                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." readonly="true"/>
                         <h:outputLabel value="Notifications:" for="notifications" />
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
-                    <p:remoteCommand update="@form" name="test" autoRun="true" action="#{usersController.onSetTimezone}">
-                            
-                    </p:remoteCommand>>
-                    <script>test();</script>
-                    <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" action="pretty:home"/>
+                    
+                    <script id="test" type="text/javascript">
+                            var getTimeZone = function() {
+                                console.log(new Date().getTimezoneOffset());
+                                var input = document.getElementById('registerForm:timezone');
+                                input.value = "GMT +" + new Date().getTimezoneOffset()/(-60);
+                                return new Date().getTimezoneOffset();
+                            };
+                        </script>
+                        <script>getTimeZone();</script>
+                        
+<!--                        <p:remoteCommand update="@form" name="test" action="#{usersController.onSetTimezone}">
+                                                </p:remoteCommand>-->
+                    
+                    <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="" action="pretty:home"/>
                         <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
                     <h:button value="Back" outcome="pretty:home"/>
                 </h:form>

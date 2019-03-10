@@ -8,6 +8,7 @@ import com.WebApplicationProject.view.util.PaginationHelper;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -45,7 +46,7 @@ public class UsersController implements Serializable {
             
             System.out.println("test");
             
-            current.setTimezone(getTimezone());
+            //current.setTimezone(getTimezone());
             
             selectedItemIndex = -1;
         }
@@ -59,9 +60,13 @@ public class UsersController implements Serializable {
     }
     
     public void onSetTimezone(){
-        //String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("timezone");
-        //System.out.println(timezone);
-        System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
+        
+        
+        
+        String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("getTimeZone");
+        System.out.println("Timezone: " + timezone);
+        current.setTimezone(timezone);
+        //System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
         //Locale locale = request.getLocale();
         //current.setTimezone(request.);
     }
