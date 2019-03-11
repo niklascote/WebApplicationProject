@@ -31,6 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "EventParticipant.findById", query = "SELECT e FROM EventParticipant e WHERE e.id = :id")
     , @NamedQuery(name = "EventParticipant.findByWritePermission", query = "SELECT e FROM EventParticipant e WHERE e.writePermission = :writePermission")
     , @NamedQuery(name = "EventParticipant.findByParticipant", query = "SELECT e FROM EventParticipant e WHERE e.participant.id = :participantId")
+    , @NamedQuery(name = "EventParticipant.deleteByEvent", query = "DELETE FROM EventParticipant e WHERE e.event.id = :eventId")
+    , @NamedQuery(name = "EventParticipant.getByEvent", query = "SELECT e FROM EventParticipant e WHERE e.event.id = :eventId")
 
 })
 public class EventParticipant implements Serializable {

@@ -11,7 +11,6 @@
     <h:head>
         <h:outputStylesheet library="css" name="default.css"  />
         <title>Calendar</title>
-
     </h:head>
     <h:body>
 
@@ -26,8 +25,8 @@
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
-                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.updateEvent()}" rendered="#{param.update == true}"/> 
-                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.addEvent()}" rendered="#{param.update == false}"/>
+                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.updateEvent(usersController.selectedEventAttendees)}" rendered="#{param.update == true}"/> 
+                <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.addEvent(usersController.selectedEventAttendees)}" rendered="#{param.update == false}"/>
 
                 <p:menuitem value="Delete this occurance" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteThisEvent()}" rendered="#{param.update == true}"/>
                 <p:menuitem value="Delete all occurances" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteAllEvents()}" rendered="#{param.update == true}"/>
@@ -89,16 +88,16 @@
                     <h1 style="margin-top: 0px; margin-bottom: 10px;">Attendees</h1>
                     <p:separator class="global-margin-event-components" />
 
-                    <h:panelGrid class="global-margin-event-components">
-                        <p:autoComplete id="autocomplete" multiple="true" value="#{eventController.selectedAttendees}" 
+                    <h:panelGrid class="global-margin-event-components" id="invites">
+                        <p:autoComplete id="autocomplete" multiple="true" value="#{usersController.selectedAttendees}" 
                                         completeMethod="#{usersController.completeAttendees}" var="attendees" 
                                         itemLabel="#{attendees.firstname} #{attendees.lastname}"  forceSelection="true" 
-                                        placeholder="Invite users..." dropdown="true" maxResults="10" itemValue="#{attendees}"
-                                        >
+                                        placeholder="Invite users..." dropdown="true" maxResults="10" itemValue="#{attendees}">
+                            
                             <o:converter converterId="omnifaces.ListConverter" list="#{usersController.attendeesList}"/>
 
                             <p:ajax event="itemSelect" process="@this" update="attendeesSelection" immediate="true"/> 
-                            <!--                         oncomplete="PF('attendeesSelection').update()"-->
+
                             <p:column style="width:10%;">
                                 <h:graphicImage library="img" name="profile.png" styleClass="ui-theme" height="30px;" width="30px;"/>
                             </p:column>
@@ -107,11 +106,34 @@
                                 <h:outputText value="#{attendees.firstname} #{attendees.lastname}" />
                             </p:column>
                         </p:autoComplete>
-                        <p:dataList id="attendeesSelection" widgetVar="selection" value="#{eventController.selectedEventAttendees}" var="attendee" 
-                                    class="global-margin-event-components" rendered="#{eventController.selectedEventAttendees.size() > 0}"
-                                    >
 
-                            <p:panel style="height:50px; padding-top:0px;" styleClass="padding-top:0px; padding-bottom:0px;">
+                        <p:panel style="height:50px; padding-top:0px;" rendered="#{eventController.event.event.owner != null}" >
+
+                            <div class="ui-g" align="center">
+
+                                <div class="ui-g-1">
+                                    <h:graphicImage library="img" name="profile.png" 
+                                                    styleClass="ui-theme" height="30px;" width="30px; "
+                                                    style="vertical-align:middle;"/>
+                                </div>
+
+                                <div class="ui-g-5">
+                                    <h:outputText value="#{eventController.event.event.owner.firstname} #{eventController.event.event.owner.lastname}" 
+                                                  style="vertical-align:middle; float:left;"/>
+                                </div>
+
+                                <div class="ui-g-5"> 
+                                    <h:outputText value="Owner"/>
+                                </div>
+
+                                <div class="ui-g-1">
+                                </div>
+                            </div>
+                        </p:panel>
+                        <p:dataList id="attendeesSelection" widgetVar="selection"  var="attendee" 
+                                    emptyMessage="No invites" value="#{usersController.getSelectedEventAttendees(eventController.event.event.id)}">
+
+                            <p:panel style="height:50px; padding-top:0px;">
 
                                 <div class="ui-g" align="center">
 
@@ -121,12 +143,12 @@
                                                         style="vertical-align:middle;"/>
                                     </div>
 
-                                    <div class="ui-g-6">
+                                    <div class="ui-g-5">
                                         <h:outputText value="#{attendee.participant.firstname} #{attendee.participant.lastname}" 
-                                                      style="vertical-align:middle"/>
+                                                      style="vertical-align:middle; float:left;"/>
                                     </div>
 
-                                    <div class="ui-g-4"> 
+                                    <div class="ui-g-5"> 
                                         <p:selectOneMenu id="access" value="#{attendee.writePermission}" style="width:100px">
                                             <f:selectItem itemLabel="Can edit" itemValue="true" />
                                             <f:selectItem itemLabel="Can view" itemValue="false" />
@@ -134,24 +156,16 @@
                                     </div>
 
                                     <div class="ui-g-1">
-                                        <p:commandLink>
+                                        <p:commandLink action="#{usersController.removeAttendee(attendee)}" process="@this" update=":#{p:component('invites')}">
                                             <i class="fa fa-fw fa-trash" style="color:black"/>
                                         </p:commandLink>
-
                                     </div>
-
-
                                 </div>
                             </p:panel>
-
                         </p:dataList>
                     </h:panelGrid>
-
-
-
                 </div>
             </div>
         </h:form>
     </h:body>
-
 </html>

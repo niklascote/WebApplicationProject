@@ -56,25 +56,6 @@ public class EventController implements Serializable {
     @Setter
     private Users user = new Users();
         
-    @Getter
-    private List<Users> selectedAttendees = new ArrayList<Users>();
-    
-    @Getter
-    @Setter
-    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
-    
-    public void setSelectedAttendees(List<Users> selectedAttendees ){
-        this.selectedAttendees = selectedAttendees;
-        this.selectedEventAttendees.clear();
-        
-        for(Users u : selectedAttendees) {
-            if(!selectedEventAttendees.contains(u)){
-                selectedEventAttendees.add(new EventParticipant(u));
-            }   
-        }
-    }
-    
-   
     
     @PostConstruct
     public void init() {
@@ -85,8 +66,12 @@ public class EventController implements Serializable {
         //Get all events for the user
         getEvents();        
     }
-
+    
     public String addEvent() {
+        return addEvent(new ArrayList<>());
+    }
+
+    public String addEvent(List<EventParticipant> participants) {
 
         //Add event to Event-table in DB        
         Event e = new Event(event.getEvent().getTitle(),
@@ -99,7 +84,6 @@ public class EventController implements Serializable {
 
         eventFacade.create(e);
 
-        //Todo: When repeating this must be change to multiple occurances
         //Add event occurance to EventOccurance-table in DB    
         EventOccurance eo = new EventOccurance(
                 eventFacade.find(e.getId()),
@@ -107,6 +91,16 @@ public class EventController implements Serializable {
                 event.getEventOccurance().getEndDate());
                 
         eventOccuranceFacade.create(eo);
+        
+        //Add event participant
+        if(participants.size() > 0) {
+            for (EventParticipant ep : participants) {
+                ep.setEvent(e);
+                if(!ep.equals(event.getEvent().getOwner())) {
+                    eventParticipantFacade.create(ep);
+                }
+            }
+        }
         
         eventModel.addEvent(new EventViewer(e, eo));
         clearEvent();
@@ -123,10 +117,18 @@ public class EventController implements Serializable {
         
         List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(event.getEvent().getId());
         
-        //Remove event and occurances from database         
+        //Remove event         
         for(EventOccurance eo : occurances) {
             eventOccuranceFacade.remove(eo);
         }
+        
+        //Delete all event participants from event
+        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
+        if(participants.size() > 0) {
+            eventParticipantFacade.deleteEventParticipantByEvent(event.getEvent().getId());
+        }
+        
+        //Delete event
         eventFacade.remove(event.getEvent());
         
         getEvents();
@@ -136,6 +138,13 @@ public class EventController implements Serializable {
     }
     
     public String deleteThisEvent() {
+        
+        //Delete event participants
+        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
+        if(participants.size() > 0) {
+            eventParticipantFacade.deleteEventParticipantByEvent(event.getEvent().getId());
+        }
+            
         //Delete event and occurances from database
         eventOccuranceFacade.remove(event.getEventOccurance());
         
@@ -150,11 +159,26 @@ public class EventController implements Serializable {
         return "pretty:calendar";
     }
 
-    public String updateEvent() {
+    public String updateEvent(List<EventParticipant> participants) {
 
         //Update entities
         eventFacade.edit(event.getEvent());
         eventOccuranceFacade.edit(event.getEventOccurance());
+        
+        //Update event participant
+        if(participants.size() > 0) {
+            
+            eventParticipantFacade.deleteEventParticipantByEvent(event.getEvent().getId());
+            
+            for (EventParticipant ep : participants) {
+                ep.setEvent(event.getEvent());
+                
+                //Do not add if the user is the owner
+                if(!ep.equals(event.getEvent().getOwner())) {
+                    eventParticipantFacade.create(ep);
+                }
+            }
+        }
 
         //Update event model
         eventModel.updateEvent(event);

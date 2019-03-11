@@ -52,7 +52,7 @@
                         <p:growl id="messages" showDetail="true" />
 
                         <p:panelGrid>
-                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventController.eventModel}" widgetVar="myschedule" timeZone="#{scheduleController.user.timezone}">
+                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventController.eventModel}" widgetVar="myschedule" timeZone="#{eventController.user.timezone}">
                                 <p:ajax event="dateSelect" listener="#{eventController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
                                 <p:ajax event="eventSelect" listener="#{eventController.onEventSelect}" oncomplete="editEvent()" /> 
                                 <p:ajax event="eventMove" listener="#{eventController.onEventMove}" update="messages" />

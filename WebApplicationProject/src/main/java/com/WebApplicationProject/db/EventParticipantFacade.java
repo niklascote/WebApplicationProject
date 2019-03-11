@@ -38,4 +38,18 @@ public class EventParticipantFacade extends AbstractFacade<EventParticipant> {
 
        return results;
    }
+    
+    public void deleteEventParticipantByEvent(Long eventId) {
+        em.createNamedQuery("EventParticipant.deleteByEvent")
+                .setParameter("eventId", eventId)
+                .executeUpdate();
+    }
+    
+    public List<EventParticipant> getEventParticipantByEvent(Long eventId) {
+        List results = em.createNamedQuery("EventParticipant.getByEvent")
+               .setParameter("eventId", eventId)
+               .getResultList();
+
+       return results;
+    }
 }

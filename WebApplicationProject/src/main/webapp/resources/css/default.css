@@ -134,10 +134,6 @@ body.index > .container > .sign_up {
     padding-inline-start: 0px;
 }
 
-.ui-panel .ui-panel-content {
-     padding: 0px !important;
-}
-
 .ui-panel-content .ui-widget-content {
     padding:0 !important;
 }

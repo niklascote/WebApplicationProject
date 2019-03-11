@@ -1,6 +1,8 @@
 package com.WebApplicationProject.control;
 
+import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.EventParticipant;
 import com.WebApplicationProject.model.Users;
 
 import java.io.Serializable;
@@ -16,6 +18,7 @@ import javax.faces.model.DataModel;
 import javax.faces.view.ViewScoped;
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.event.UnselectEvent;
@@ -34,6 +37,9 @@ public class UsersController implements Serializable {
     @EJB
     private UsersFacade usersFacade;
     
+    @EJB
+    private EventParticipantFacade eventParticipantFacade;
+    
     @Getter
     @Setter
     private Users user = new Users();
@@ -42,6 +48,28 @@ public class UsersController implements Serializable {
     @Setter
     private List<Users> attendeesList = new ArrayList<Users>(); 
     
+    @Getter
+    private List<Users> selectedAttendees = new ArrayList<Users>();
+    
+    @Setter
+    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
+    
+    private Boolean firstTime = true; 
+    
+    public List<EventParticipant> getSelectedEventAttendees() {
+        return selectedEventAttendees;
+    }
+        
+    public List<EventParticipant> getSelectedEventAttendees(Long eventId) {
+        
+        if(firstTime && eventId != null){
+            this.selectedEventAttendees = eventParticipantFacade.getEventParticipantByEvent(eventId);
+            firstTime = false;
+        }
+        
+        return this.selectedEventAttendees;
+    }
+        
 
     @PostConstruct 
     public void init() {
@@ -88,6 +116,31 @@ public class UsersController implements Serializable {
         List<Users> users = userFacade.findAll();
         users.remove(user);
         return users; 
+    }
+    
+    public void setSelectedAttendees(List<Users> selectedAttendees){
+                
+        if(selectedAttendees == null) { return; }
+        
+        this.selectedAttendees = selectedAttendees;
+        
+        for(Users u : selectedAttendees) {  
+            Boolean alreadyParticipant = false;
+                        
+            for(EventParticipant ep : selectedEventAttendees)  {
+                if (ep.getParticipant().equals(u)) { 
+                    alreadyParticipant = true;
+                }
+            }
+        
+            if(!alreadyParticipant){
+                selectedEventAttendees.add(new EventParticipant(u));
+            }
+        }
+    }
+    
+    public void removeAttendee(EventParticipant participant) {
+        this.selectedEventAttendees.remove(participant);
     }
     
     public void onTransfer(TransferEvent event) {
