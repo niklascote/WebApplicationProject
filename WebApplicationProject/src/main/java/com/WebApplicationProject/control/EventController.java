@@ -132,16 +132,17 @@ public class EventController implements Serializable {
     public String deleteParticipantEvent() {
         
         if(event.getEvent().getOwner().equals(user)) {
+            //Delete this event if user is owner
             deleteThisEvent();
-            return; 
         }
-        
-        //Delete the event participants from event
-        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
-        
-        for(EventParticipant ep : participants) {
-            if(ep.equals(user)) {
-                eventParticipantFacade.remove(ep);
+        else {
+            //Delete the event participants from event
+            List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
+
+            for(EventParticipant ep : participants) {
+                if(ep.equals(user)) {
+                    eventParticipantFacade.remove(ep);
+                }
             }
         }
         
