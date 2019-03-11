@@ -33,15 +33,9 @@ import javax.servlet.http.HttpSession;
 public class AuthController extends HttpServlet {
 
     @EJB
-    private com.WebApplicationProject.db.UsersFacade ufacade;
-    
-    
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String email = request.getParameter("email"); //Fetches data from loginView.xhtml
-        String pass = request.getParameter("pass");
+    private static com.WebApplicationProject.db.UsersFacade ufacade;
+
+    public static boolean validate(String email, String pass){
         
         //Class.forName("com.derby.jdbc.Drivers");
         //Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
@@ -51,12 +45,9 @@ public class AuthController extends HttpServlet {
         //ps.setString(2, pass);
         
         //ResultSet rs = ps.executeQuery();
-        
         if(user.size()>0) {
-            HttpSession session =request.getSession();
-            session.setAttribute("user", email);
-            response.sendRedirect("schedule/scheduleView.xhtml"); //Direction if login is successful (PLACEHOLDER)
+            return true;
         }else
-            response.sendRedirect("schedule/loginView.xhtml");//Direction if login is NOT successful (PLACEHOLDER)
+            return false;
     }
 }
