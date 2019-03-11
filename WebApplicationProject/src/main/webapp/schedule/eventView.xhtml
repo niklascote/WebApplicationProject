@@ -19,23 +19,35 @@
         <h:form>
             <p:growl id="messages" showDetail="true" />
 
-            <p:megaMenu orientation="horizontal" style="margin-top:20px;">
-                <p:menuitem value="Update event" disabled="true" style="background: white;" rendered="#{param.update == true}" /> 
-                <p:menuitem value="Add event" disabled="true" style="background: white;" rendered="#{param.update == false}" /> 
-
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventController.writePremission()}">
+                <p:menuitem value="Event" disabled="true" style="background: white;" /> 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
                 <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.updateEvent(usersController.selectedEventAttendees)}" rendered="#{param.update == true}"/> 
                 <p:menuitem value="Save" icon="fa fa-fw fa-save" action="#{eventController.addEvent(usersController.selectedEventAttendees)}" rendered="#{param.update == false}"/>
 
-                <p:menuitem value="Delete this occurance" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteThisEvent()}" rendered="#{param.update == true}"/>
-                <p:menuitem value="Delete all occurances" ajax="false" icon="fa fa-fw fa-trash" action="#{eventController.deleteAllEvents()}" rendered="#{param.update == true}"/>
-                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteTemporaryEvent()}" rendered="#{param.update == false}"/>
+                <p:submenu label="Delete" icon="fa fa-fw fa-trash" rendered="#{param.update == true}">
+                    <p:column>
+                        <p:submenu>
+                            <p:menuitem value="This occurance" ajax="false" action="#{eventController.deleteThisEvent()}"/>
+                            <p:menuitem value="All occurances" ajax="false" action="#{eventController.deleteAllEvents()}"/>
+                            <p:menuitem value="Only from your schedule" ajax="false" action="#{eventController.deleteAllEvents()}"/>
+                        </p:submenu>
+                    </p:column>
+                </p:submenu>
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteParticipantEvent()}" rendered="#{param.update == false}"/>
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
                 <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> 
 
+                <p:menuitem class="quit" icon="fa fa-fw fa-close" outcome="pretty:calendar" />
+            </p:megaMenu>
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventController.writePremission() == false}">
+                <p:menuitem value="Event" disabled="true" style="background: white;" /> 
+                <p:menuitem value="|" disabled="true" style="background: white;"/> 
+                <p:menuitem value="Delete from your schedule" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteParticipantEvent()}"/>
+                <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 <p:menuitem class="quit" icon="fa fa-fw fa-close" outcome="pretty:calendar" />
             </p:megaMenu>
 

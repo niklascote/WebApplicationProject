@@ -70,6 +70,22 @@ public class EventController implements Serializable {
     public String addEvent() {
         return addEvent(new ArrayList<>());
     }
+    
+    public Boolean writePremission() {
+        //Check if user has write permission on event
+        if(event.getEvent().getOwner().equals(user)) {
+            return true;
+        }
+        
+        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByParticipant(event.getEvent().getId());
+        for(EventParticipant ep : participants) {
+            if(ep.equals(user)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     public String addEvent(List<EventParticipant> participants) {
 
@@ -110,6 +126,25 @@ public class EventController implements Serializable {
     
     public String deleteTemporaryEvent() {
         clearEvent();        
+        return "pretty:calendar";
+    }
+    
+    public String deleteParticipantEvent() {
+        
+        if(event.getEvent().getOwner().equals(user)) {
+            deleteThisEvent();
+            return; 
+        }
+        
+        //Delete the event participants from event
+        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
+        
+        for(EventParticipant ep : participants) {
+            if(ep.equals(user)) {
+                eventParticipantFacade.remove(ep);
+            }
+        }
+        
         return "pretty:calendar";
     }
 
