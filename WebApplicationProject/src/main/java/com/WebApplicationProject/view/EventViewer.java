@@ -37,6 +37,7 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
     public EventViewer(String title, Date start, Date end) {
         super(title, start, end);
         super.setAllDay(true);
+        changeAllDay();
     }
     
     public EventViewer(Event e, EventOccurance eo) {
