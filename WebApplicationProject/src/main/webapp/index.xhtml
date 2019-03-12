@@ -12,20 +12,6 @@
         <h:outputStylesheet library="css" name="default.css"  />
         <title>Calendar</title>
     </h:head>
-
-    
-    <!--
-    <c:choose>
-        <c:when test="#{sessionScope.user == null}">
-            <h:link value="LOG IN" outcome="/users/loginView.xhtml"/>
-        </c:when>
-        <c:otherwise>
-            <h:outputText value="Logged in as user"/>
-        </c:otherwise>
-    </c:choose>
-    -->
-    
-    
     
     <h:body class="index">
 
@@ -40,10 +26,6 @@
             <p class="register">Not registered?</p>
 
             <h:link value="Sign up" outcome="/users/Create.xhtml" class="sign_up"/>
-            
-            <h:link value="Calendar" outcome="/schedule/scheduleView.xhtml"/>
-
-
         </h:panelGroup>
 
     </h:body>
