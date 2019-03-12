@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.jsf.beans;
+package com.WebApplicationProject.model;
 
 /**
  *
  * @author niklascote
  */
-
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -5,49 +5,64 @@
  */
 package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Auth;
+import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author niklascote
  */
-@WebServlet(name = "Auth", urlPatterns = {"/Auth"})
+@Named("authController")
+@SessionScoped
 public class AuthController extends HttpServlet {
 
     @EJB
-    private static com.WebApplicationProject.db.UsersFacade ufacade;
+    private com.WebApplicationProject.db.UsersFacade ufacade;
 
-    public static boolean validate(String email, String pass){
-        
-        //Class.forName("com.derby.jdbc.Drivers");
-        //Connection c = DriverManager.getConnection("jdbc:derby://localhost:1527/scheduleDatabase\", \"root\", \"root");
-        //PreparedStatement ps = c.prepareStatement("select FIRSTNAME,PASSWORD from USERS where FIRSTNAME=? and PASSWORD=?");
-        List user = ufacade.users(email,pass); //Passes arguments into query in UsersFacade
-        //ps.setString(1, user); //Currently uses FIRSTNAME as User
-        //ps.setString(2, pass);
-        
-        //ResultSet rs = ps.executeQuery();
-        if(user.size()>0) {
-            return true;
-        }else
-            return false;
+    @Getter
+    @Setter
+    private Auth tmp = new Auth();
+
+    public String login() {
+        System.out.println("E1");
+        if (validate()) {
+            System.out.println("E3_A");
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN,
+                            "Incorrect Email and Password",
+                            "Please enter correct Email and Password"));
+            return "users/loginView";
+        } 
+        else {
+            System.out.println("E3_B");
+            HttpSession session = SessionUtil.getSession();
+            session.setAttribute("email", tmp.getEmail());
+            return "schedule/scheduleView";
+        }
     }
+    
+    private boolean validate() {
+        System.out.println("E2");
+        return (ufacade.users(tmp.getEmail(), tmp.getPass())).size() <= 0;
+    }
+
+    //Logout event, invalidate session
+    public String logout() {
+        HttpSession session = SessionUtil.getSession();
+        session.invalidate();
+        return "users/loginView";
+    }
+
 }
