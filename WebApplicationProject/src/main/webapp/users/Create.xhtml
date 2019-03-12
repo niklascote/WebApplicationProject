@@ -35,13 +35,13 @@
                         <h:outputLabel value="Timezone:" for="timezone" />
                             
                         
-                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="true"/>
+                        <h:inputText id="timezone" value="#{usersController.selected.timezone}" title="Timezone" required="true" requiredMessage="The Timezone field is required." disabled="false"/>
                         <h:outputLabel value="Notifications:" for="notifications" />
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
                     
-                    <p:remoteCommand name="remote" action="#{usersController.onSetTimezone}" process="@this" partialSubmit="true">
+                    <p:remoteCommand name="remote" action="#{usersController.prepareEdit()}" process="@this" partialSubmit="true">
                                                 </p:remoteCommand>
                     
                     <script id="test" type="text/javascript">
