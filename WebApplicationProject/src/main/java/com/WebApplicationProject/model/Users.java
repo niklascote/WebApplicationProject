@@ -155,6 +155,7 @@ public class Users implements Serializable {
     }
 
     public void setTimezone(String timezone) {
+        System.out.println("Timezone in setter: " + timezone);
         this.timezone = timezone;
     }
 

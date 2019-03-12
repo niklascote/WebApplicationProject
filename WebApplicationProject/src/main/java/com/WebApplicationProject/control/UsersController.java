@@ -8,7 +8,8 @@ import com.WebApplicationProject.model.Users;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
+
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -18,7 +19,6 @@ import javax.faces.model.DataModel;
 import javax.faces.view.ViewScoped;
 import lombok.Getter;
 import lombok.Setter;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.event.UnselectEvent;
@@ -80,10 +80,34 @@ public class UsersController implements Serializable {
     public Users getSelected() {
         if (current == null) {
             current = new Users();
-            current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
+            //current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
+            
+            System.out.println("test");
+            
+            //current.setTimezone(getTimezone());
+            
             selectedItemIndex = -1;
         }
         return current;
+    }
+    
+    
+    public String getTimezone(){
+        return current.getTimezone();
+    }
+    
+    public void onSetTimezone(){
+        
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        
+        String timezone = params.get("timezone");
+        
+        //String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("timezone");
+        System.out.println("Timezone: " + timezone);
+        getSelected().setTimezone(timezone);
+        //System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
+        //Locale locale = request.getLocale();
+        //current.setTimezone(request.);
     }
     
     public String shortenTimeZone(String name){
