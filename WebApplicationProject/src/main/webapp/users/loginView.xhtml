@@ -10,21 +10,28 @@
         <h:outputStylesheet library="css" name="default.css"  />
         <title>Login to Calendar</title>
     </h:head>
-    <h:form>
-        <p:inputText type="text"
-                     value="#{authController.tmp.email}" 
-                     required="true"
-                     placeholder="Username (email)"/>
+    <h:form styleClass="loginView">
+        <div>
+            <p:inputText type="text"
+                         value="#{authController.tmp.email}" 
+                         required="true"
+                         placeholder="Username (email)"/>
 
-        <p:inputText type="password"
-                     value="#{authController.tmp.pass}" 
-                     required="true"
-                     placeholder="Password"/>
-        
-        <p:commandButton 
-            ajax="false"
-            value="Login"
-            action="#{authController.login()}"/>
+            <p:inputText type="password"
+                         value="#{authController.tmp.pass}" 
+                         required="true"
+                         placeholder="Password"/>
+        </div>
+        <div>
+            <p:commandButton
+                ajax="false"
+                value="Login"
+                action="#{authController.login()}"/>
+        </div>
+        <div>
+            <p:messages showDetail="true"/>
+        </div>
     </h:form>
+
 </html>
 

@@ -26,10 +26,10 @@ body.index > .container > a {
     text-decoration: none;
     font-weight: bold;
     display: block;
-    
+
     margin: 5px;
     padding: 5px;
-    
+
     border: 1px solid transparent;
     border-radius: 0px;
     transition: 0.1s;
@@ -40,17 +40,6 @@ body.index > .container > a:hover {
     border-radius: 5px;
 }
 
-body.index > .container > .login_container > form {
-    display: inline-block;
-}
-
-body.index > .container > .login_container > form > input {
-    margin: 5px;
-    padding: 5px;
-    display: block;
-}
-
-body.index > .container > .login_container > form > input.button,
 body.index > .container > .register,
 body.index > .container > .sign_up {
     display: inline-block;
@@ -127,7 +116,7 @@ body.index > .container > .sign_up {
 
 .ui-datalist-item {
     list-style-type: none;
-    
+
 }
 
 .ui-datalist-data{
@@ -136,4 +125,19 @@ body.index > .container > .sign_up {
 
 .ui-panel-content .ui-widget-content {
     padding:0 !important;
+}
+
+.loginView {
+    display:inline-block;
+}
+
+.loginView > div {
+    display: block;
+    margin: 5px;
+    padding: 5px;
+}
+
+.loginView > div > input {
+    display: block;
+    margin: 5px auto;
 }

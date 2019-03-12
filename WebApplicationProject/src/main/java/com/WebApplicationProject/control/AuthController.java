@@ -43,9 +43,9 @@ public class AuthController extends HttpServlet {
             FacesContext.getCurrentInstance().addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "Incorrect Email and Password",
+                            "Incorrect Email and/or Password",
                             "Please enter correct Email and Password"));
-            return "";
+            return "index.xhtml";
         }
     }
 
