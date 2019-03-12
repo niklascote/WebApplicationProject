@@ -23,7 +23,6 @@ public class Login implements Serializable {
 	private static final long serialVersionUID = 1094801825228386363L;
 	
 	private String pass;
-	private String msg;
 	private String email;
 
 	public String getPass() {
@@ -34,13 +33,6 @@ public class Login implements Serializable {
 		this.pass = pass;
 	}
 
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
 
 	public String getEmail() {
 		return email;
