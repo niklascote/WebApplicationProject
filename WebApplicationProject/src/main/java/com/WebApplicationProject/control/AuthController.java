@@ -35,34 +35,34 @@ public class AuthController extends HttpServlet {
     private Auth tmp = new Auth();
 
     public String login() {
-        System.out.println("E1");
         if (validate()) {
-            System.out.println("E3_A");
+            HttpSession session = SessionUtil.getSession();
+            session.setAttribute("email", tmp.getEmail());
+            return "schedule/scheduleView";
+        } else {
             FacesContext.getCurrentInstance().addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Incorrect Email and Password",
                             "Please enter correct Email and Password"));
-            return "users/loginView";
-        } 
-        else {
-            System.out.println("E3_B");
-            HttpSession session = SessionUtil.getSession();
-            session.setAttribute("email", tmp.getEmail());
-            return "schedule/scheduleView";
+            return "";
         }
     }
-    
+
     private boolean validate() {
-        System.out.println("E2");
-        return (ufacade.users(tmp.getEmail(), tmp.getPass())).size() <= 0;
+        List<Users> users = ufacade.users(tmp.getEmail());
+
+        return !(users == null
+                || users.size() != 1 //Only one user with this email exist.
+                || users.get(0) == null
+                || (users.get(0).getPassword() == null ? tmp.getPass() != null : !users.get(0).getPassword().equals(tmp.getPass())));
     }
 
     //Logout event, invalidate session
     public String logout() {
         HttpSession session = SessionUtil.getSession();
         session.invalidate();
-        return "users/loginView";
+        return "index.xhtml";
     }
 
 }
