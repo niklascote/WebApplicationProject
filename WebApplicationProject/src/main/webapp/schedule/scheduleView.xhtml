@@ -85,7 +85,25 @@
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="location" value="Location:" />
-                                <p:inputText id="location" value="#{eventController.event.event.location}"/>                    
+                                <p:inputText id="location" value="#{eventController.event.event.location}"/>  
+
+                                <p:outputLabel for="recurrent" value="Recurrent:" />
+                                <p:selectBooleanCheckbox id="recurrent" value="#{eventController.event.recurrent}">
+                                    <p:ajax update="to, from"/>
+                                </p:selectBooleanCheckbox>
+
+
+                                <p:outputLabel for="recurrentEvery" value="Repeat every: "/>
+                                <p:selectOneMenu id="recurrentEvery" value="#{eventController.event.recurrentEveryRange}"  style="width:125px" >
+                                    <f:selectItem itemValue="Day" itemLabel="Day"/>
+                                    <f:selectItem itemValue="Week" itemLabel="Week"/>
+                                    <f:selectItem itemValue="Month" itemLabel="Month"/>
+                                    <f:selectItem itemValue="Year" itemLabel="Year"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="recurrentFor" value="Repeat # of times:" />
+                                <p:inputText id="recurrentFor" value="#{eventController.event.recurrentForRange}"/>
+
 
                                 <p:commandLink id="ajax" value="More information" update="eventDetails" action="pretty:addeventview"/>
                                 <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>

@@ -46,36 +46,36 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Long id;
-    
+
     @Column(name = "LOCATION", length = 250)
     private String location;
-        
+
     @JoinColumn(name = "REMINDER", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Reminder reminder;
-    
+
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
-        
+
     @Column(name = "TITLE", length = 250, nullable = false)
     private String title;
-    
+
     @OneToMany(mappedBy = "event")
     private Collection<EventParticipant> eventParticipantCollection;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Collection<EventOccurance> eventOccuranceCollection;
-    
+
     @JoinColumn(name = "CALENDAR", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Calendar calendar;
-    
+
     @JoinColumn(name = "OWNER", referencedColumnName = "ID", nullable = false)
     @ManyToOne
     private Users owner;
@@ -86,16 +86,16 @@ public class Event implements Serializable {
     public Event(Long id) {
         this.id = id;
     }
-    
+
     public Event(String title, Calendar cal, String location, Users owner, Reminder reminder, String description) {
         this.title = title;
-        this.calendar = cal; 
-        this.location = location; 
+        this.calendar = cal;
+        this.location = location;
         this.owner = owner;
-        this.reminder = reminder; 
-        this.description = description; 
+        this.reminder = reminder;
+        this.description = description;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -108,7 +108,7 @@ public class Event implements Serializable {
         return location;
     }
 
-    public void setLocation(String location) {        
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -194,5 +194,5 @@ public class Event implements Serializable {
     public String toString() {
         return "com.WebApplicationProject.model.Event[ id=" + id + " ]";
     }
-    
+
 }
