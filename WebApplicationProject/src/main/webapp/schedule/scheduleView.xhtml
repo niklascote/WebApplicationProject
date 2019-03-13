@@ -137,12 +137,12 @@
               setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
             }
         }
-        var e = new Date();
+        var now = new Date();
         var startDateOfEvent = document.getElementById('form:from');
         
         startDateOfEvent = startDateOfEvent.getTime();
         
-        if((startDateOfEvent-86400000)<=e.getTime() && e.getTime()<=startDateOfEvent){   //if there is an event today Send Notification
+        if((startDateOfEvent-86400000)<=now.getTime() && now.getTime()<=startDateOfEvent){   //if there is an event today Send Notification
             notifyEvent();
         }
         
