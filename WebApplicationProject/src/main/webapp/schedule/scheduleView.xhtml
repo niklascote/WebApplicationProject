@@ -133,9 +133,16 @@
               setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
             }
         }
-        if(true){   //if there is an event today Send Notification
+        var e = new Date();
+        var input = document.getElementById('form:from');
+        
+        input=input.prototype.substr(0,input.prototype.indexOf(' '));
+        
+        if(e.getDate()===input){   //if there is an event today Send Notification
             notifyEvent();
         }
+        else
+            window.alert(" "+input+"    "+e);
     </script>
 
     </h:body>
