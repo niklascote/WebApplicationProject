@@ -45,7 +45,7 @@ public class AuthController extends HttpServlet {
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Incorrect Email and/or Password",
                             "Please enter correct Email and Password"));
-            return "index.xhtml";
+            return "/index.xhtml";
         }
     }
 
@@ -62,7 +62,7 @@ public class AuthController extends HttpServlet {
     public String logout() {
         HttpSession session = SessionUtil.getSession();
         session.invalidate();
-        return "index.xhtml";
+        return "/index.xhtml";
     }
 
 }
