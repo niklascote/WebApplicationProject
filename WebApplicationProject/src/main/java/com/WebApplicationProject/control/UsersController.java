@@ -1,27 +1,31 @@
+
 package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.EventParticipant;
 import com.WebApplicationProject.model.Users;
+import com.WebApplicationProject.view.util.JsfUtil;
+import com.WebApplicationProject.view.util.PaginationHelper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+import java.util.ResourceBundle;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.faces.application.FacesMessage;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
-import lombok.Getter;
-import lombok.Setter;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TransferEvent;
-import org.primefaces.event.UnselectEvent;
+import javax.servlet.http.HttpServletRequest;
 
 @Named("usersController")
 @ViewScoped
@@ -29,52 +33,12 @@ public class UsersController implements Serializable {
 
     private Users current;
     private DataModel items = null;
+    @EJB
+    private com.WebApplicationProject.db.UsersFacade ejbFacade;
+    private PaginationHelper pagination;
     private int selectedItemIndex;
-    
-    @EJB
-    private com.WebApplicationProject.db.UsersFacade userFacade;
-    
-    @EJB
-    private UsersFacade usersFacade;
-    
-    @EJB
-    private EventParticipantFacade eventParticipantFacade;
-    
-    @Getter
-    @Setter
-    private Users user = new Users();
-        
-    @Getter
-    @Setter
-    private List<Users> attendeesList = new ArrayList<Users>(); 
-    
-    @Getter
-    private List<Users> selectedAttendees = new ArrayList<Users>();
-    
-    @Setter
-    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
-    
-    private Boolean firstTime = true; 
-    
-    public List<EventParticipant> getSelectedEventAttendees() {
-        return selectedEventAttendees;
-    }
-        
-    public List<EventParticipant> getSelectedEventAttendees(Long eventId) {
-        
-        if(firstTime && eventId != null){
-            this.selectedEventAttendees = eventParticipantFacade.getEventParticipantByEvent(eventId);
-            firstTime = false;
-        }
-        
-        return this.selectedEventAttendees;
-    }
-        
 
-    @PostConstruct 
-    public void init() {
-        //TODO: Only for testing. Must be changed to a real user search. 
-        user = usersFacade.find(1L);
+    public UsersController() {
     }
 
     public Users getSelected() {
@@ -120,79 +84,197 @@ public class UsersController implements Serializable {
         }
         return sB.toString();
     }
-    
-    public List<Users> completeAttendees(String query) {
-        List<Users> allUsers = setAttendeesList();
-        attendeesList = new ArrayList<>();
-         
-        for (int i = 0; i < allUsers.size(); i++) {
-            Users skin = allUsers.get(i);
-            
-            if(skin.getFirstname().toLowerCase().contains(query) || skin.getLastname().toLowerCase().contains(query)) {
-                attendeesList.add(skin);
-            }
-        }
-         
-        return attendeesList;
+
+    private UsersFacade getFacade() {
+        return ejbFacade;
     }
-    
-    public List<Users> setAttendeesList() {
-        List<Users> users = userFacade.findAll();
-        users.remove(user);
-        return users; 
-    }
-    
-    public void setSelectedAttendees(List<Users> selectedAttendees){
-                
-        if(selectedAttendees == null) { return; }
-        
-        this.selectedAttendees = selectedAttendees;
-        
-        for(Users u : selectedAttendees) {  
-            Boolean alreadyParticipant = false;
-                        
-            for(EventParticipant ep : selectedEventAttendees)  {
-                if (ep.getParticipant().equals(u)) { 
-                    alreadyParticipant = true;
+
+    public PaginationHelper getPagination() {
+        if (pagination == null) {
+            pagination = new PaginationHelper(10) {
+
+                @Override
+                public int getItemsCount() {
+                    return getFacade().count();
                 }
-            }
-        
-            if(!alreadyParticipant){
-                selectedEventAttendees.add(new EventParticipant(u));
-            }
+
+                @Override
+                public DataModel createPageDataModel() {
+                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
+                }
+            };
+        }
+        return pagination;
+    }
+
+    public String prepareList() {
+        recreateModel();
+        return "List";
+    }
+
+    public String prepareView() {
+        current = (Users) getItems().getRowData();
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        return "View";
+    }
+
+    public String prepareCreate() {
+        current = new Users();
+        selectedItemIndex = -1;
+        return "Create";
+    }
+
+    public String create() {
+        try {
+            getFacade().create(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersCreated"));
+            return prepareCreate();
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            return null;
         }
     }
-    
-    public void removeAttendee(EventParticipant participant) {
-        this.selectedEventAttendees.remove(participant);
+
+    public String prepareEdit() {
+        current = (Users) getItems().getRowData();
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        return "Edit";
     }
-    
-    public void onTransfer(TransferEvent event) {
-        StringBuilder builder = new StringBuilder();
-        for(Object item : event.getItems()) {
-            builder.append(((Users) item).getFirstname()).append("<br />");
+
+    public String update() {
+        try {
+            getFacade().edit(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersUpdated"));
+            return "View";
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            return null;
         }
-         
-        FacesMessage msg = new FacesMessage();
-        msg.setSeverity(FacesMessage.SEVERITY_INFO);
-        msg.setSummary("Items Transferred");
-        msg.setDetail(builder.toString());
-         
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }  
-     
-    public void onSelect(SelectEvent event) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item Selected", event.getObject().toString()));
     }
-     
-    public void onUnselect(UnselectEvent event) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item Unselected", event.getObject().toString()));
+
+    public String destroy() {
+        current = (Users) getItems().getRowData();
+        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
+        performDestroy();
+        recreatePagination();
+        recreateModel();
+        return "List";
     }
-     
-    public void onReorder() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "List Reordered", null));
+
+    public String destroyAndView() {
+        performDestroy();
+        recreateModel();
+        updateCurrentItem();
+        if (selectedItemIndex >= 0) {
+            return "View";
+        } else {
+            // all items were removed - go back to list
+            recreateModel();
+            return "List";
+        }
     }
+
+    private void performDestroy() {
+        try {
+            getFacade().remove(current);
+            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersDeleted"));
+        } catch (Exception e) {
+            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+        }
+    }
+
+    private void updateCurrentItem() {
+        int count = getFacade().count();
+        if (selectedItemIndex >= count) {
+            // selected index cannot be bigger than number of items:
+            selectedItemIndex = count - 1;
+            // go to previous page if last page disappeared:
+            if (pagination.getPageFirstItem() >= count) {
+                pagination.previousPage();
+            }
+        }
+        if (selectedItemIndex >= 0) {
+            current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
+        }
+    }
+
+    public DataModel getItems() {
+        if (items == null) {
+            items = getPagination().createPageDataModel();
+        }
+        return items;
+    }
+
+    private void recreateModel() {
+        items = null;
+    }
+
+    private void recreatePagination() {
+        pagination = null;
+    }
+
+    public String next() {
+        getPagination().nextPage();
+        recreateModel();
+        return "List";
+    }
+
+    public String previous() {
+        getPagination().previousPage();
+        recreateModel();
+        return "List";
+    }
+
+    public SelectItem[] getItemsAvailableSelectMany() {
+        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
+    }
+
+    public SelectItem[] getItemsAvailableSelectOne() {
+        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
+    }
+
+    public Users getUsers(java.lang.Long id) {
+        return ejbFacade.find(id);
+    }
+
+    @FacesConverter(forClass = Users.class)
+    public static class UsersControllerConverter implements Converter {
+
+        @Override
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            UsersController controller = (UsersController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "usersController");
+            return controller.getUsers(getKey(value));
+        }
+
+        java.lang.Long getKey(String value) {
+            java.lang.Long key;
+            key = Long.valueOf(value);
+            return key;
+        }
+
+        String getStringKey(java.lang.Long value) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(value);
+            return sb.toString();
+        }
+
+        @Override
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof Users) {
+                Users o = (Users) object;
+                return getStringKey(o.getId());
+            } else {
+                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Users.class.getName());
+            }
+        }
+
+    }
+
 }
