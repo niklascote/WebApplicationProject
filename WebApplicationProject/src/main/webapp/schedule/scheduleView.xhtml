@@ -98,12 +98,15 @@
         </h:panelGroup>
 
         <script type="text/javascript">
+            
             editEvent = function () {
                 window.location.href = "#{root}/calendar/event/update";
             };
+            
         </script>
         
         <script>
+           
         //Notification script
         Notification.requestPermission(); //Get access in browser
         function notifyEvent() {
@@ -136,14 +139,16 @@
         var e = new Date();
         var input = document.getElementById('form:from');
         
-        input=input.prototype.substr(0,input.prototype.indexOf(' '));
+        input=input.getTime();
         
-        if(e.getDate()===input){   //if there is an event today Send Notification
+        if((input-86400000)<=e.getTime() && e.getTime()<=input){   //if there is an event today Send Notification
             notifyEvent();
         }
-        else
-            window.alert(" "+input+"    "+e);
+        
+        
+        
     </script>
 
     </h:body>
+    
 </html>
