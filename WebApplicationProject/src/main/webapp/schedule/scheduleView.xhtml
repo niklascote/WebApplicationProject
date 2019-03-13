@@ -106,8 +106,8 @@
         </script>
         
         <script>
-        
-        //<![CDATA[ 
+        //<![CDATA[    //This needs to be here to be able to use operators in javascript
+        // Author Niklas Côté
         //Notification script
         Notification.requestPermission(); //Get access in browser
         function notifyEvent() {
@@ -132,20 +132,22 @@
                 body: "Hey! You have an Event Today"
               });
 
-              //notification.onclick = function () { //If link to event is needed
-                //window.open("");      
-              //};
+              notification.onclick = function () { //If link to event is needed
+                window.location.href= "#{root}/calendar/event/update"; //Redirection onClick of the notification      
+              };
               setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
             }
         }
-        var now = new Date(Date.now());
-        var currentTime = now.getTime();
-        var startDateOfEvent = document.getElementById('form:from');
-        var start = getTime(startDateOfEvent);
+        //var now = new Date(Date.now());
+        //var currentTime = now.getTime(); // Long Type miliseconds from 1970 Jan 1 00:00:00
+        
+        //var startDateOfEvent = document.getElementById('form:from');
+        //var start = new Date(startDateOfEvent.prototype.getTime());
+        //var startDate = start.prototype.toLocaleString();
         
         //startDateOfEvent = startDateOfEvent.getTime();
         
-        if((start-86400000 < currentTime) && ( currentTime < start)){   //if there is an event today Send Notification &lt;
+        if(true){   //TODO: if there is an event today Send Notification/ CURRENTLY notifies everytime reloaded/logged in
             notifyEvent();
         }
         
