@@ -104,7 +104,8 @@
         </script>
         
         <script>
-        Notification.requestPermission();
+        //Notification script
+        Notification.requestPermission(); //Get access in browser
         function notifyEvent() {
             if (!("Notification" in window)) {
               alert("This browser does not support system notifications");
