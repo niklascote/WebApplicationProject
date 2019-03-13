@@ -127,6 +127,7 @@
         function notification(){
             var notification = new Notification('Event Reminder Today', {
                 //icon: 'avatar.jpg',
+                title: "Calendar Reminder",
                 body: "Hey! You have an Event Today",
               });
 
@@ -137,11 +138,11 @@
             }
         }
         var e = new Date();
-        var input = document.getElementById('form:from');
+        var startDateOfEvent = document.getElementById('form:from');
         
-        input=input.getTime();
+        startDateOfEvent = startDateOfEvent.getTime();
         
-        if((input-86400000)<=e.getTime() && e.getTime()<=input){   //if there is an event today Send Notification
+        if((startDateOfEvent-86400000)<=e.getTime() && e.getTime()<=startDateOfEvent){   //if there is an event today Send Notification
             notifyEvent();
         }
         
