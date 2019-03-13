@@ -42,8 +42,33 @@
                         </p:selectManyCheckbox>
                     </h:form>
 
-                    <p:button value="Add a calendar"/>
+                    <h:form id="newCalForm">
+                        <p:commandButton value="Create new calendar" onclick="PF('newCalDialog').show()"/>
+                        <p:dialog 
+                            header="New Calendar"
+                            showEffect="fold"
+                            hideEffect="fold"
+                            widgetVar="newCalDialog" 
+                            position="left"
+                            resizable="false">
+                            <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                            <p:outputLabel for="calName" value="Name:"/>
+                            <p:inputText id="calName" value="#{calendarController.selected.name}" />
+                            
+                            <p:outputLabel for="calDesc" value="Description:"/>
+                            <p:inputText id="calDesc" value="#{calendarController.selected.description}" />
+                            
+                            <p:outputLabel for="calAccess" value="Public:"/>
+                            <p:selectBooleanCheckbox id="calAccess" value="#{calendarController.selected.publicAccess}" />
+                            
+                            <p:commandButton value="Cancel" onclick="PF('newCalDialog').hide()"/>
+                            <p:commandButton value="Create" actionListener="#{calendarController.create()}" oncomplete="PF('newCalDialog').hide()"/>
+                            </p:panelGrid>
+                            
+                            
 
+                        </p:dialog>
+                    </h:form>
                 </div>
 
                 <div class="ui-g-9" style="padding-left: 40px;">
