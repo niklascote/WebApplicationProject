@@ -102,6 +102,40 @@
                 window.location.href = "#{root}/calendar/event/update";
             };
         </script>
+        
+        <script>
+        Notification.requestPermission();
+        function notifyEvent() {
+            if (!("Notification" in window)) {
+              alert("This browser does not support system notifications");
+            }
+            else if (Notification.permission === "granted") {
+              notification();
+            }
+            else if (Notification.permission !== 'denied') {
+              Notification.requestPermission(function (permission) {
+                if (permission === "granted") {
+                  notification();
+                }
+              });
+        }
+        
+        function notification(){
+            var notification = new Notification('Event Reminder Today', {
+                //icon: 'avatar.jpg',
+                body: "Hey! You have an Event Today",
+              });
+
+              //notification.onclick = function () { //If link to event is needed
+                //window.open("");      
+              //};
+              setTimeout(notification.close.bind(notification), 7000); //Timeout for the notification
+            }
+        }
+        if(true){   //if there is an event today Send Notification
+            notifyEvent();
+        }
+    </script>
 
     </h:body>
 </html>
