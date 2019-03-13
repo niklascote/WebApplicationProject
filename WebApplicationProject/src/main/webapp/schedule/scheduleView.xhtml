@@ -106,7 +106,8 @@
         </script>
         
         <script>
-           
+        
+        //<![CDATA[ 
         //Notification script
         Notification.requestPermission(); //Get access in browser
         function notifyEvent() {
@@ -128,7 +129,7 @@
             var notification = new Notification('Event Reminder Today', {
                 //icon: 'avatar.jpg',
                 title: "Calendar Reminder",
-                body: "Hey! You have an Event Today",
+                body: "Hey! You have an Event Today"
               });
 
               //notification.onclick = function () { //If link to event is needed
@@ -137,17 +138,20 @@
               setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
             }
         }
-        var now = new Date();
+        var now = new Date(Date.now());
+        var currentTime = now.getTime();
         var startDateOfEvent = document.getElementById('form:from');
+        var start = getTime(startDateOfEvent);
         
-        startDateOfEvent = startDateOfEvent.getTime();
+        //startDateOfEvent = startDateOfEvent.getTime();
         
-        if((startDateOfEvent-86400000)<=now.getTime() && now.getTime()<=startDateOfEvent){   //if there is an event today Send Notification
+        if((start-86400000 < currentTime) && ( currentTime < start)){   //if there is an event today Send Notification &lt;
             notifyEvent();
         }
         
         
-        
+     
+    //]]>
     </script>
 
     </h:body>
