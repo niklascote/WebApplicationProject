@@ -22,7 +22,7 @@
                     <p:menuitem value="#{eventController.user.firstname} #{eventController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
-                        <p:commandButton type="button" value="Logout"/>
+                        <p:commandButton ajax="false" value="Logout" action="#{authController.logout()}"/>
                     </f:facet>
                 </p:menubar>
             </h:form>
