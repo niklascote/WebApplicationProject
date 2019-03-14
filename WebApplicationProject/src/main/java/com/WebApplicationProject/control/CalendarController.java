@@ -68,10 +68,15 @@ public class CalendarController implements Serializable {
         return currentCal;
     }
     
+    public List<Calendar> getAllCalendars(){
+        return getFacade().findAll();
+    }
+    
     public void setCalendars() {
         
         //All the user's created calendards
         user.getCalendarCollection().forEach((c) -> {
+            System.out.println("Adding editable calendar...");
             editableCalendars.add(c);
         });
         
@@ -92,25 +97,20 @@ public class CalendarController implements Serializable {
     
     public String prepareCreate(){
         currentCal = new Calendar();
-        System.out.println("New calender created!");
-        System.out.println("ID: " + currentCal.getId());
-        System.out.println("Name: " + currentCal.getName());
-        System.out.println("Desc: " + currentCal.getDescription());
-        System.out.println("PA: " + currentCal.getPublicAccess());
-        return "Create";
+        return "pretty:calendar";
     }
     
     public String create(){
-        System.out.println("Calendar name in create(): " + currentCal.getName());
-        currentCal.setOwner(user);
-        try {
+        
+        
+            currentCal.setOwner(user);
             getFacade().create(currentCal);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("CalendarCreated"));
+            System.out.println("New calender created!");
+            System.out.println("ID: " + currentCal.getId());
+            System.out.println("Name: " + currentCal.getName());
+            System.out.println("Desc: " + currentCal.getDescription());
+            System.out.println("PA: " + currentCal.getPublicAccess());
             return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
     }
 
 }
