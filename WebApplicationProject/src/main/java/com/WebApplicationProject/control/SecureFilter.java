@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
 public class SecureFilter implements Filter{
- private FilterConfig fc;
+ //private FilterConfig fc;
  
  public void doFilter(ServletRequest req, ServletResponse resp,  
      FilterChain chain) throws IOException, ServletException {  
@@ -31,12 +31,12 @@ public class SecureFilter implements Filter{
      boolean loggedIn = session != null && session.getAttribute("email") != null;
      boolean loginRequest = request.getRequestURI().equals(loginURI);
      boolean resourceRequest = request.getRequestURI().startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER);
- 
-    if (loggedIn || loginRequest || resourceRequest) {
-        chain.doFilter(request, response);
-    } else {
-        response.sendRedirect(loginURI);
-    }
+     //chain.doFilter(request, response);
+    //if (loggedIn || loginRequest || resourceRequest) {
+        
+    //} else {
+      //  response.sendRedirect(loginURI);
+    //}
     }  
  
     @Override
@@ -44,7 +44,7 @@ public class SecureFilter implements Filter{
 
     @Override
     public void init(FilterConfig arg) throws ServletException {
-        this.fc = arg;
+        //this.fc = arg;
     }  
  
 }

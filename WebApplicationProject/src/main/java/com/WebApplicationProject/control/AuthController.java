@@ -40,25 +40,25 @@ public class AuthController extends HttpServlet {
     @Setter
     private Auth tmp = new Auth();
 
-    public void login() throws IOException {
+    public String login() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         if (validate()) {
-            //HttpSession session = SessionUtil.getSession();
-            context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
-            //session.setAttribute("email", tmp.getEmail());
-            try {
-                context.getExternalContext().redirect("/schedule/scheduleView.xhtml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //return "schedule/scheduleView";
+            HttpSession session = SessionUtil.getSession();
+            //context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
+            session.setAttribute("email", tmp.getEmail());
+            //try {
+                //context.getExternalContext().redirect("/schedule/scheduleView.xhtml");
+            //} catch (IOException e) {
+              //  e.printStackTrace();
+            //}
+            return "/schedule/scheduleView";
         } else {
             context.addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Incorrect Email and/or Password",
                             "Please enter correct Email and Password"));
-            //return "/index.xhtml";
+            return "/index.xhtml";
         }
     }
 
