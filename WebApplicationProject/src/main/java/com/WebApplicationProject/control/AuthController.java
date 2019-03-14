@@ -70,6 +70,8 @@ public class AuthController extends HttpServlet {
                 || users.get(0) == null
                 || (users.get(0).getPassword() == null ? tmp.getPass() != null : !users.get(0).getPassword().equals(tmp.getPass())));
     }
+    
+ 
 
     //Logout event, invalidate session
     public String logout() {

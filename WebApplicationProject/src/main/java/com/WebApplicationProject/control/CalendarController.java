@@ -2,6 +2,7 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.CalendarFacade;
 import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.model.Calendar;
 import com.WebApplicationProject.view.util.JsfUtil;
@@ -20,6 +21,10 @@ import lombok.Setter;
 @Named("calendarController")
 @ViewScoped
 public class CalendarController implements Serializable {
+    
+    @Getter
+    @Setter
+    private Auth tmp = new Auth();
     
     private Calendar currentCal;
     
@@ -47,13 +52,19 @@ public class CalendarController implements Serializable {
     
     @Getter
     @Setter
+    private List<Users> users= new ArrayList<Users>();
+    
+    @Getter
+    @Setter
     private Calendar calendar = new Calendar();
     
     @PostConstruct
     public void init() {
+        user = usersFacade.find(1L);
         
         //TODO: Only for testing. Must be changed to a real user search. 
-        user = usersFacade.find(1L);
+        //users = usersFacade.users(tmp.getEmail());
+        //user = users.get(1);
         //currentCal = calendarFacade.find(1L);
         setCalendars();
         
