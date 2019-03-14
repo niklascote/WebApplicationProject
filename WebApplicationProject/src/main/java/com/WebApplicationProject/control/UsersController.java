@@ -2,8 +2,8 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.EventParticipant;
+import com.WebApplicationProject.model.SessionUtil;
 //import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.util.JsfUtil;
@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpSession;
 //import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,15 +85,6 @@ public class UsersController implements Serializable {
         }
         
         return this.selectedEventAttendees;
-    }
-        
-
-    @PostConstruct 
-    public void init() {
-        //TODO: Only for testing. Must be changed to a real user search. 
-        user = usersFacade.find(1L);
-        //users = usersFacade.users(tmp.getEmail());
-        //user = users.get(1);
     }
 
     public Users getSelected() {

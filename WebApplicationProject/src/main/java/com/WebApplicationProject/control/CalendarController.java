@@ -2,9 +2,9 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.CalendarFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.model.Calendar;
+import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.view.util.JsfUtil;
 
 import java.io.Serializable;
@@ -15,16 +15,13 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named("calendarController")
 @ViewScoped
 public class CalendarController implements Serializable {
-    
-    @Getter
-    @Setter
-    private Auth tmp = new Auth();
     
     private Calendar currentCal;
     
@@ -60,12 +57,15 @@ public class CalendarController implements Serializable {
     
     @PostConstruct
     public void init() {
-        user = usersFacade.find(1L);
+        //user = usersFacade.find(1L);
         
         //TODO: Only for testing. Must be changed to a real user search. 
-        //users = usersFacade.users(tmp.getEmail());
-        //user = users.get(1);
-        //currentCal = calendarFacade.find(1L);
+        HttpSession session = SessionUtil.getSession();
+        String email = (String) session.getAttribute("email");
+        
+        users = usersFacade.users(email);
+        user = users.get(0);
+        currentCal = calendarFacade.find(1L);
         setCalendars();
         
     }

@@ -5,7 +5,6 @@
  */
 package com.WebApplicationProject.control;
 
-import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
 import java.io.IOException;
@@ -29,23 +28,27 @@ import javax.enterprise.context.RequestScoped;
  * @author niklascote
  */
 @Named("authController")
-@ManagedBean
 @RequestScoped
 public class AuthController extends HttpServlet {
+    
+    @Getter
+    @Setter
+    private String email;
+    
+    @Getter
+    @Setter
+    private String pass;
 
     @EJB
     private com.WebApplicationProject.db.UsersFacade ufacade;
 
-    @Getter
-    @Setter
-    private Auth tmp = new Auth();
-
     public String login() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
-        if (validate()) {
+        if (validate(email, pass)) {
+            
             HttpSession session = SessionUtil.getSession();
             //context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
-            session.setAttribute("email", tmp.getEmail());
+            session.setAttribute("email", email);
             //try {
                 //context.getExternalContext().redirect("/schedule/scheduleView.xhtml");
             //} catch (IOException e) {
@@ -62,13 +65,13 @@ public class AuthController extends HttpServlet {
         }
     }
 
-    private boolean validate() {
-        List<Users> users = ufacade.users(tmp.getEmail());
+    private boolean validate(String email, String pass) {
+        List<Users> users = ufacade.users(email);
 
         return !(users == null
                 || users.size() != 1 //Only one user with this email exist.
                 || users.get(0) == null
-                || (users.get(0).getPassword() == null ? tmp.getPass() != null : !users.get(0).getPassword().equals(tmp.getPass())));
+                || (users.get(0).getPassword() == null ? pass != null : !users.get(0).getPassword().equals(pass)));
     }
     
  

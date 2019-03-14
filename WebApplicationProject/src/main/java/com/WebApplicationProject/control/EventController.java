@@ -4,10 +4,10 @@ import com.WebApplicationProject.db.EventFacade;
 import com.WebApplicationProject.db.EventOccuranceFacade;
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.EventParticipant;
+import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.EventViewer;
 
@@ -24,6 +24,7 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.ScheduleEntryMoveEvent;
@@ -38,9 +39,6 @@ public class EventController implements Serializable {
 
     private Users current;
     
-    @Getter
-    @Setter
-    private Auth tmp = new Auth();
     
     @EJB
     private UsersFacade usersFacade;
@@ -75,9 +73,12 @@ public class EventController implements Serializable {
     public void init() {
 
         //TODO: Only for testing. Must be changed to a real user search. 
-        //users = usersFacade.users(tmp.getEmail());
-        //user = users.get(1);
-        user = usersFacade.find(1L);
+        HttpSession session = SessionUtil.getSession();
+        String email = (String) session.getAttribute("email");
+        
+        users = usersFacade.users(email);
+        user = users.get(0);
+        //user = usersFacade.find(1L);
         //Get all events for the user
         getEvents();
     }
