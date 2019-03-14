@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
 public class SecureFilter implements Filter{
- 
+ private FilterConfig fc;
  
  public void doFilter(ServletRequest req, ServletResponse resp,  
      FilterChain chain) throws IOException, ServletException {  
@@ -43,8 +43,8 @@ public class SecureFilter implements Filter{
     public void destroy() {}
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException {
-
+    public void init(FilterConfig arg) throws ServletException {
+        this.fc = arg;
     }  
  
 }

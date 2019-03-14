@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.IOException;
+import javax.annotation.ManagedBean;
+import javax.enterprise.context.RequestScoped;
 
 
 /**
@@ -27,7 +29,8 @@ import java.io.IOException;
  * @author niklascote
  */
 @Named("authController")
-@SessionScoped
+@ManagedBean
+@RequestScoped
 public class AuthController extends HttpServlet {
 
     @EJB
