@@ -8,6 +8,7 @@ package com.WebApplicationProject.control;
 import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
+import java.io.IOException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
+import java.io.IOException;
+
 
 /**
  *
@@ -34,18 +37,25 @@ public class AuthController extends HttpServlet {
     @Setter
     private Auth tmp = new Auth();
 
-    public String login() {
+    public void login() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
         if (validate()) {
-            HttpSession session = SessionUtil.getSession();
-            session.setAttribute("email", tmp.getEmail());
-            return "schedule/scheduleView";
+            //HttpSession session = SessionUtil.getSession();
+            context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
+            //session.setAttribute("email", tmp.getEmail());
+            try {
+                context.getExternalContext().redirect("/schedule/scheduleView.xhtml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //return "schedule/scheduleView";
         } else {
-            FacesContext.getCurrentInstance().addMessage(
+            context.addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Incorrect Email and/or Password",
                             "Please enter correct Email and Password"));
-            return "/index.xhtml";
+            //return "/index.xhtml";
         }
     }
 

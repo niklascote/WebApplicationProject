@@ -49,7 +49,7 @@
 
     <filter-mapping>  
         <filter-name>sec</filter-name>  
-        <url-pattern>/*</url-pattern>  
+        <url-pattern>/faces/Html/schedule/*</url-pattern>  
     </filter-mapping>
         
 </web-app>
