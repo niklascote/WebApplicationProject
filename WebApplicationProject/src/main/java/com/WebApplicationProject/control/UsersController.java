@@ -2,7 +2,9 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.EventParticipant;
+//import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.view.util.JsfUtil;
 import com.WebApplicationProject.view.util.PaginationHelper;
@@ -21,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
+//import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.SelectEvent;
@@ -32,6 +35,8 @@ import org.primefaces.event.UnselectEvent;
 public class UsersController implements Serializable {
 
     private Users current;
+    
+
     private DataModel items = null;
     private int selectedItemIndex;
     private PaginationHelper pagination;
@@ -48,6 +53,10 @@ public class UsersController implements Serializable {
     @Getter
     @Setter
     private Users user = new Users();
+    
+    @Getter
+    @Setter
+    private List<Users> users = new ArrayList<Users>();
         
     @Getter
     @Setter
@@ -58,6 +67,8 @@ public class UsersController implements Serializable {
     
     @Setter
     private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
+    
+    //private HttpSession session = SessionUtil.getSession();
     
     private Boolean firstTime = true; 
     
@@ -80,6 +91,8 @@ public class UsersController implements Serializable {
     public void init() {
         //TODO: Only for testing. Must be changed to a real user search. 
         user = usersFacade.find(1L);
+        //users = usersFacade.users(tmp.getEmail());
+        //user = users.get(1);
     }
 
     public Users getSelected() {

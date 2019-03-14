@@ -5,6 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"    
       xmlns:p="http://primefaces.org/ui">
+ 
 
     <h:head>
         <h:outputStylesheet library="css" name="default.css"  />
@@ -26,7 +27,7 @@
             <p:commandButton
                 ajax="false"
                 value="Login"
-                action="#{authController.login()}"/>
+                action="#{authController.login}"/>
         </div>
         <div>
             <p:messages showDetail="true"/>

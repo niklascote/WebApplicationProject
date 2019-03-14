@@ -8,6 +8,7 @@ package com.WebApplicationProject.control;
 import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
+import java.io.IOException;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -18,13 +19,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
+import java.io.IOException;
+import javax.annotation.ManagedBean;
+import javax.enterprise.context.RequestScoped;
+
 
 /**
  *
  * @author niklascote
  */
 @Named("authController")
-@SessionScoped
+@ManagedBean
+@RequestScoped
 public class AuthController extends HttpServlet {
 
     @EJB
@@ -34,13 +40,20 @@ public class AuthController extends HttpServlet {
     @Setter
     private Auth tmp = new Auth();
 
-    public String login() {
+    public String login() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
         if (validate()) {
             HttpSession session = SessionUtil.getSession();
+            //context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
             session.setAttribute("email", tmp.getEmail());
-            return "schedule/scheduleView";
+            //try {
+                //context.getExternalContext().redirect("/schedule/scheduleView.xhtml");
+            //} catch (IOException e) {
+              //  e.printStackTrace();
+            //}
+            return "/schedule/scheduleView";
         } else {
-            FacesContext.getCurrentInstance().addMessage(
+            context.addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Incorrect Email and/or Password",
@@ -57,6 +70,8 @@ public class AuthController extends HttpServlet {
                 || users.get(0) == null
                 || (users.get(0).getPassword() == null ? tmp.getPass() != null : !users.get(0).getPassword().equals(tmp.getPass())));
     }
+    
+ 
 
     //Logout event, invalidate session
     public String logout() {

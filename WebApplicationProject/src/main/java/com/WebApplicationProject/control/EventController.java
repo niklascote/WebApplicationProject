@@ -4,6 +4,7 @@ import com.WebApplicationProject.db.EventFacade;
 import com.WebApplicationProject.db.EventOccuranceFacade;
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
+import com.WebApplicationProject.model.Auth;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.EventParticipant;
@@ -35,6 +36,12 @@ import org.primefaces.model.ScheduleModel;
 @SessionScoped
 public class EventController implements Serializable {
 
+    private Users current;
+    
+    @Getter
+    @Setter
+    private Auth tmp = new Auth();
+    
     @EJB
     private UsersFacade usersFacade;
 
@@ -58,13 +65,19 @@ public class EventController implements Serializable {
     @Getter
     @Setter
     private Users user = new Users();
+    
+    
+    @Getter
+    @Setter
+    private List<Users> users= new ArrayList<Users>();
 
     @PostConstruct
     public void init() {
 
         //TODO: Only for testing. Must be changed to a real user search. 
+        //users = usersFacade.users(tmp.getEmail());
+        //user = users.get(1);
         user = usersFacade.find(1L);
-
         //Get all events for the user
         getEvents();
     }
