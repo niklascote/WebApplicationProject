@@ -152,22 +152,13 @@ public class EventController implements Serializable {
         return "pretty:calendar";
     }
 
-    public void addRecurrentEvent(List<EventParticipant> participants) {
-
-        //Add event to Event-table in DB        
-        Event e = new Event(event.getEvent().getTitle(),
-                event.getEvent().getCalendar(),
-                event.getEvent().getLocation(),
-                user,
-                event.getEvent().getReminder(),
-                event.getEvent().getDescription()
-        );
-
-        eventFacade.create(e);
+    public void addRecurrentEvent(List<EventParticipant> participants, Long Id) {
+        Event e = eventFacade.find(Id);
+        
 
         //Add event occurance to EventOccurance-table in DB    
         EventOccurance eo = new EventOccurance(
-                eventFacade.find(e.getId()),
+                eventFacade.find(Id),
                 event.getEventOccurance().getStartDate(),
                 event.getEventOccurance().getEndDate());
 
@@ -195,6 +186,19 @@ public class EventController implements Serializable {
      * @return Redirection to the schedule view through prettyfaces
      */
     public String addRecurrentEvent(int forRange, String everyRange) {
+        //Add event to Event-table in DB        
+        Event e = new Event(event.getEvent().getTitle(),
+                event.getEvent().getCalendar(),
+                event.getEvent().getLocation(),
+                user,
+                event.getEvent().getReminder(),
+                event.getEvent().getDescription()
+        );
+
+        eventFacade.create(e);
+        
+        System.out.println("Event id: " + e.getId());
+        
         System.out.println("For range: " + forRange);
         System.out.println("Every range: " + everyRange);
         LocalDate localStartDate = event.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -225,7 +229,7 @@ public class EventController implements Serializable {
 
             System.out.println("Loop #" + i);
             System.out.println("Event #" + (i + 1) + "'s date: " + event.getStartDate());
-            addRecurrentEvent(new ArrayList<>());
+            addRecurrentEvent(new ArrayList<>(), e.getId());
 
         }
         clearEvent();
@@ -290,13 +294,16 @@ public class EventController implements Serializable {
 
         //Delete event and occurances from database
         eventOccuranceFacade.remove(event.getEventOccurance());
+        System.out.println("Delete event and occurances from database");
 
         //Only remove event if it is there is only one occurance
-        if (event.getEvent().getEventOccuranceCollection().size() <= 1) {
-            eventFacade.remove(event.getEvent());
-        }
+//        if (event.getEvent().getEventOccuranceCollection().size() <= 1) {
+//            System.out.println("Only remove event if it it there is only one occurance");
+//            eventFacade.remove(event.getEvent());
+//        }
 
         eventModel.deleteEvent(event);
+        System.out.println("Delete event");
         clearEvent();
 
         return "pretty:calendar";
