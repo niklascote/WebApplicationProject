@@ -39,6 +39,8 @@ public class AuthController extends HttpServlet implements Serializable{
     @Getter
     @Setter
     private String pass;
+    
+    private boolean loggedIn = false;
 
     @EJB
     private com.WebApplicationProject.db.UsersFacade ufacade;
@@ -46,7 +48,7 @@ public class AuthController extends HttpServlet implements Serializable{
     public String login() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         if (validate(email, pass)) {
-            
+            loggedIn = true;
             HttpSession session = SessionUtil.getSession();
             //context.getExternalContext().getSessionMap().put("email", tmp.getEmail());
             session.setAttribute("email", email);
@@ -75,7 +77,9 @@ public class AuthController extends HttpServlet implements Serializable{
                 || (users.get(0).getPassword() == null ? pass != null : !users.get(0).getPassword().equals(pass)));
     }
     
- 
+    public boolean getLogin(){
+        return loggedIn;
+    }
 
     //Logout event, invalidate session
     public String logout() {
