@@ -18,24 +18,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  
 public class SecureFilter implements Filter{
- private FilterConfig fc;
+ //private FilterConfig fc;
  
  public void doFilter(ServletRequest req, ServletResponse resp,  
      FilterChain chain) throws IOException, ServletException {  
            
      HttpServletRequest request = (HttpServletRequest) req;
      HttpServletResponse response = (HttpServletResponse) resp;
-     HttpSession session = request.getSession();
+     SessionBean session = (SessionBean)request.getSession().getAttribute("bean");
      
-     String loginURI = request.getContextPath() + "/index.xhtml";
-     boolean loggedIn = session != null && session.getAttribute("email") != null;
+     String loginURI = request.getRequestURI();
+     
+     
+     boolean loggedIn = session != null && session. != false ;
      boolean loginRequest = request.getRequestURI().equals(loginURI);
      boolean resourceRequest = request.getRequestURI().startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER);
 
     if (loggedIn || loginRequest || resourceRequest) {
         chain.doFilter(request, response);
     } else {
-        response.sendRedirect(loginURI);
+        response.sendRedirect(request.getServletContext().getContextPath() + "/index.xhtml");
     }
     }  
  
@@ -44,7 +46,7 @@ public class SecureFilter implements Filter{
 
     @Override
     public void init(FilterConfig arg) throws ServletException {
-        this.fc = arg;
+        //this.fc = arg;
     }  
  
 }

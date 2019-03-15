@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.annotation.ManagedBean;
 import javax.enterprise.context.RequestScoped;
 
@@ -29,7 +30,7 @@ import javax.enterprise.context.RequestScoped;
  */
 @Named("authController")
 @RequestScoped
-public class AuthController extends HttpServlet {
+public class AuthController extends HttpServlet implements Serializable{
     
     @Getter
     @Setter
