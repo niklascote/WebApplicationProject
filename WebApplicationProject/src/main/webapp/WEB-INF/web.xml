@@ -41,15 +41,15 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     
-    <!--Filter
+    <!--Filter-->
     <filter>  
         <filter-name>sec</filter-name>  
        <filter-class>com.WebApplicationProject.control.SecureFilter</filter-class>  
-    </filter> --> 
+    </filter>
 
-    <!--<filter-mapping>  
+    <filter-mapping>  
         <filter-name>sec</filter-name>  
         <url-pattern>/faces/Html/schedule/*</url-pattern>
-    </filter-mapping> -->
+    </filter-mapping>
         
 </web-app>
