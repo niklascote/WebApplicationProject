@@ -113,50 +113,7 @@ public class EventController implements Serializable {
         return false;
     }
 
-    /**
-     * Adds a recurrent event to the calendar
-     *
-     * @param forRange The duration of the recurring
-     * @param everyRange The frequency of the recurring
-     * @return Redirection to the schedule view through prettyfaces
-     */
-    public String addRecurrentEvent(int forRange, String everyRange) {
-        System.out.println("For range: " + forRange);
-        System.out.println("Every range: " + everyRange);
-        LocalDate localStartDate = event.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate localEndDate = event.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        for (int i = 0; i < forRange; i++) {
-
-            switch (everyRange) {
-                case "Day":
-                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusDays(i)));
-                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusDays(i)));
-                    break;
-
-                case "Week":
-                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusWeeks(i)));
-                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusWeeks(i)));
-                    break;
-
-                case "Month":
-                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusMonths(i)));
-                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusMonths(i)));
-                    break;
-
-                case "Year":
-                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusYears(i)));
-                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusYears(i)));
-                    break;
-            }
-
-            System.out.println("Loop #" + i);
-            System.out.println("Event #" + (i + 1) + "'s date: " + event.getStartDate());
-            addRecurrentEvent(new ArrayList<>());
-
-        }
-        clearEvent();
-        return "pretty:calendar";
-    }
+    
 
     public String addEvent(List<EventParticipant> participants) {
 
@@ -228,6 +185,51 @@ public class EventController implements Serializable {
 
         eventModel.addEvent(new EventViewer(e, eo));
 
+    }
+    
+    /**
+     * Adds a recurrent event to the calendar
+     *
+     * @param forRange The duration of the recurring
+     * @param everyRange The frequency of the recurring
+     * @return Redirection to the schedule view through prettyfaces
+     */
+    public String addRecurrentEvent(int forRange, String everyRange) {
+        System.out.println("For range: " + forRange);
+        System.out.println("Every range: " + everyRange);
+        LocalDate localStartDate = event.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localEndDate = event.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        for (int i = 0; i < forRange; i++) {
+
+            switch (everyRange) {
+                case "Day":
+                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusDays(i)));
+                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusDays(i)));
+                    break;
+
+                case "Week":
+                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusWeeks(i)));
+                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusWeeks(i)));
+                    break;
+
+                case "Month":
+                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusMonths(i)));
+                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusMonths(i)));
+                    break;
+
+                case "Year":
+                    event.setStartDate(java.sql.Date.valueOf(localStartDate.plusYears(i)));
+                    event.setEndDate(java.sql.Date.valueOf(localEndDate.plusYears(i)));
+                    break;
+            }
+
+            System.out.println("Loop #" + i);
+            System.out.println("Event #" + (i + 1) + "'s date: " + event.getStartDate());
+            addRecurrentEvent(new ArrayList<>());
+
+        }
+        clearEvent();
+        return "pretty:calendar";
     }
 
     public String deleteTemporaryEvent() {

@@ -9,6 +9,7 @@ import com.WebApplicationProject.view.util.JsfUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
@@ -65,7 +66,14 @@ public class CalendarController implements Serializable {
         
         users = usersFacade.users(email);
         user = users.get(0);
-        currentCal = calendarFacade.find(1L);
+        List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
+        if(col.isEmpty()){
+            currentCal = new Calendar();
+            create();
+        } else{
+            currentCal = col.get(0);
+        }
+        //currentCal = calendarFacade.find(1L);
         setCalendars();
         
     }

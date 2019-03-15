@@ -70,6 +70,7 @@ public class Calendar implements Serializable {
     private Collection<Event> eventCollection;
 
     public Calendar() {
+        this.name = "Empty";
     }
 
     public Calendar(Long id) {
