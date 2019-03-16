@@ -93,8 +93,8 @@ public class CalendarController implements Serializable {
         return getFacade().findAll();
     }
     
-    public List<Calendar> getByPublicAccess(){
-        return getFacade().publicAccess();
+    public List<Calendar> getByUserAccess(){
+        return getFacade().userAccess();
     }
     
     public void setCalendars() {
