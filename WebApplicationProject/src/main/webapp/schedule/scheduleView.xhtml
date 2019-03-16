@@ -42,7 +42,7 @@
                         </p:selectManyCheckbox>-->
 
                         <p:selectManyCheckbox id="calendarSelection" value="#{calendarController.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
-                            <f:selectItems id="editable" value="#{calendarController.allCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                            <f:selectItems id="editable" value="#{calendarController.byPublicAccess}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectManyCheckbox>
 
 

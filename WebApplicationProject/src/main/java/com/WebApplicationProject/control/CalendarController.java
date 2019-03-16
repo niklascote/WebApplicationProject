@@ -93,6 +93,10 @@ public class CalendarController implements Serializable {
         return getFacade().findAll();
     }
     
+    public List<Calendar> getByPublicAccess(){
+        return getFacade().publicAccess();
+    }
+    
     public void setCalendars() {
         
         //All the user's created calendards
@@ -134,6 +138,7 @@ public class CalendarController implements Serializable {
             if(currentCal.getPublicAccess()){ //Adds calendar if public to all users
                 for(Users user:allUsers){
                     user.getCalendarCollection().add(currentCal);
+                    user.setCalendarCollection(user.getCalendarCollection());
                 }
             }
             return prepareCreate();

@@ -7,6 +7,7 @@ package com.WebApplicationProject.db;
 
 import com.WebApplicationProject.db.AbstractFacade;
 import com.WebApplicationProject.model.Calendar;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,6 +31,11 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
         super(Calendar.class);
     }
     
-    
+    public List<Calendar> publicAccess(){
+        boolean status = true;
+        List<Calendar> calendars = em.createNamedQuery("Calendar.findByPublicAccess")
+                .setParameter("publicAccess", status).getResultList();
+        return calendars;
+    }
     
 }
