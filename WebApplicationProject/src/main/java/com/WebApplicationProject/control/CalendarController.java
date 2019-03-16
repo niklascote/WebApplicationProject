@@ -50,7 +50,7 @@ public class CalendarController implements Serializable {
     
     @Getter
     @Setter
-    private List<Users> users= new ArrayList<Users>();
+    private List<Users> allUsers= new ArrayList<Users>();
     
     @Getter
     @Setter
@@ -63,9 +63,20 @@ public class CalendarController implements Serializable {
         //TODO: Only for testing. Must be changed to a real user search. 
         HttpSession session = SessionUtil.getSession();
         String email = (String) session.getAttribute("email");
-        
+        allUsers = usersFacade.findAll();
         user = usersFacade.users(email);
         //user = users.get(0);
+        
+        for(Calendar cal :calendarFacade.findAll()){
+            if(cal.getPublicAccess()){
+                for(Users user:allUsers){
+                    if(!user.getCalendarCollection().contains(cal)){
+                        user.getCalendarCollection().add(cal);
+                    }
+                }
+            }
+        }
+        
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
             currentCal = new Calendar();
