@@ -69,12 +69,10 @@ public class AuthController extends HttpServlet implements Serializable{
     }
 
     private boolean validate(String email, String pass) {
-        List<Users> users = ufacade.users(email);
+        Users user = ufacade.users(email);
 
-        return !(users == null
-                || users.size() != 1 //Only one user with this email exist.
-                || users.get(0) == null
-                || (users.get(0).getPassword() == null ? pass != null : !users.get(0).getPassword().equals(pass)));
+        return !(user == null
+                || (user.getPassword() == null ? pass != null : !user.getPassword().equals(pass)));
     }
     
     public boolean getLogin(){
