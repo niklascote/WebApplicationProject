@@ -76,8 +76,7 @@ public class EventController implements Serializable {
         HttpSession session = SessionUtil.getSession();
         String email = (String) session.getAttribute("email");
         
-        users = usersFacade.users(email);
-        user = users.get(0);
+        user = usersFacade.users(email);
         //user = usersFacade.find(1L);
         //Get all events for the user
         getEvents();

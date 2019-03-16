@@ -50,7 +50,7 @@ public class CalendarController implements Serializable {
     
     @Getter
     @Setter
-    private List<Users> users= new ArrayList<Users>();
+    private List<Users> allUsers= new ArrayList<Users>();
     
     @Getter
     @Setter
@@ -63,9 +63,11 @@ public class CalendarController implements Serializable {
         //TODO: Only for testing. Must be changed to a real user search. 
         HttpSession session = SessionUtil.getSession();
         String email = (String) session.getAttribute("email");
+        allUsers = usersFacade.findAll();
+        user = usersFacade.users(email);
+        //user = users.get(0);
         
-        users = usersFacade.users(email);
-        user = users.get(0);
+        
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
             currentCal = new Calendar();
@@ -89,6 +91,10 @@ public class CalendarController implements Serializable {
     
     public List<Calendar> getAllCalendars(){
         return getFacade().findAll();
+    }
+    
+    public List<Calendar> getByUserAccess(){
+        return getFacade().userAccess();
     }
     
     public void setCalendars() {
@@ -129,6 +135,12 @@ public class CalendarController implements Serializable {
             System.out.println("Name: " + currentCal.getName());
             System.out.println("Desc: " + currentCal.getDescription());
             System.out.println("PA: " + currentCal.getPublicAccess());
+            if(currentCal.getPublicAccess()){ //Adds calendar if public to all users
+                for(Users user:allUsers){
+                    user.getCalendarCollection().add(currentCal);
+                    user.setCalendarCollection(user.getCalendarCollection());
+                }
+            }
             return prepareCreate();
     }
 
