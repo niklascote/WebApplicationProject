@@ -67,15 +67,6 @@ public class CalendarController implements Serializable {
         user = usersFacade.users(email);
         //user = users.get(0);
         
-        for(Calendar cal :calendarFacade.findAll()){
-            if(cal.getPublicAccess()){
-                for(Users user:allUsers){
-                    if(!user.getCalendarCollection().contains(cal)){
-                        user.getCalendarCollection().add(cal);
-                    }
-                }
-            }
-        }
         
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
@@ -140,6 +131,11 @@ public class CalendarController implements Serializable {
             System.out.println("Name: " + currentCal.getName());
             System.out.println("Desc: " + currentCal.getDescription());
             System.out.println("PA: " + currentCal.getPublicAccess());
+            if(currentCal.getPublicAccess()){ //Adds calendar if public to all users
+                for(Users user:allUsers){
+                    user.getCalendarCollection().add(currentCal);
+                }
+            }
             return prepareCreate();
     }
 
