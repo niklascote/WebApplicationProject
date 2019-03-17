@@ -5,13 +5,10 @@ import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Users;
 import com.WebApplicationProject.model.Calendar;
 import com.WebApplicationProject.model.SessionUtil;
-import com.WebApplicationProject.view.util.JsfUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;

@@ -5,7 +5,6 @@
  */
 package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.view.util.JsfUtil;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -40,8 +39,6 @@ public abstract class AbstractFacade<T> {
             while(iterator.hasNext()){
             ConstraintViolation<T> cv = iterator.next();
             System.err.println(cv.getRootBeanClass().getName()+"."+cv.getPropertyPath() + " " +cv.getMessage());
-
-            JsfUtil.addErrorMessage(cv.getRootBeanClass().getSimpleName()+"."+cv.getPropertyPath() + " " +cv.getMessage());
         }
         }else{
             getEntityManager().persist(entity);
