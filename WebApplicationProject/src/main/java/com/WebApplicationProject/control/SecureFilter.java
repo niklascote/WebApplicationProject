@@ -27,11 +27,8 @@ public class SecureFilter implements Filter{
      
      String loginURI = request.getContextPath()+"/index.xhtml";
      
-     
      boolean loggedIn = (session != null && session.getAttribute("email") != null) ;
-     //boolean loginRequest = request.getRequestURI().equals(loginURI);
-     //boolean resourceRequest = request.getRequestURI().startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER);
-
+    
     if (!loggedIn) {
         if(loginURI.indexOf("/scheduleView.xhtml")>=0 || loginURI.indexOf("/eventView.xhtml")>=0){
             response.sendRedirect(request.getServletContext().getContextPath() + "/index.xhtml");
