@@ -92,9 +92,9 @@ public class EventController implements Serializable {
 
     public Boolean writePremission() {
 
-        //If event has not been created yet
+        //If event has not been created yet the user is the owner and has write permissions
         if (event.getEvent().getId() == null) {
-            return false;
+            return true;
         }
 
         //Check if user has write permission on event

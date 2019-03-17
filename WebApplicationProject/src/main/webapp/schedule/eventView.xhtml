@@ -39,8 +39,6 @@
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
-                <p:menuitem value="Repeat" ajax="false" icon="fa fa-fw fa-repeat"/> 
-
                 <p:menuitem class="quit" icon="fa fa-fw fa-close" outcome="pretty:calendar" />
             </p:megaMenu>
             <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventController.writePremission() == false}">
@@ -70,7 +68,7 @@
                     <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
                         <p:calendar id="from" class="global-margin-event-components-row" placeholder="Start date"  
                                     value="#{eventController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
-                                    timeZone="#{eventController.user.timezone}"/>
+                                    timeZone="#{eventController.user.timezone}" />
 
                         <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
                                     value="#{eventController.event.endDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
