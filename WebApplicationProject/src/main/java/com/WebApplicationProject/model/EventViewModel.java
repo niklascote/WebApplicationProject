@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.WebApplicationProject.view;
+package com.WebApplicationProject.model;
 
-import com.WebApplicationProject.model.Event;
-import com.WebApplicationProject.model.EventOccurance;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Getter;
@@ -17,7 +15,7 @@ import org.primefaces.model.DefaultScheduleEvent;
  *
  * @author gabri
  */
-public class EventViewer extends DefaultScheduleEvent implements Serializable {
+public class EventViewModel extends DefaultScheduleEvent implements Serializable {
 
     @Getter
     @Setter
@@ -39,18 +37,18 @@ public class EventViewer extends DefaultScheduleEvent implements Serializable {
     @Setter
     private EventOccurance eventOccurance = new EventOccurance();
 
-    public EventViewer() {
+    public EventViewModel() {
         super();
         super.setAllDay(true);
     }
 
-    public EventViewer(String title, Date start, Date end) {
+    public EventViewModel(String title, Date start, Date end) {
         super(title, start, end);
         super.setAllDay(true);
         changeAllDay();
     }
 
-    public EventViewer(Event e, EventOccurance eo) {
+    public EventViewModel(Event e, EventOccurance eo) {
         super.setAllDay(true);
         super.setTitle(e.getTitle());
         super.setStartDate(eo.getStartDate());

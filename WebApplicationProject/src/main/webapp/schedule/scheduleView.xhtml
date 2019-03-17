@@ -19,7 +19,7 @@
 
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                    <p:menuitem value="#{eventController.user.firstname} #{eventController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
+                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" disabled="true" style="background: black; color:white;"/> 
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
                         <p:commandButton ajax="false" value="Logout" action="#{authController.logout()}"/>
@@ -83,11 +83,11 @@
                         <p:growl id="messages" showDetail="true" />
 
                         <p:panelGrid>
-                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventController.eventModel}" widgetVar="myschedule" timeZone="#{eventController.user.timezone}">
-                                <p:ajax event="dateSelect" listener="#{eventController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-                                <p:ajax event="eventSelect" listener="#{eventController.onEventSelect}" oncomplete="editEvent()" /> 
-                                <p:ajax event="eventMove" listener="#{eventController.onEventMove}" update="messages" />
-                                <p:ajax event="eventResize" listener="#{eventController.onEventResize}" update="messages"  />
+                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventView.eventModel}" widgetVar="myschedule" timeZone="#{eventController.user.timezone}">
+                                <p:ajax event="dateSelect" listener="#{eventView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                                <p:ajax event="eventSelect" listener="#{eventView.onEventSelect}" oncomplete="editEvent()" /> 
+                                <p:ajax event="eventMove" listener="#{eventView.onEventMove}" update="messages" />
+                                <p:ajax event="eventResize" listener="#{eventView.onEventResize}" update="messages"  />
                             </p:schedule>
                         </p:panelGrid>
 
@@ -97,35 +97,35 @@
                                   hideEffect="clip">
                             <p:panelGrid id="eventDetails" columns="2" styleClass="ui-panelgrid-blank">
                                 <p:outputLabel for="title" value="Event name:" />
-                                <p:inputText id="title" value="#{eventController.event.title}" />
+                                <p:inputText id="title" value="#{eventView.event.title}" />
 
                                 <p:outputLabel for="from" value="Start date:" />
-                                <p:calendar id="from" value="#{eventController.event.startDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="from" value="#{eventView.event.startDate}" timeZone="#{eventView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="to" value="End date:" />
-                                <p:calendar id="to" value="#{eventController.event.endDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="to" value="#{eventView.event.endDate}" timeZone="#{eventView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="allDay" value="All Day:" />
-                                <p:selectBooleanCheckbox id="allDay" value="#{eventController.event.allDay}">
-                                    <p:ajax update="to, from" listener="#{eventController.event.changeAllDay()}" /> 
+                                <p:selectBooleanCheckbox id="allDay" value="#{eventView.event.allDay}">
+                                    <p:ajax update="to, from" listener="#{eventView.event.changeAllDay()}" /> 
                                 </p:selectBooleanCheckbox>
 
                                 <p:outputLabel for="console" value="Calendar:" />
-                                <p:selectOneMenu id="console" value="#{eventController.event.event.calendar}" style="width:125px" converter="omnifaces.SelectItemsConverter">
+                                <p:selectOneMenu id="console" value="#{eventView.event.event.calendar}" style="width:125px" converter="omnifaces.SelectItemsConverter">
                                     <f:selectItems value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="location" value="Location:" />
-                                <p:inputText id="location" value="#{eventController.event.event.location}"/>  
+                                <p:inputText id="location" value="#{eventView.event.event.location}"/>  
 
                                 <p:outputLabel for="recurrent" value="Recurrent:" />
-                                <p:selectBooleanCheckbox id="recurrent" value="#{eventController.event.recurrent}">
+                                <p:selectBooleanCheckbox id="recurrent" value="#{eventView.event.recurrent}">
                                     <p:ajax update="to, from"/>
                                 </p:selectBooleanCheckbox>
 
 
                                 <p:outputLabel for="recurrentEvery" value="Repeat every: "/>
-                                <p:selectOneMenu id="recurrentEvery" value="#{eventController.event.recurrentEveryRange}"  style="width:125px" >
+                                <p:selectOneMenu id="recurrentEvery" value="#{eventView.event.recurrentEveryRange}"  style="width:125px" >
                                     <f:selectItem itemValue="Day" itemLabel="Day"/>
                                     <f:selectItem itemValue="Week" itemLabel="Week"/>
                                     <f:selectItem itemValue="Month" itemLabel="Month"/>
@@ -133,11 +133,11 @@
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="recurrentFor" value="Repeat # of times:" />
-                                <p:inputText id="recurrentFor" value="#{eventController.event.recurrentForRange}"/>
+                                <p:inputText id="recurrentFor" value="#{eventView.event.recurrentForRange}"/>
 
 
                                 <p:commandLink id="ajax" value="More information" update="eventDetails" action="pretty:addeventview"/>
-                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventView.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
 
                             </p:panelGrid>
                         </p:dialog>    

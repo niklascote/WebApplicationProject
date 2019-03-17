@@ -19,7 +19,7 @@
         <h:form>
             <p:growl id="messages" showDetail="true" />
 
-            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventController.writePremission()}">
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventView.writePremission()}">
                 <p:menuitem value="Event" disabled="true" style="background: white;" /> 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
@@ -35,13 +35,13 @@
                         </p:submenu>
                     </p:column>
                 </p:submenu>
-                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteParticipantEvent()}" rendered="#{param.update == false}"/>
+                <p:menuitem value="Delete" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteTempEvent()}" rendered="#{param.update == false}"/>
 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
 
                 <p:menuitem class="quit" icon="fa fa-fw fa-close" outcome="pretty:calendar" />
             </p:megaMenu>
-            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventController.writePremission() == false}">
+            <p:megaMenu orientation="horizontal" style="margin-top:20px;" rendered="#{eventView.writePremission() == false}">
                 <p:menuitem value="Event" disabled="true" style="background: white;" /> 
                 <p:menuitem value="|" disabled="true" style="background: white;"/> 
                 <p:menuitem value="Delete from your schedule" ajax="false" icon="fa fa-fw fa-trash"  action="#{eventController.deleteParticipantEvent()}"/>
@@ -54,39 +54,39 @@
                 <div class="ui-g-7">
 
                     <p:inputText id="title" placeholder="Event name" 
-                                 value="#{eventController.event.title}"
+                                 value="#{eventView.event.title}"
                                  style="height: 50px; font-size: 24px; width:100%;">
                     </p:inputText>
 
                     <p:inputText id="location" placeholder="Location" 
-                                 value="#{eventController.event.event.location}"
+                                 value="#{eventView.event.event.location}"
                                  style="width:100%; margin-top: 10px; margin-bottom: 10px;"/>
 
                     <p:inputTextarea id="description" rows="10" style="width:100%" placeholder="Description"
-                                     value="#{eventController.event.event.description}"/>
+                                     value="#{eventView.event.event.description}"/>
 
                     <div class="global-margin-event-components" style="margin-top: 10px; margin-bottom: 20px;">
                         <p:calendar id="from" class="global-margin-event-components-row" placeholder="Start date"  
-                                    value="#{eventController.event.startDate}" pattern="dd/MM/yyyy HH:mm"
-                                    timeZone="#{eventController.user.timezone}" />
+                                    value="#{eventView.event.startDate}" pattern="dd/MM/yyyy HH:mm"
+                                    timeZone="#{eventView.user.timezone}" />
 
                         <p:calendar id="to" class="global-margin-event-components-row" placeholder="End date" 
-                                    value="#{eventController.event.endDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                    value="#{eventView.event.endDate}" timeZone="#{eventView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
-                        <p:selectBooleanCheckbox id="allDay" value="#{eventController.event.allDay}" itemLabel="All day" style="vertical-align: middle;">
-                            <p:ajax update="to, from" listener="#{eventController.event.changeAllDay()}" /> 
+                        <p:selectBooleanCheckbox id="allDay" value="#{eventView.event.allDay}" itemLabel="All day" style="vertical-align: middle;">
+                            <p:ajax update="to, from" listener="#{eventView.event.changeAllDay()}" /> 
                         </p:selectBooleanCheckbox>
                     </div>
 
                     <div class="global-margin-event-components" style="display:inline-block;">
                         <p:outputLabel class="global-margin-event-components-row" value="Reminder:" style="vertical-align: middle;"/>
-                        <p:selectOneMenu class="global-margin-event-components-row" value="#{eventController.event.event.reminder}" id="reminder" style="vertical-align: middle;" 
+                        <p:selectOneMenu class="global-margin-event-components-row" value="#{eventView.event.event.reminder}" id="reminder" style="vertical-align: middle;" 
                                          converter="omnifaces.SelectItemsConverter">
                             <f:selectItems value="#{reminderController.getReminders()}" var="rem" itemLabel="#{rem.type}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel class="global-margin-event-components-row" value="Calendar:" style="vertical-align: middle;"/>
-                        <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{eventController.event.event.calendar}"
+                        <p:selectOneMenu class="global-margin-event-components-row" id="calendars" value="#{eventView.event.event.calendar}"
                                          converter="omnifaces.SelectItemsConverter">
                             <f:selectItems value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectOneMenu>
@@ -117,7 +117,7 @@
                             </p:column>
                         </p:autoComplete>
 
-                        <p:panel style="height:50px; padding-top:0px;" rendered="#{eventController.event.event.owner != null}" >
+                        <p:panel style="height:50px; padding-top:0px;" rendered="#{eventView.event.event.owner != null}" >
 
                             <div class="ui-g" align="center">
 
@@ -128,7 +128,7 @@
                                 </div>
 
                                 <div class="ui-g-5">
-                                    <h:outputText value="#{eventController.event.event.owner.firstname} #{eventController.event.event.owner.lastname}" 
+                                    <h:outputText value="#{eventView.event.event.owner.firstname} #{eventView.event.event.owner.lastname}" 
                                                   style="vertical-align:middle; float:left;"/>
                                 </div>
 
@@ -141,7 +141,7 @@
                             </div>
                         </p:panel>
                         <p:dataList id="attendeesSelection" widgetVar="selection"  var="attendee" 
-                                    emptyMessage="No invites" value="#{usersController.getSelectedEventAttendees(eventController.event.event.id)}">
+                                    emptyMessage="No invites" value="#{usersController.getSelectedEventAttendees(eventView.event.event.id)}">
 
                             <p:panel style="height:50px; padding-top:0px;">
 
