@@ -171,7 +171,7 @@
                     var notification = new Notification('Event Reminder Today', {
                         //icon: 'avatar.jpg',
                         title: "Calendar Reminder",
-                        body: "Hey! You have an Event Today"
+                        body: "Hey! You have an Event within 24 hours"
                     });
 
                     notification.onclick = function () { //If link to event is needed
@@ -180,14 +180,14 @@
                     setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
                 }
             }
-            //var now = new Date(Date.now());
-            //var currentTime = now.getTime(); // Long Type miliseconds from 1970 Jan 1 00:00:00
+            var now = new Date();
+            var currentTime = now.getTime(); // Long Type miliseconds from 1970 Jan 1 00:00:00
 
-            //var startDateOfEvent = document.getElementById('form:from');
-            //var start = new Date(startDateOfEvent.prototype.getTime());
-            //var startDate = start.prototype.toLocaleString();
-
-            //startDateOfEvent = startDateOfEvent.getTime();
+            console.log(""+ currentTime);
+            
+            var eventDate= document.getElementById('dateSelect');
+            
+            console.log("" + eventDate); //Is null
 
             if (true) {   //TODO: if there is an event today Send Notification/ CURRENTLY notifies everytime reloaded/logged in
                 notifyEvent();
