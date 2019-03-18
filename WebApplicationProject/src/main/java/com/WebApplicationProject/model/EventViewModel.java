@@ -61,6 +61,7 @@ public class EventViewModel extends DefaultScheduleEvent implements Serializable
     }
 
     public void changeAllDay() {
+                
         if (super.isAllDay()) {
 
             //Set start date to 00:00

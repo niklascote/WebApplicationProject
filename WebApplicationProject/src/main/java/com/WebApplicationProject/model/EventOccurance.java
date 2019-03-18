@@ -53,12 +53,12 @@ public class EventOccurance implements Serializable {
     
     @Basic(optional = false)
     @Column(name = "START_DATE", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
     
     @Basic(optional = false)
     @Column(name = "END_DATE", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
         
     @JoinColumn(name = "EVENT", referencedColumnName = "ID")
