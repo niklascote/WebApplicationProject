@@ -55,9 +55,11 @@ public class CalendarController implements Serializable {
         
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
+            System.out.println("User's calendar collection is empty");
             currentCal = new Calendar();
             create();
         } else{
+            System.out.println("User's calendar collection is not empty");
             currentCal = col.get(0);
         }
     }
