@@ -53,34 +53,9 @@ public class UsersController implements Serializable {
     @Setter
     private List<Users> users = new ArrayList<Users>();
         
-    @Getter
-    @Setter
-    private List<Users> attendeesList = new ArrayList<Users>(); 
-    
-    @Getter
-    private List<Users> selectedAttendees = new ArrayList<Users>();
-    
-    @Setter
-    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
-    
     //private HttpSession session = SessionUtil.getSession();
     
-    private Boolean firstTime = true; 
-    
-    public List<EventParticipant> getSelectedEventAttendees() {
-        return selectedEventAttendees;
-    }
-        
-    public List<EventParticipant> getSelectedEventAttendees(Long eventId) {
-        
-        if(firstTime && eventId != null){
-            this.selectedEventAttendees = eventParticipantFacade.getEventParticipantByEvent(eventId);
-            firstTime = false;
-        }
-        
-        return this.selectedEventAttendees;
-    }
-
+  
     public Users getSelected() {
         if (current == null) {
             current = new Users();
@@ -123,52 +98,6 @@ public class UsersController implements Serializable {
             }
         }
         return sB.toString();
-    }
-    
-    public List<Users> completeAttendees(String query) {
-        List<Users> allUsers = setAttendeesList();
-        attendeesList = new ArrayList<>();
-         
-        for (int i = 0; i < allUsers.size(); i++) {
-            Users skin = allUsers.get(i);
-            
-            if(skin.getFirstname().toLowerCase().contains(query) || skin.getLastname().toLowerCase().contains(query)) {
-                attendeesList.add(skin);
-            }
-        }
-         
-        return attendeesList;
-    }
-    
-    public List<Users> setAttendeesList() {
-        List<Users> users = userFacade.findAll();
-        users.remove(user);
-        return users; 
-    }
-    
-    public void setSelectedAttendees(List<Users> selectedAttendees){
-                
-        if(selectedAttendees == null) { return; }
-        
-        this.selectedAttendees = selectedAttendees;
-        
-        for(Users u : selectedAttendees) {  
-            Boolean alreadyParticipant = false;
-                        
-            for(EventParticipant ep : selectedEventAttendees)  {
-                if (ep.getParticipant().equals(u)) { 
-                    alreadyParticipant = true;
-                }
-            }
-        
-            if(!alreadyParticipant){
-                selectedEventAttendees.add(new EventParticipant(u));
-            }
-        }
-    }
-    
-    public void removeAttendee(EventParticipant participant) {
-        this.selectedEventAttendees.remove(participant);
     }
     
     public void onTransfer(TransferEvent event) {

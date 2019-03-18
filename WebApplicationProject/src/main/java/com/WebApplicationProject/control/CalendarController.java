@@ -32,19 +32,7 @@ public class CalendarController implements Serializable {
     @Getter
     @Setter
     private Users user = new Users(); 
-    
-    @Getter
-    @Setter
-    private List<Calendar> editableCalendars = new ArrayList<Calendar>();
-    
-    @Getter
-    @Setter
-    private List<Calendar> nonEditableCalendars = new ArrayList<Calendar>();
-    
-    @Getter
-    @Setter
-    private List<Calendar> selectedCalendars = new ArrayList<Calendar>();
-    
+        
     @Getter
     @Setter
     private List<Users> allUsers= new ArrayList<Users>();
@@ -72,9 +60,6 @@ public class CalendarController implements Serializable {
         } else{
             currentCal = col.get(0);
         }
-        //currentCal = calendarFacade.find(1L);
-        setCalendars();
-        
     }
     
     public Calendar getSelected() {
@@ -85,34 +70,7 @@ public class CalendarController implements Serializable {
         }
         return currentCal;
     }
-    
-    public List<Calendar> getAllCalendars(){
-        return getFacade().findAll();
-    }
-    
-    public List<Calendar> getByUserAccess(){
-        return getFacade().userAccess();
-    }
-    
-    public void setCalendars() {
         
-        //All the user's created calendards
-        user.getCalendarCollection().forEach((c) -> {
-            System.out.println("Adding editable calendar...");
-            editableCalendars.add(c);
-        });
-        
-        //All the user's shared calendars
-        user.getCalendarParticipantCollection().forEach((c) -> {
-            if(c.getWritePermission()) {
-                editableCalendars.add(c.getCalendar());
-            }
-            else {
-                nonEditableCalendars.add(c.getCalendar());
-            }
-        });
-    }
-    
     public CalendarFacade getFacade(){
         return calendarFacade;
     }
@@ -123,8 +81,6 @@ public class CalendarController implements Serializable {
     }
     
     public String create(){
-        
-        
             currentCal.setOwner(user);
             getFacade().create(currentCal);
             System.out.println("New calender created!");

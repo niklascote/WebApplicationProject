@@ -41,8 +41,8 @@
                             <f:selectItems id="nonEditable" value="#{calendarController.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectManyCheckbox>-->
 
-                        <p:selectManyCheckbox id="calendarSelection" value="#{calendarController.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
-                            <f:selectItems id="editable" value="#{calendarController.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
+                        <p:selectManyCheckbox id="calendarSelection" value="#{calendarView.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
+                            <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectManyCheckbox>
 
 
@@ -70,9 +70,6 @@
 
                                 </p:commandButton>
                             </p:panelGrid>
-
-
-
                         </p:dialog>
                     </h:form>
                 </div>
@@ -83,11 +80,9 @@
                         <p:growl id="messages" showDetail="true" />
 
                         <p:panelGrid>
-                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventView.eventModel}" widgetVar="myschedule" timeZone="#{eventController.user.timezone}">
+                            <p:schedule showWeekNumbers="true" id="schedule" value="#{calendarView.eventModel}" widgetVar="myschedule" timeZone="#{calendarView.user.timezone}">
                                 <p:ajax event="dateSelect" listener="#{eventView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
                                 <p:ajax event="eventSelect" listener="#{eventView.onEventSelect}" oncomplete="editEvent()" /> 
-                                <p:ajax event="eventMove" listener="#{eventView.onEventMove}" update="messages" />
-                                <p:ajax event="eventResize" listener="#{eventView.onEventResize}" update="messages"  />
                             </p:schedule>
                         </p:panelGrid>
 
@@ -100,10 +95,10 @@
                                 <p:inputText id="title" value="#{eventView.event.title}" />
 
                                 <p:outputLabel for="from" value="Start date:" />
-                                <p:calendar id="from" value="#{eventView.event.startDate}" timeZone="#{eventView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="from" value="#{eventView.event.startDate}" timeZone="#{calendarView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="to" value="End date:" />
-                                <p:calendar id="to" value="#{eventView.event.endDate}" timeZone="#{eventView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="to" value="#{eventView.event.endDate}" timeZone="#{calendarView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="allDay" value="All Day:" />
                                 <p:selectBooleanCheckbox id="allDay" value="#{eventView.event.allDay}">
@@ -112,7 +107,7 @@
 
                                 <p:outputLabel for="console" value="Calendar:" />
                                 <p:selectOneMenu id="console" value="#{eventView.event.event.calendar}" style="width:125px" converter="omnifaces.SelectItemsConverter">
-                                    <f:selectItems value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                                    <f:selectItems value="#{calendarView.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="location" value="Location:" />
@@ -137,7 +132,7 @@
 
 
                                 <p:commandLink id="ajax" value="More information" update="eventDetails" action="pretty:addeventview"/>
-                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventView.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent(eventView.event)}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
 
                             </p:panelGrid>
                         </p:dialog>    
