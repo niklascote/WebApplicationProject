@@ -19,7 +19,7 @@
 
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                    <p:menuitem value="#{eventController.user.firstname} #{eventController.user.lastname}" disabled="true" style="background: black; color:white;"/> 
+                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" disabled="true" style="background: black; color:white;"/> 
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
                         <p:commandButton ajax="false" value="Logout" action="#{authController.logout()}"/>
@@ -41,8 +41,8 @@
                             <f:selectItems id="nonEditable" value="#{calendarController.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectManyCheckbox>-->
 
-                        <p:selectManyCheckbox id="calendarSelection" value="#{calendarController.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
-                            <f:selectItems id="editable" value="#{calendarController.allCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                        <p:selectManyCheckbox id="calendarSelection" value="#{calendarView.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
+                            <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
                         </p:selectManyCheckbox>
 
 
@@ -70,9 +70,6 @@
 
                                 </p:commandButton>
                             </p:panelGrid>
-
-
-
                         </p:dialog>
                     </h:form>
                 </div>
@@ -83,11 +80,9 @@
                         <p:growl id="messages" showDetail="true" />
 
                         <p:panelGrid>
-                            <p:schedule showWeekNumbers="true" id="schedule" value="#{eventController.eventModel}" widgetVar="myschedule" timeZone="#{eventController.user.timezone}">
-                                <p:ajax event="dateSelect" listener="#{eventController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-                                <p:ajax event="eventSelect" listener="#{eventController.onEventSelect}" oncomplete="editEvent()" /> 
-                                <p:ajax event="eventMove" listener="#{eventController.onEventMove}" update="messages" />
-                                <p:ajax event="eventResize" listener="#{eventController.onEventResize}" update="messages"  />
+                            <p:schedule showWeekNumbers="true" id="schedule" value="#{calendarView.eventModel}" widgetVar="myschedule" timeZone="#{calendarView.user.timezone}">
+                                <p:ajax event="dateSelect" listener="#{eventView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                                <p:ajax event="eventSelect" listener="#{eventView.onEventSelect}" oncomplete="editEvent()" /> 
                             </p:schedule>
                         </p:panelGrid>
 
@@ -97,35 +92,35 @@
                                   hideEffect="clip">
                             <p:panelGrid id="eventDetails" columns="2" styleClass="ui-panelgrid-blank">
                                 <p:outputLabel for="title" value="Event name:" />
-                                <p:inputText id="title" value="#{eventController.event.title}" />
+                                <p:inputText id="title" value="#{eventView.event.title}" />
 
                                 <p:outputLabel for="from" value="Start date:" />
-                                <p:calendar id="from" value="#{eventController.event.startDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="from" value="#{eventView.event.startDate}" timeZone="#{calendarView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="to" value="End date:" />
-                                <p:calendar id="to" value="#{eventController.event.endDate}" timeZone="#{eventController.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
+                                <p:calendar id="to" value="#{eventView.event.endDate}" timeZone="#{calendarView.user.timezone}" pattern="dd/MM/yyyy HH:mm"/>
 
                                 <p:outputLabel for="allDay" value="All Day:" />
-                                <p:selectBooleanCheckbox id="allDay" value="#{eventController.event.allDay}">
-                                    <p:ajax update="to, from" listener="#{eventController.event.changeAllDay()}" /> 
+                                <p:selectBooleanCheckbox id="allDay" value="#{eventView.event.allDay}">
+                                    <p:ajax update="to, from" listener="#{eventView.event.changeAllDay()}" /> 
                                 </p:selectBooleanCheckbox>
 
                                 <p:outputLabel for="console" value="Calendar:" />
-                                <p:selectOneMenu id="console" value="#{eventController.event.event.calendar}" style="width:125px" converter="omnifaces.SelectItemsConverter">
-                                    <f:selectItems value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                                <p:selectOneMenu id="console" value="#{eventView.event.event.calendar}" style="width:125px" converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItems value="#{calendarView.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="location" value="Location:" />
-                                <p:inputText id="location" value="#{eventController.event.event.location}"/>  
+                                <p:inputText id="location" value="#{eventView.event.event.location}"/>  
 
                                 <p:outputLabel for="recurrent" value="Recurrent:" />
-                                <p:selectBooleanCheckbox id="recurrent" value="#{eventController.event.recurrent}">
+                                <p:selectBooleanCheckbox id="recurrent" value="#{eventView.event.recurrent}">
                                     <p:ajax update="to, from"/>
                                 </p:selectBooleanCheckbox>
 
 
                                 <p:outputLabel for="recurrentEvery" value="Repeat every: "/>
-                                <p:selectOneMenu id="recurrentEvery" value="#{eventController.event.recurrentEveryRange}"  style="width:125px" >
+                                <p:selectOneMenu id="recurrentEvery" value="#{eventView.event.recurrentEveryRange}"  style="width:125px" >
                                     <f:selectItem itemValue="Day" itemLabel="Day"/>
                                     <f:selectItem itemValue="Week" itemLabel="Week"/>
                                     <f:selectItem itemValue="Month" itemLabel="Month"/>
@@ -133,11 +128,11 @@
                                 </p:selectOneMenu>
 
                                 <p:outputLabel for="recurrentFor" value="Repeat # of times:" />
-                                <p:inputText id="recurrentFor" value="#{eventController.event.recurrentForRange}"/>
+                                <p:inputText id="recurrentFor" value="#{eventView.event.recurrentForRange}"/>
 
 
                                 <p:commandLink id="ajax" value="More information" update="eventDetails" action="pretty:addeventview"/>
-                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent()}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                <p:commandButton ajax="false" id="addButton" value="Save" actionListener="#{eventController.addEvent(eventView.event)}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
 
                             </p:panelGrid>
                         </p:dialog>    
@@ -149,53 +144,59 @@
         <script type="text/javascript">
 
             editEvent = function () {
-                window.location.href = "#{root}/calendar/event/update";
+            window.location.href = "#{root}/calendar/event/update";
             };
-
         </script>
 
-        <script>
+        <script type="text/javascript">
             //<![CDATA[    //This needs to be here to be able to use operators in javascript
             // Author Niklas Côté
             //Notification script
             Notification.requestPermission(); //Get access in browser
             function notifyEvent() {
-                if (!("Notification" in window)) {
-                    alert("This browser does not support system notifications");
-                } else if (Notification.permission === "granted") {
-                    notification();
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission(function (permission) {
-                        if (permission === "granted") {
-                            notification();
-                        }
-                    });
-                }
-
-                function notification() {
-                    var notification = new Notification('Event Reminder Today', {
-                        //icon: 'avatar.jpg',
-                        title: "Calendar Reminder",
-                        body: "Hey! You have an Event Today"
-                    });
-
-                    notification.onclick = function () { //If link to event is needed
-                        window.location.href = "#{root}/calendar/event/update"; //Redirection onClick of the notification      
-                    };
-                    setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
-                }
+            if (!("Notification" in window)) {
+            alert("This browser does not support system notifications");
+            } else if (Notification.permission === "granted") {
+            notification();
+            } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+            if (permission === "granted") {
+            notification();
             }
-            //var now = new Date(Date.now());
-            //var currentTime = now.getTime(); // Long Type miliseconds from 1970 Jan 1 00:00:00
+            });
+            }
 
-            //var startDateOfEvent = document.getElementById('form:from');
-            //var start = new Date(startDateOfEvent.prototype.getTime());
-            //var startDate = start.prototype.toLocaleString();
 
-            //startDateOfEvent = startDateOfEvent.getTime();
 
-            if (true) {   //TODO: if there is an event today Send Notification/ CURRENTLY notifies everytime reloaded/logged in
-                notifyEvent();
+            function notification() {
+
+            console.log("Entering notification script");
+            
+            var today = new Date().now();
+            var selectedCal = document.getElementById("form:schedule");
+            var eventList = selectedCal.getEvents();
+            for (var event : eventList){
+            var eventOccurances = event.getEventOccuranceCollection();
+                for (var x in eventOccurances){
+                console.log("Checking event occurance...");
+            if (today.prototype.getDate() >= x.getStartDate() && today.prototype.getDate() <= x.getEndDate()){
+                console.log("Event today found!");
+            var notification = new Notification('Event Reminder Today', {
+            //icon: 'avatar.jpg',
+            title: "Calendar Reminder",
+                    body: "Hey! You have an Event Today"
+            });
+            notification.onclick = function () { //If link to event is needed
+            window.location.href = "#{root}/calendar/event/update"; //Redirection onClick of the notification      
+            };
+            setTimeout(notification.close.bind(notification), 6000); //Timeout for the notification
+            notifyEvent();
+            }
+            }
+            }
+
+
+            }
             }
 
 

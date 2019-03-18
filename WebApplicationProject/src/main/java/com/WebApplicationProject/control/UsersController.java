@@ -6,9 +6,6 @@ import com.WebApplicationProject.model.EventParticipant;
 import com.WebApplicationProject.model.SessionUtil;
 //import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
-import com.WebApplicationProject.view.util.JsfUtil;
-import com.WebApplicationProject.view.util.PaginationHelper;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +33,8 @@ import org.primefaces.event.UnselectEvent;
 public class UsersController implements Serializable {
 
     private Users current;
-    
-
     private DataModel items = null;
     private int selectedItemIndex;
-    private PaginationHelper pagination;
     
     @EJB
     private com.WebApplicationProject.db.UsersFacade userFacade;
@@ -59,34 +53,9 @@ public class UsersController implements Serializable {
     @Setter
     private List<Users> users = new ArrayList<Users>();
         
-    @Getter
-    @Setter
-    private List<Users> attendeesList = new ArrayList<Users>(); 
-    
-    @Getter
-    private List<Users> selectedAttendees = new ArrayList<Users>();
-    
-    @Setter
-    private List<EventParticipant> selectedEventAttendees = new ArrayList<EventParticipant>();
-    
     //private HttpSession session = SessionUtil.getSession();
     
-    private Boolean firstTime = true; 
-    
-    public List<EventParticipant> getSelectedEventAttendees() {
-        return selectedEventAttendees;
-    }
-        
-    public List<EventParticipant> getSelectedEventAttendees(Long eventId) {
-        
-        if(firstTime && eventId != null){
-            this.selectedEventAttendees = eventParticipantFacade.getEventParticipantByEvent(eventId);
-            firstTime = false;
-        }
-        
-        return this.selectedEventAttendees;
-    }
-
+  
     public Users getSelected() {
         if (current == null) {
             current = new Users();
@@ -131,52 +100,6 @@ public class UsersController implements Serializable {
         return sB.toString();
     }
     
-    public List<Users> completeAttendees(String query) {
-        List<Users> allUsers = setAttendeesList();
-        attendeesList = new ArrayList<>();
-         
-        for (int i = 0; i < allUsers.size(); i++) {
-            Users skin = allUsers.get(i);
-            
-            if(skin.getFirstname().toLowerCase().contains(query) || skin.getLastname().toLowerCase().contains(query)) {
-                attendeesList.add(skin);
-            }
-        }
-         
-        return attendeesList;
-    }
-    
-    public List<Users> setAttendeesList() {
-        List<Users> users = userFacade.findAll();
-        users.remove(user);
-        return users; 
-    }
-    
-    public void setSelectedAttendees(List<Users> selectedAttendees){
-                
-        if(selectedAttendees == null) { return; }
-        
-        this.selectedAttendees = selectedAttendees;
-        
-        for(Users u : selectedAttendees) {  
-            Boolean alreadyParticipant = false;
-                        
-            for(EventParticipant ep : selectedEventAttendees)  {
-                if (ep.getParticipant().equals(u)) { 
-                    alreadyParticipant = true;
-                }
-            }
-        
-            if(!alreadyParticipant){
-                selectedEventAttendees.add(new EventParticipant(u));
-            }
-        }
-    }
-    
-    public void removeAttendee(EventParticipant participant) {
-        this.selectedEventAttendees.remove(participant);
-    }
-    
     public void onTransfer(TransferEvent event) {
         StringBuilder builder = new StringBuilder();
         for(Object item : event.getItems()) {
@@ -210,24 +133,6 @@ public class UsersController implements Serializable {
         return usersFacade;
     }
 
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
-                }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
-                }
-            };
-        }
-        return pagination;
-    }
-
     public String prepareList() {
         recreateModel();
         return "List";
@@ -235,7 +140,6 @@ public class UsersController implements Serializable {
 
     public String prepareView() {
         current = (Users) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "View";
     }
 
@@ -248,36 +152,29 @@ public class UsersController implements Serializable {
     public String create() {
         try {
             getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersCreated"));
             return prepareCreate();
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
     }
 
     public String prepareEdit() {
         current = (Users) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         return "Edit";
     }
 
     public String update() {
         try {
             getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersUpdated"));
             return "View";
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             return null;
         }
     }
 
     public String destroy() {
         current = (Users) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
         performDestroy();
-        recreatePagination();
         recreateModel();
         return "List";
     }
@@ -298,9 +195,7 @@ public class UsersController implements Serializable {
     private void performDestroy() {
         try {
             getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsersDeleted"));
         } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
         }
     }
 
@@ -309,10 +204,6 @@ public class UsersController implements Serializable {
         if (selectedItemIndex >= count) {
             // selected index cannot be bigger than number of items:
             selectedItemIndex = count - 1;
-            // go to previous page if last page disappeared:
-            if (pagination.getPageFirstItem() >= count) {
-                pagination.previousPage();
-            }
         }
         if (selectedItemIndex >= 0) {
             current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
@@ -321,29 +212,12 @@ public class UsersController implements Serializable {
 
     public DataModel getItems() {
         if (items == null) {
-            items = getPagination().createPageDataModel();
         }
         return items;
     }
 
     private void recreateModel() {
         items = null;
-    }
-
-    private void recreatePagination() {
-        pagination = null;
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
     }
 
     public Users getUsers(java.lang.Long id) {

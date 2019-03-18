@@ -7,38 +7,26 @@ import com.WebApplicationProject.db.UsersFacade;
 import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventOccurance;
 import com.WebApplicationProject.model.EventParticipant;
+import com.WebApplicationProject.model.EventViewModel;
 import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
-import com.WebApplicationProject.view.EventViewer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
-import org.primefaces.event.ScheduleEntryMoveEvent;
-import org.primefaces.event.ScheduleEntryResizeEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleModel;
 
 @Named("eventController")
-@SessionScoped
+@ViewScoped
 public class EventController implements Serializable {
-
-    private Users current;
-    
     
     @EJB
     private UsersFacade usersFacade;
@@ -54,68 +42,29 @@ public class EventController implements Serializable {
 
     @Getter
     @Setter
-    private ScheduleModel eventModel = new DefaultScheduleModel();
-
-    @Getter
-    @Setter
-    private EventViewer event = new EventViewer();
-
-    @Getter
-    @Setter
     private Users user = new Users();
-    
-    
-    @Getter
-    @Setter
-    private List<Users> users= new ArrayList<Users>();
 
     @PostConstruct
     public void init() {
 
-        //TODO: Only for testing. Must be changed to a real user search. 
+        //Set user based on session
         HttpSession session = SessionUtil.getSession();
         String email = (String) session.getAttribute("email");
-        
-        users = usersFacade.users(email);
-        user = users.get(0);
-        //user = usersFacade.find(1L);
-        //Get all events for the user
-        getEvents();
+        user = usersFacade.users(email);
+    }
+    
+    public String addEvent(EventViewModel event) {
+        List<EventParticipant> participtans = new ArrayList<EventParticipant>();
+        addEvent(event, participtans);
+        return "";
     }
 
-    public String addEvent() {
+    public String addEvent(EventViewModel event, List<EventParticipant> participants) {
+        
         if (event.isRecurrent()) {
             System.out.println("Creating recurrent event");
-            return addRecurrentEvent(event.getRecurrentForRange(), event.getRecurrentEveryRange());
+            return addRecurrentEvent(event, participants);
         }
-        return addEvent(new ArrayList<>());
-    }
-
-    public Boolean writePremission() {
-
-        //If event has not been created yet
-        if (event.getEvent().getId() == null) {
-            return false;
-        }
-
-        //Check if user has write permission on event
-        if (event.getEvent().getOwner().equals(user)) {
-            return true;
-        }
-
-        List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByParticipant(event.getEvent().getId());
-        for (EventParticipant ep : participants) {
-            if (ep.equals(user)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    
-
-    public String addEvent(List<EventParticipant> participants) {
 
         //Add event to Event-table in DB        
         Event e = new Event(event.getEvent().getTitle(),
@@ -146,16 +95,12 @@ public class EventController implements Serializable {
             }
         }
 
-        eventModel.addEvent(new EventViewer(e, eo));
-        clearEvent();
-
         return "pretty:calendar";
     }
 
-    public void addRecurrentEvent(List<EventParticipant> participants, Long Id) {
+    public void addRecurrentEvent(EventViewModel event, Long Id, List<EventParticipant> participants) {
         Event e = eventFacade.find(Id);
         
-
         //Add event occurance to EventOccurance-table in DB    
         EventOccurance eo = new EventOccurance(
                 eventFacade.find(Id),
@@ -173,9 +118,6 @@ public class EventController implements Serializable {
                 }
             }
         }
-
-        eventModel.addEvent(new EventViewer(e, eo));
-
     }
     
     /**
@@ -185,7 +127,7 @@ public class EventController implements Serializable {
      * @param everyRange The frequency of the recurring
      * @return Redirection to the schedule view through prettyfaces
      */
-    public String addRecurrentEvent(int forRange, String everyRange) {
+    public String addRecurrentEvent(EventViewModel event, List<EventParticipant> participants) {
         //Add event to Event-table in DB        
         Event e = new Event(event.getEvent().getTitle(),
                 event.getEvent().getCalendar(),
@@ -199,13 +141,13 @@ public class EventController implements Serializable {
         
         System.out.println("Event id: " + e.getId());
         
-        System.out.println("For range: " + forRange);
-        System.out.println("Every range: " + everyRange);
+        System.out.println("For range: " + event.getRecurrentForRange());
+        System.out.println("Every range: " + event.getRecurrentEveryRange());
         LocalDate localStartDate = event.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localEndDate = event.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        for (int i = 0; i < forRange; i++) {
+        for (int i = 0; i < event.getRecurrentForRange(); i++) {
 
-            switch (everyRange) {
+            switch (event.getRecurrentEveryRange()) {
                 case "Day":
                     event.setStartDate(java.sql.Date.valueOf(localStartDate.plusDays(i)));
                     event.setEndDate(java.sql.Date.valueOf(localEndDate.plusDays(i)));
@@ -229,23 +171,16 @@ public class EventController implements Serializable {
 
             System.out.println("Loop #" + i);
             System.out.println("Event #" + (i + 1) + "'s date: " + event.getStartDate());
-            addRecurrentEvent(new ArrayList<>(), e.getId());
-
+            addRecurrentEvent(event, e.getId(), participants);
         }
-        clearEvent();
         return "pretty:calendar";
     }
-
-    public String deleteTemporaryEvent() {
-        clearEvent();
-        return "pretty:calendar";
-    }
-
-    public String deleteParticipantEvent() {
+    
+    public String deleteParticipantEvent(EventViewModel event) {
 
         if (event.getEvent().getOwner().equals(user)) {
             //Delete this event if user is owner
-            deleteThisEvent();
+            deleteThisEvent(event);
         } else {
             //Delete the event participants from event
             List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
@@ -260,7 +195,7 @@ public class EventController implements Serializable {
         return "pretty:calendar";
     }
 
-    public String deleteAllEvents() {
+    public String deleteAllEvents(EventViewModel event) {
 
         List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(event.getEvent().getId());
 
@@ -278,13 +213,10 @@ public class EventController implements Serializable {
         //Delete event
         eventFacade.remove(event.getEvent());
 
-        getEvents();
-        clearEvent();
-
         return "pretty:calendar";
     }
 
-    public String deleteThisEvent() {
+    public String deleteThisEvent(EventViewModel event) {
 
         //Delete event participants
         List<EventParticipant> participants = eventParticipantFacade.getEventParticipantByEvent(event.getEvent().getId());
@@ -297,19 +229,17 @@ public class EventController implements Serializable {
         System.out.println("Delete event and occurances from database");
 
         //Only remove event if it is there is only one occurance
-//        if (event.getEvent().getEventOccuranceCollection().size() <= 1) {
-//            System.out.println("Only remove event if it it there is only one occurance");
-//            eventFacade.remove(event.getEvent());
-//        }
+        if (event.getEvent().getEventOccuranceCollection().size() <= 1) {
+            System.out.println("Only remove event if it it there is only one occurance");
+            eventFacade.remove(event.getEvent());
+        }
 
-        eventModel.deleteEvent(event);
         System.out.println("Delete event");
-        clearEvent();
 
         return "pretty:calendar";
     }
 
-    public String updateEvent(List<EventParticipant> participants) {
+    public String updateEvent(EventViewModel event, List<EventParticipant> participants) {
 
         //Update entities
         eventFacade.edit(event.getEvent());
@@ -330,70 +260,11 @@ public class EventController implements Serializable {
             }
         }
 
-        //Update event model
-        eventModel.updateEvent(event);
-        clearEvent();
-
         return "pretty:calendar";
     }
 
     public String deleteTempEvent() {
-        clearEvent();
         return "pretty:calendar";
     }
 
-    public void getEvents() {
-
-        eventModel.clear();
-
-        //Find all events created by the user
-        List<Event> events = eventFacade.getEventByOwner(user.getId());
-
-        for (Event e : events) {
-            List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(e.getId());
-            for (EventOccurance eo : occurances) {
-                eventModel.addEvent(new EventViewer(e, eo));
-            }
-        }
-
-        //Find all events where the user is included
-        List<EventParticipant> participantEvents = eventParticipantFacade.getEventParticipantByParticipant(user.getId());
-        for (EventParticipant ep : participantEvents) {
-            List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(ep.getEvent().getId());
-            for (EventOccurance eo : occurances) {
-                eventModel.addEvent(new EventViewer(ep.getEvent(), eo));
-            }
-        }
-    }
-
-    public void setSelectedEvent(EventViewer selected) {
-        event = selected;
-    }
-
-    public void onEventSelect(SelectEvent selectEvent) {
-        event = (EventViewer) selectEvent.getObject();
-    }
-
-    public void onDateSelect(SelectEvent selectEvent) {
-        event = new EventViewer("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
-    }
-
-    public void onEventMove(ScheduleEntryMoveEvent event) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
-        addMessage(message);
-    }
-
-    public void onEventResize(ScheduleEntryResizeEvent event) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event resized", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
-        addMessage(message);
-    }
-
-    private void addMessage(FacesMessage message) {
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
-    public void clearEvent() {
-        //Clear temporary event
-        event = new EventViewer();
-    }
 }
