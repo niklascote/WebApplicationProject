@@ -221,9 +221,10 @@ public class Users implements Serializable {
         return true;
     }
 
+    
     @Override
-    public String toString() {
-        return "com.WebApplicationProject.model.Users[ id=" + id + " ]";
+    public String toString(){
+        return "" + this.firstname + " " + this.lastname;
     }
     
 }
