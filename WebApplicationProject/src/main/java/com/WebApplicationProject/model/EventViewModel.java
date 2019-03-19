@@ -6,9 +6,7 @@
 package com.WebApplicationProject.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.model.DefaultScheduleEvent;

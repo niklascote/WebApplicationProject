@@ -148,3 +148,110 @@ body.index > .container > .sign_up {
     display: block;
     margin: 5px auto;
 }
+
+div.overlay {
+    position:absolute;
+    overflow-x:hidden !important;
+    padding: 0;
+    margin:0;
+    width:100%;
+    height:100%;
+
+    background-color: #f2f2f2;
+    font-family: Arial;
+    font-size: 12pt;
+    text-align:center;
+
+    top:0px;
+    left:0px;
+
+    display: grid;
+    grid-template-rows: 30% 70%;
+}
+
+div.overlay > .cover {
+    background: linear-gradient(black 50%, 0%, #f2f2f2 50%);
+    color: white;
+}
+
+div.overlay > .cover > .circle {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    height: 155px;
+    width: 155px;
+    background-color: #f2f2f2;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+div.overlay > .cover > .circle > img.user {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    margin:0 auto;
+    border-radius:50%;
+    width: 150px;
+    height: 150px;
+}
+
+div.overlay > .content {
+    margin-left: 10%;
+    margin-right: 10%;
+    display: grid;
+    grid-template-rows: 20% 70% 10%;
+}
+
+div.overlay > .content > .mid {    
+    display: grid;
+    grid-template-columns: 46% 8% 46%;
+}
+
+div.overlay > .content > .mid > .mid {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid #cccccc;
+    margin-left: 50%;
+}
+
+div.overlay > .content > .mid > .left > .item,
+div.overlay > .content > .mid > .right > .item {
+    text-align:left;
+    margin:0;
+    padding:20px;
+    background-color: #fcfcfc;
+    border: 1px #cccccc solid;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+div.overlay > .content > .mid > .left,
+div.overlay > .content > .mid > .right {
+    text-align:left;
+}
+
+div.overlay > .content > .bot {
+}
+
+div.overlay > .content > .top > .paragraph,
+div.overlay > .content > .mid > .paragraph,
+div.overlay > .content > .mid > .left > .paragraph,
+div.overlay > .content > .mid > .left > .content > .paragraph,
+div.overlay > .content > .mid > .mid > .paragraph,
+div.overlay > .content > .mid > .mid > .content > .paragraph,
+div.overlay > .content > .mid > .right > .paragraph,
+div.overlay > .content > .mid > .right > .content > .paragraph,
+div.overlay > .content > .bot > .paragraph {
+    display:block;
+}
+
+.item {
+    text-align:left;
+}
+
+.item > .text_left {
+    font-weight:bold;
+}

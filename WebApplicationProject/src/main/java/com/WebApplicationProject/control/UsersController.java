@@ -2,26 +2,18 @@ package com.WebApplicationProject.control;
 
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.EventParticipant;
-import com.WebApplicationProject.model.SessionUtil;
-//import com.WebApplicationProject.model.SessionUtil;
 import com.WebApplicationProject.model.Users;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
-import java.util.ResourceBundle;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
 import javax.faces.view.ViewScoped;
-import javax.servlet.http.HttpSession;
-//import javax.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.SelectEvent;
@@ -223,6 +215,4 @@ public class UsersController implements Serializable {
     public Users getUsers(java.lang.Long id) {
         return usersFacade.find(id);
     }
-
-    
 }

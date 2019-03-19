@@ -28,6 +28,5 @@
         <pattern value="/calendar/event/add" />
         <view-id value="/schedule/eventView.xhtml?update=false" />
     </url-mapping>
-      
     
 </pretty-config>    
