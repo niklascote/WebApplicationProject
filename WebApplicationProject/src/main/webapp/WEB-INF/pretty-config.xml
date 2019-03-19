@@ -29,8 +29,4 @@
         <view-id value="/schedule/eventView.xhtml?update=false" />
     </url-mapping>
     
-    <url-mapping id="calendar">
-        <pattern value="/calendar/profile" />
-        <view-id value="/schedule/profileView.xhtml" />
-    </url-mapping>
 </pretty-config>    
