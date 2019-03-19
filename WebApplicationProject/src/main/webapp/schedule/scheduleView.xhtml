@@ -19,7 +19,7 @@
 
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" style="background: black; color:white;"/> 
+                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" disabled="true" style="background: black; color:white; opacity:1.0;"/> 
                     <p:menuitem value="Profile" action="#{profileController.showProfile}" style="background: black; color:white;"/>
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
