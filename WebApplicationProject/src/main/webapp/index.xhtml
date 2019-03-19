@@ -17,15 +17,20 @@
 
         <h:panelGroup layout="block" class="container">
             
-            <h1>CALENDAR</h1>
+            <h:outputText styleClass="header" value ="CALENDAR"/>
 
             <h:panelGroup layout="block" class="login_container">
                 <ui:include src="/users/loginView.xhtml"/>
             </h:panelGroup>
             
-            <p class="register">Not registered?</p>
-
-            <h:link value="Sign up" outcome="/users/Create.xhtml" class="sign_up"/>
+            <h:panelGroup layout="block" class="label_box">
+                <h:outputText styleClass="register" value ="Not registered?"/>
+            </h:panelGroup>
+            
+            <h:panelGroup layout="block" class="link_box">
+                <h:link value="Sign up" outcome="/users/Create.xhtml" class="sign_up"/>
+            </h:panelGroup>
+            
         </h:panelGroup>
 
     </h:body>

@@ -23,37 +23,39 @@ body.index > .container {
     text-align: center;
 }
 
-body.index > .container > p,
-body.index > .container > a,
-body.index > .container > h1 {
+body.index > .container > .label_box > p,
+body.index > .container > .link_box > a,
+body.index > .container > .header {
     color: black;
 }
 
-body.index > .container > a {
+body.index > .container > .header {
+    font-size: 24pt;
+    font-weight:bold;
+}
+
+body.index > .container > .link_box > a {
     text-decoration: none;
     font-weight: bold;
     display: block;
 
-    margin: 5px;
-    padding: 5px;
-
     border: 1px solid transparent;
     border-radius: 0px;
-    transition: 0.1s;
+    padding: 20px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
 }
 
-body.index > .container > a:hover {
+body.index > .container > .link_box > a:hover {
     border: 1px solid black;
     border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
 }
 
-body.index > .container > .register,
-body.index > .container > .sign_up {
+body.index > .container > .label_box,
+body.index > .container > .link_box {
     display: inline-block;
-}
-
-body.index > .container > .register,
-body.index > .container > .sign_up { 
     margin: 5px;
     margin-top: 20px;
 }
@@ -172,29 +174,52 @@ div.overlay {
 div.overlay > .cover {
     background: linear-gradient(black 50%, 0%, #f2f2f2 50%);
     color: white;
+    
+    width:100%;
+    
+    display:grid;
+    grid-template-columns: 20% 60% 20%;
 }
 
-div.overlay > .cover > .circle {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-
-    height: 155px;
-    width: 155px;
-    background-color: #f2f2f2;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-div.overlay > .cover > .circle > img.user {
+div.overlay > .cover > .circle,
+div.overlay > .cover > .circle > img.user{
     position: relative;
     top: 50%;
     transform: translateY(-50%);
 
     margin:0 auto;
-    border-radius:50%;
+    
+    height: 155px;
+    width: 155px;
+    background-color: #f2f2f2;
+    border-radius: 50%;
+}
+
+div.overlay > .cover > .circle > img.user {
     width: 150px;
     height: 150px;
+}
+
+div.overlay > .cover > .left > form > .calendar_button {
+    position:relative;
+    display: inline-block;
+    text-align:center;
+    color:white;
+    text-decoration : none;
+    
+    border: 1px solid transparent;
+    border-radius: 0px;
+    padding: 20px;
+    margin-top:20px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
+}
+
+div.overlay > .cover > .left > form > .calendar_button:hover {
+    border: 1px solid white;
+    border-radius:5px;
+    padding: 10px;
+    margin-top:30px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
 }
 
 div.overlay > .content {
