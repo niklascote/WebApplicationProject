@@ -5,13 +5,9 @@
  */
 package com.WebApplicationProject.view;
 
-import com.WebApplicationProject.db.CalendarFacade;
-import com.WebApplicationProject.db.EventFacade;
-import com.WebApplicationProject.db.EventOccuranceFacade;
 import com.WebApplicationProject.db.EventParticipantFacade;
 import com.WebApplicationProject.db.ReminderFacade;
 import com.WebApplicationProject.db.UsersFacade;
-import com.WebApplicationProject.model.Calendar;
 import com.WebApplicationProject.model.EventParticipant;
 import com.WebApplicationProject.model.EventViewModel;
 import com.WebApplicationProject.model.Reminder;

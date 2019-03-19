@@ -5,10 +5,7 @@
  */
 package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.db.AbstractFacade;
 import com.WebApplicationProject.model.Event;
-import com.WebApplicationProject.model.EventOccurance;
-import com.WebApplicationProject.model.Users;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

@@ -5,7 +5,6 @@
  */
 package com.WebApplicationProject.db;
 
-import com.WebApplicationProject.model.Event;
 import com.WebApplicationProject.model.EventParticipant;
 import java.util.List;
 import javax.ejb.Stateless;
