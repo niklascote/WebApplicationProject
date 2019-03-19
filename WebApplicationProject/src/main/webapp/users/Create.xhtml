@@ -9,7 +9,7 @@
       xmlns:of="http://omnifaces.org/functions"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-      <h:head>
+    <h:head>
         <h:outputStylesheet library="css" name="default.css"  />
     </h:head>
 
@@ -33,8 +33,8 @@
                         <h:outputLabel value="Password:" for="password" />
                         <h:inputSecret id="password" value="#{usersController.selected.password}" title="Password" required="true" requiredMessage="The Password field is required."/>
                         <h:outputLabel value="Timezone:" for="timezone" />
-                            
-                        
+
+
                         <h:inputText 
                             id="timezone" 
                             value="#{usersController.selected.timezone}" 
@@ -47,28 +47,29 @@
                         <h:inputText id="notifications" value="#{usersController.selected.notifications}" title="Notifications" required="true" requiredMessage="The Notifications field is required."/>
 
                     </h:panelGrid>
-                    
+
                     <p:remoteCommand name="remote" action="#{usersController.prepareEdit()}" process="@this" partialSubmit="true">
-                                                </p:remoteCommand>
-                    
+                    </p:remoteCommand>
+
                     <script id="test" type="text/javascript">
-                            function getTimeZone() {
-                                                                                                
-                                console.log(new Date().getTimezoneOffset());
-                                var input = document.getElementById('registerForm:timezone');
-                                input.value = "GMT +" + new Date().getTimezoneOffset()/(-60);
-                                
-                                remote([
-                                    {name: 'timezone', value: input.value}
-                                ]);
-                            };
-                        </script>
-                        <script>getTimeZone();</script>
-                        
-                        
-                    
-                        <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="getTimeZone()" action="pretty:home"/>
-                        <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
+                        function getTimeZone() {
+
+                            console.log(new Date().getTimezoneOffset());
+                            var input = document.getElementById('registerForm:timezone');
+                            input.value = "GMT +" + new Date().getTimezoneOffset() / (-60);
+
+                            remote([
+                                {name: 'timezone', value: input.value}
+                            ]);
+                        }
+                        ;
+                    </script>
+                    <script>getTimeZone();</script>
+
+
+
+                    <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="getTimeZone()" action="pretty:home"/>
+                    <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
                     <h:button value="Back" outcome="pretty:home"/>
                 </h:form>
             </f:view>

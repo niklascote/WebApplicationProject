@@ -19,7 +19,8 @@
 
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" disabled="true" style="background: black; color:white;"/> 
+                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" style="background: black; color:white;"/> 
+                    <p:menuitem value="Profile" action="#{profileController.showProfile}" style="background: black; color:white;"/>
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
                         <p:commandButton ajax="false" value="Logout" action="#{authController.logout()}"/>
@@ -183,10 +184,10 @@
             var now = new Date();
             var currentTime = now.getTime(); // Long Type miliseconds from 1970 Jan 1 00:00:00
 
-            console.log(""+ currentTime);
-            
-            var eventDate= document.getElementById('dateSelect');
-            
+            console.log("" + currentTime);
+
+            var eventDate = document.getElementById('dateSelect');
+
             console.log("" + eventDate); //Is null
 
             if (true) {   //TODO: if there is an event today Send Notification/ CURRENTLY notifies everytime reloaded/logged in

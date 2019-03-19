@@ -223,6 +223,4 @@ public class UsersController implements Serializable {
     public Users getUsers(java.lang.Long id) {
         return usersFacade.find(id);
     }
-
-    
 }
