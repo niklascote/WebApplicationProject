@@ -62,6 +62,10 @@ public class CalendarController implements Serializable {
         }
     }
     
+    public void setCalendar() {
+        currentCal = calendarFacade.findAll().get(calendarFacade.findAll().indexOf(currentCal));    
+    }
+    
     public Calendar getSelected() {
         if (currentCal == null) {
             currentCal = new Calendar();
