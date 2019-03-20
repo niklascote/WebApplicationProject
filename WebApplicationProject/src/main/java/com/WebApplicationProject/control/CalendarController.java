@@ -85,6 +85,7 @@ public class CalendarController implements Serializable {
     public String create(){
             currentCal.setOwner(user);
             getFacade().create(currentCal);
+            user.getCalendarCollection().add(currentCal);
             System.out.println("New calender created!");
             System.out.println("ID: " + currentCal.getId());
             System.out.println("Name: " + currentCal.getName());
