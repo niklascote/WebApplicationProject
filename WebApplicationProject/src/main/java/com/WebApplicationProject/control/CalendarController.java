@@ -52,7 +52,6 @@ public class CalendarController implements Serializable {
         user = usersFacade.users(email);
         //user = users.get(0);
         
-        
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
             currentCal = new Calendar();

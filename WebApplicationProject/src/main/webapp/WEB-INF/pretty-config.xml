@@ -11,7 +11,12 @@
     
     <url-mapping id="calendar">
         <pattern value="/calendar" />
-        <view-id value="/schedule/scheduleView.xhtml" />
+        <view-id value="/schedule/scheduleView.xhtml"/>
+    </url-mapping>
+    
+    <url-mapping id="profile">
+        <pattern value="/calendar/profile" />
+        <view-id value="/schedule/profileView.xhtml"/>
     </url-mapping>
     
     <url-mapping id="eventview">
