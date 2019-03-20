@@ -44,7 +44,10 @@
                         </p:selectManyCheckbox>-->
 
                         <p:selectManyCheckbox id="calendarSelection" value="#{calendarView.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
-                            <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
+<!--                            <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>-->
+                            <f:selectItems id="editable" value="#{calendarView.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                            <f:selectItems id="nonEditable" value="#{calendarView.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                            
                         </p:selectManyCheckbox>
 
 
