@@ -68,6 +68,7 @@ public class ProfileController implements Serializable {
         try {
             ufacade.edit(user);
             session.setAttribute("email", user.getEmail());
+            user = ufacade.users((String) session.getAttribute("email"));
         } catch (Exception e) {
             e.printStackTrace();
         }
