@@ -69,6 +69,7 @@ public class Calendar implements Serializable {
 
     public Calendar() {
         this.name = "Empty";
+        this.publicAccess = true;
     }
 
     public Calendar(Long id) {
