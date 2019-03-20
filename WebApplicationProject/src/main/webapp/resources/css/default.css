@@ -6,7 +6,6 @@ html, body.index{
 }
 
 body {
-    overflow-x:hidden !important;
     height:100%;
     width: 100%;
 }
@@ -222,19 +221,53 @@ div.overlay > .cover > .left > form > .calendar_button:hover {
     transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
 }
 
-div.overlay > .content {
-    margin-left: 10%;
-    margin-right: 10%;
-    display: grid;
-    grid-template-rows: 20% 70% 10%;
+div.overlay > .content > form {
+    margin:0 auto;
 }
 
-div.overlay > .content > .mid {    
+div.overlay > .content > form > .form_content {
+    display: grid;
+    grid-template-rows: 20% 10% 60% 10%;
+}
+
+div.overlay > .content > form > .form_content > .mid,
+div.overlay > .content > form > .form_content > .bot {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+div.overlay > .content > form > .form_content > .top2 {
+    text-align:center;
+    font-size: 16pt;
+    margin-bottom:50px;
+}
+
+div.overlay > .content > form > .form_content > .top2 > a {
+    position:relative;
+    text-align:center;
+    text-decoration: none;
+    font-weight:bold;
+    color: black;
+    
+    border: 1px solid transparent;
+    border-radius: 0px;
+    padding: 20px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
+}
+
+div.overlay > .content > form > .form_content > .top2 > a:hover {
+    border: 1px solid black;
+    border-radius:5px;
+    padding: 10px;
+    transition: 0.1s padding ease-out, 0.1s margin ease-out, 0.1s border ease-out;
+}
+
+div.overlay > .content > form > .form_content > .mid {    
     display: grid;
     grid-template-columns: 46% 8% 46%;
 }
 
-div.overlay > .content > .mid > .mid {
+div.overlay > .content > form > .form_content > .mid > .mid {
     position: relative;
     top: 0;
     bottom: 0;
@@ -242,8 +275,8 @@ div.overlay > .content > .mid > .mid {
     margin-left: 50%;
 }
 
-div.overlay > .content > .mid > .left > .item,
-div.overlay > .content > .mid > .right > .item {
+div.overlay > .content > form > .form_content > .mid > .left > .item,
+div.overlay > .content > form > .form_content > .mid > .right > .item {
     text-align:left;
     margin:0;
     padding:20px;
@@ -253,23 +286,23 @@ div.overlay > .content > .mid > .right > .item {
     grid-template-columns: 50% 50%;
 }
 
-div.overlay > .content > .mid > .left,
-div.overlay > .content > .mid > .right {
+div.overlay > .content > form > .form_content > .mid > .left,
+div.overlay > .content > form > .form_content > .mid > .right {
     text-align:left;
 }
 
 div.overlay > .content > .bot {
 }
 
-div.overlay > .content > .top > .paragraph,
-div.overlay > .content > .mid > .paragraph,
-div.overlay > .content > .mid > .left > .paragraph,
-div.overlay > .content > .mid > .left > .content > .paragraph,
-div.overlay > .content > .mid > .mid > .paragraph,
-div.overlay > .content > .mid > .mid > .content > .paragraph,
-div.overlay > .content > .mid > .right > .paragraph,
-div.overlay > .content > .mid > .right > .content > .paragraph,
-div.overlay > .content > .bot > .paragraph {
+div.overlay > .content > form > .form_content > .top > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .left > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .left > .content > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .mid > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .mid > .content > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .right > .paragraph,
+div.overlay > .content > form > .form_content > .mid > .right > .content > .paragraph,
+div.overlay > .content > form > .form_content > .bot > .paragraph {
     display:block;
 }
 

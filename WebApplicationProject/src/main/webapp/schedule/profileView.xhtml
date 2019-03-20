@@ -24,11 +24,14 @@ and open the template in the editor.
             <h:panelGroup layout="block" styleClass="cover">
                 <h:panelGroup layout="block" styleClass="left">
                     <h:form>
-                        <h:link styleClass="calendar_button" value="Calendar" outcome="/schedule/scheduleView.xhtml" />
+                        <h:commandLink styleClass="calendar_button"
+                                       value="Calendar"
+                                       action="#{profileController.calendar()}">
+                        </h:commandLink>
                     </h:form>
                 </h:panelGroup>
                 <h:panelGroup layout="block" styleClass="circle">
-                    <img src="resources/img/paris.png" alt="Paris" class="user"/>
+                    <h:graphicImage value="resources/img/paris.png" styleClass="user"/>
                 </h:panelGroup>
                 <h:panelGroup layout="block" styleClass="right">
                     <h:outputText value =""/>
@@ -36,69 +39,160 @@ and open the template in the editor.
             </h:panelGroup>
 
             <h:panelGroup layout="block" styleClass="content">
-
-                <h:panelGroup layout="block" styleClass="top">
-                    <h:outputText styleClass="paragraph" 
-                                  value="#{profileController.user.getFirstname()} #{profileController.user.getLastname()}" 
-                                  style="font-weight:bold; font-size:16pt;"/>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="mid">
-                    <h:panelGroup layout="block" styleClass="left">
-
-                        <h:outputText styleClass="paragraph" value="Basic Information" style="font-weight:bold; font-size: 14pt; margin-bottom: 10px;"/>
-
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="First Name" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getFirstname()}" />
+                <h:form>    
+                    <h:panelGroup layout="block" styleClass="form_content">
+                        <h:panelGroup layout="block" styleClass="top">
+                            <h:outputText styleClass="paragraph" 
+                                          value="#{profileController.user.getFirstname()} 
+                                          #{profileController.user.getLastname()}"
+                                          style="font-weight:bold; font-size:16pt;"/>
                         </h:panelGroup>
 
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="Last Name" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getLastname()}" />
+                        <h:panelGroup layout="block" styleClass="top2">
+                            <h:commandLink styleClass="edit_button"
+                                           value="Edit"
+                                           action="#{profileController.editMode}"
+                                           rendered="#{!profileController.isEdit()}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandLink>
+                            <h:commandLink styleClass="save_button"
+                                           value="Save"
+                                           action="#{profileController.save}"
+                                           rendered="#{profileController.isEdit()}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandLink>
+                            <h:commandLink styleClass="cancel_button"
+                                           value="Cancel"
+                                           action="#{profileController.cancel}"
+                                           rendered="#{profileController.isEdit()}">
+                                <f:ajax execute="@form" render="@form"/>
+                            </h:commandLink>
                         </h:panelGroup>
 
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="Email Address" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getEmail()}" />
+                        <h:panelGroup layout="block" styleClass="mid">
+                            <h:panelGroup layout="block" styleClass="left">
+
+                                <h:outputText styleClass="paragraph" value="Basic Information" 
+                                              style="font-weight:bold; font-size: 14pt; margin-bottom: 10px;"/>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="First Name"/>
+                                    <h:outputText styleClass="text_right" 
+                                                  value="#{profileController.user.getFirstname()}" 
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right"
+                                                 value="#{profileController.user.firstname}" 
+                                                 required="true"
+                                                 placeholder="First Name"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="Last Name"/>
+                                    <h:outputText styleClass="text_right" 
+                                                  value="#{profileController.user.getLastname()}" 
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.lastname}" 
+                                                 required="true"
+                                                 placeholder="Last Name"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="Email Address"/>
+                                    <h:outputText styleClass="text_right" 
+                                                  value="#{profileController.user.getEmail()}"
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.email}" 
+                                                 required="true"
+                                                 placeholder="Username (email)"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="User ID"/>
+                                    <h:outputText styleClass="text_right"
+                                                  value="#{profileController.user.getId()}"
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.id}"
+                                                 disabled="true"
+                                                 required="true"
+                                                 placeholder="User ID"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+
+                            <h:panelGroup layout="block" styleClass="mid"></h:panelGroup>
+
+
+                            <h:panelGroup layout="block" styleClass="right">
+                                <h:outputText styleClass="paragraph" 
+                                              value="Additional Information" 
+                                              style="font-weight:bold; font-size: 14pt; margin-bottom:10px;"/>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="Phone Number" />
+                                    <h:outputText styleClass="text_right" 
+                                                  value="#{profileController.user.getPhone()}"
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.phone}" 
+                                                 required="true"
+                                                 placeholder="Phone Number"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left" 
+                                                  value="Time Zone" />
+                                    <h:outputText styleClass="text_right" 
+                                                  value="#{profileController.user.getTimezone()}"
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.timezone}" 
+                                                 required="true"
+                                                 placeholder="Time Zone"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="item">
+                                    <h:outputText styleClass="text_left"
+                                                  value="Allow Notifications" />
+                                    <h:outputText styleClass="text_right"
+                                                  value="#{profileController.user.getNotifications()}"
+                                                  rendered="#{!profileController.isEdit()}"/>
+                                    <p:inputText type="text"
+                                                 styleClass="text_right" 
+                                                 value="#{profileController.user.notifications}" 
+                                                 required="true"
+                                                 placeholder=" asd asdkaddkö"
+                                                 rendered="#{profileController.isEdit()}"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
                         </h:panelGroup>
 
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="User ID" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getId()}" />
+                        <h:panelGroup layout="block" styleClass="bot">
                         </h:panelGroup>
-
                     </h:panelGroup>
-
-
-                    <h:panelGroup layout="block" styleClass="mid"></h:panelGroup>
-
-
-                    <h:panelGroup layout="block" styleClass="right">
-                        <h:outputText styleClass="paragraph" value="Additional Information" style="font-weight:bold; font-size: 14pt; margin-bottom:10px;"/>
-
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="Phone Number" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getPhone()}" />
-                        </h:panelGroup>
-
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="Time Zone" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getTimezone()}" />
-                        </h:panelGroup>
-
-                        <h:panelGroup layout="block" styleClass="item">
-                            <h:outputText styleClass="text_left" value="Allow Notifications" />
-                            <h:outputText styleClass="text_right" value="#{profileController.user.getNotifications()}" />
-                        </h:panelGroup>
-
-
-                    </h:panelGroup>
-                </h:panelGroup>
-
-                <h:panelGroup layout="block" styleClass="bot">
-                </h:panelGroup>
-
+                </h:form>
             </h:panelGroup>
         </h:panelGroup>
     </h:body>
