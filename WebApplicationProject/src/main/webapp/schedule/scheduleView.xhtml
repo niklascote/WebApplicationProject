@@ -38,13 +38,11 @@
 
                     <h:form id="calListForm" style="padding-top: 20px;">
                         <p:outputLabel value="CALENDARS"/>
-<!--                        <p:selectManyCheckbox id="calendarSelection" value="#{calendarController.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
-                            <f:selectItems id="editable" value="#{calendarController.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
-                            <f:selectItems id="nonEditable" value="#{calendarController.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>
-                        </p:selectManyCheckbox>-->
 
                         <p:selectManyCheckbox id="calendarSelection" value="#{calendarView.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
                             <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
+                            
+<!--                            To be used when editable and non-editable calendars are working correctly-->
 <!--                            <f:selectItems id="editable" value="#{calendarView.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
                             <f:selectItems id="nonEditable" value="#{calendarView.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>-->
                             

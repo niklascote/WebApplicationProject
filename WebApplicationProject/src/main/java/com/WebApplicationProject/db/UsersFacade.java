@@ -30,6 +30,12 @@ public class UsersFacade extends AbstractFacade<Users> {
         super(Users.class);
     }
 
+    /**
+     * Gets a user by his/her email(username)
+     * 
+     * @param email The searched for user's email
+     * @return The user with a matching email
+     */
     public Users users(String email){
         List<Users> users = em.createNamedQuery("Users.findByEmail")
                 .setParameter("email", email).getResultList();

@@ -30,6 +30,12 @@ public class CalendarFacade extends AbstractFacade<Calendar> {
         super(Calendar.class);
     }
     
+    /**
+     * Gets a list of all calendars in the database with the property
+     * public access set to true
+     * 
+     * @return The list of calendars
+     */
     public List<Calendar> userAccess(){
         boolean status = true;
         List<Calendar> calendars = em.createNamedQuery("Calendar.findByPublicAccess")

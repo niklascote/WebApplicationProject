@@ -67,6 +67,10 @@ public class Calendar implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calendar")
     private Collection<Event> eventCollection;
 
+    /**
+     * Default calendar constructor
+     * Creates an empty calendar with public access set to true
+     */
     public Calendar() {
         this.name = "Empty";
         this.publicAccess = true;

@@ -62,7 +62,6 @@ public class EventController implements Serializable {
     public String addEvent(EventViewModel event, List<EventParticipant> participants) {
         
         if (event.isRecurrent()) {
-            System.out.println("Creating recurrent event");
             return addRecurrentEvent(event, participants);
         }
 
@@ -98,15 +97,29 @@ public class EventController implements Serializable {
         return "pretty:calendar";
     }
 
+    /**
+     * Create a new event occurance for the repeated 
+     * event and add it to the database
+     * 
+     * Basically does the same thing as addEvent, but with events fetched from 
+     * addRecurrentEvent(EventViewModel event, List<EventParticipant> participants)
+     * to make sure the same event is being repeated, and not creating new events
+     * for every iteration
+     * 
+     * @param event Event to repeat
+     * @param Id ID of event to repeat
+     * @param participants Participants of event
+     */
     public void addRecurrentEvent(EventViewModel event, Long Id, List<EventParticipant> participants) {
         Event e = eventFacade.find(Id);
         
-        //Add event occurance to EventOccurance-table in DB    
+        //Create new event occurance
         EventOccurance eo = new EventOccurance(
                 eventFacade.find(Id),
                 event.getEventOccurance().getStartDate(),
                 event.getEventOccurance().getEndDate());
 
+        //Add event occurrance to database
         eventOccuranceFacade.create(eo);
 
         //Add event participant
@@ -121,14 +134,15 @@ public class EventController implements Serializable {
     }
     
     /**
-     * Adds a recurrent event to the calendar
-     *
-     * @param forRange The duration of the recurring
-     * @param everyRange The frequency of the recurring
-     * @return Redirection to the schedule view through prettyfaces
+     * Create new instances of one event, each with an incremented 
+     * date depending on the chosen interval in @param event
+     * 
+     * @param event The event to repeated
+     * @param participants Event participants
+     * @return Redirection to calendar view
      */
     public String addRecurrentEvent(EventViewModel event, List<EventParticipant> participants) {
-        //Add event to Event-table in DB        
+        //Create an instance of the event to be repeated
         Event e = new Event(event.getEvent().getTitle(),
                 event.getEvent().getCalendar(),
                 event.getEvent().getLocation(),
@@ -137,16 +151,16 @@ public class EventController implements Serializable {
                 event.getEvent().getDescription()
         );
 
+        //Add event to database
         eventFacade.create(e);
         
-        System.out.println("Event id: " + e.getId());
-        
-        System.out.println("For range: " + event.getRecurrentForRange());
-        System.out.println("Every range: " + event.getRecurrentEveryRange());
+        //java.util.Date is mostly deprecated, so conversion to LocalDate is necessary for both original start and end date of event
         LocalDate localStartDate = event.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localEndDate = event.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        
         for (int i = 0; i < event.getRecurrentForRange(); i++) {
-
+            
+            //Increment days, weeks, months or years depending on the interval of the repetition
             switch (event.getRecurrentEveryRange()) {
                 case "Day":
                     event.setStartDate(java.sql.Date.valueOf(localStartDate.plusDays(i)));
@@ -168,9 +182,8 @@ public class EventController implements Serializable {
                     event.setEndDate(java.sql.Date.valueOf(localEndDate.plusYears(i)));
                     break;
             }
-
-            System.out.println("Loop #" + i);
-            System.out.println("Event #" + (i + 1) + "'s date: " + event.getStartDate());
+            
+            
             addRecurrentEvent(event, e.getId(), participants);
         }
         return "pretty:calendar";
@@ -195,6 +208,12 @@ public class EventController implements Serializable {
         return "pretty:calendar";
     }
 
+    /**
+     * Deletes all occurrences of an event
+     * 
+     * @param event The event to delete
+     * @return Redirection to the calendar view
+     */
     public String deleteAllEvents(EventViewModel event) {
 
         List<EventOccurance> occurances = eventOccuranceFacade.getEventOccurancesByEvent(event.getEvent().getId());

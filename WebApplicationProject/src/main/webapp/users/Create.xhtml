@@ -20,8 +20,6 @@
                 <h:form id="registerForm">
                     <h1><h:outputText value="Register" styleClass="registerViewText"/></h1>
                     <h:panelGrid columns="2">
-                        <!--                    <h:outputLabel value="Id:" for="id" />
-                                            <h:inputText id="id" value="#{usersController.selected.id}" title="Id" required="true" requiredMessage="The Id field is required." disabled="true"/>-->
                         <h:outputLabel value="Firstname:" for="firstname" />
                         <h:inputText id="firstname" value="#{usersController.selected.firstname}" title="Firstname" />
                         <h:outputLabel value="Lastname:" for="lastname" />
@@ -48,8 +46,6 @@
 
                     </h:panelGrid>
 
-                    <p:remoteCommand name="remote" action="#{usersController.prepareEdit()}" process="@this" partialSubmit="true">
-                    </p:remoteCommand>
 
                     <script id="test" type="text/javascript">
                         function getTimeZone() {
@@ -57,10 +53,6 @@
                             console.log(new Date().getTimezoneOffset());
                             var input = document.getElementById('registerForm:timezone');
                             input.value = "GMT+" + new Date().getTimezoneOffset() / (-60);
-
-                            remote([
-                                {name: 'timezone', value: input.value}
-                            ]);
                         }
                         ;
                     </script>
@@ -69,7 +61,6 @@
 
 
                     <h:commandButton value="Register user" styleClass="registerViewButtons" actionListener="#{usersController.create}" onclick="getTimeZone()" action="pretty:home"/>
-                    <!--<h:commandLink value="Register user" action="#{usersController.create}" rev="pretty:home"/>-->
                     <h:button value="Back" outcome="pretty:home"/>
                 </h:form>
             </f:view>

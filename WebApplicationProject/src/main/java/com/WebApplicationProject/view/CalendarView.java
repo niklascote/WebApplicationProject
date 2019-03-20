@@ -97,13 +97,12 @@ public class CalendarView implements Serializable {
     
     public void setCalendars() {
         
-        //All the user's created calendards
+        //Sets all user's calendars to editable calendars
         user.getCalendarCollection().forEach((c) -> {
-            System.out.println("Adding editable calendar...");
             editableCalendars.add(c);
         });
         
-        //All the user's shared calendars
+        //If user has write permission, add calendar to editable calendars, else add calendar to non-editable calendars
         user.getCalendarParticipantCollection().forEach((c) -> {
             if(c.getWritePermission()) {
                 editableCalendars.add(c.getCalendar());

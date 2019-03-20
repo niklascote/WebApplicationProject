@@ -41,25 +41,27 @@ public class CalendarController implements Serializable {
     @Setter
     private Calendar calendar = new Calendar();
     
+    /**
+     * Finds user by email(username)
+     * 
+     * If user has a collection of at least 1 calendar, 
+     * return the first calendar of that user's calendar
+     * collection.
+     * If user has no calendars in collection, create a
+     * new empty public calendar
+     */
     @PostConstruct
     public void init() {
-        //user = usersFacade.find(1L);
-        
-        //TODO: Only for testing. Must be changed to a real user search. 
         HttpSession session = SessionUtil.getSession();
         String email = (String) session.getAttribute("email");
         allUsers = usersFacade.findAll();
         user = usersFacade.users(email);
-        //user = users.get(0);
         
-        System.out.println("User: " + user.getFirstname());
         List<Calendar> col = (List<Calendar>) user.getCalendarCollection();
         if(col.isEmpty()){
-            System.out.println("User calendar list empty...");
             currentCal = new Calendar();
             create();
         } else{
-            System.out.println("User calendar list not empty...");
             currentCal = col.get(0);
         }
     }
@@ -67,31 +69,37 @@ public class CalendarController implements Serializable {
     public Calendar getSelected() {
         if (currentCal == null) {
             currentCal = new Calendar();
-            
-            System.out.println("test");
         }
         return currentCal;
     }
         
+    
     public CalendarFacade getFacade(){
         return calendarFacade;
     }
     
+    /**
+     * Reset currentCal
+     * 
+     * @return redirection to calendar page
+     */
     public String prepareCreate(){
         currentCal = new Calendar();
         return "pretty:calendar";
     }
     
+    /**
+     * Creates a new calendar, sets owner to current user
+     * and then adds the calendar to all users' collections
+     * if calendar is set to public
+     * 
+     * @return call to prepareCreate()
+     */
     public String create(){
             currentCal.setOwner(user);
             getFacade().create(currentCal);
             user.getCalendarCollection().add(currentCal);
-            System.out.println("New calender created!");
-            System.out.println("ID: " + currentCal.getId());
-            System.out.println("Name: " + currentCal.getName());
-            System.out.println("Desc: " + currentCal.getDescription());
-            System.out.println("PA: " + currentCal.getPublicAccess());
-            if(currentCal.getPublicAccess()){ //Adds calendar if public to all users
+            if(currentCal.getPublicAccess()){
                 for(Users u:allUsers){
                     if(!u.getEmail().equals(user.getEmail())){
                     u.getCalendarCollection().add(currentCal);

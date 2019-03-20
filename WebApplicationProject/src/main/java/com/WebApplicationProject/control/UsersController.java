@@ -44,52 +44,15 @@ public class UsersController implements Serializable {
     @Getter
     @Setter
     private List<Users> users = new ArrayList<Users>();
-        
-    //private HttpSession session = SessionUtil.getSession();
     
   
     public Users getSelected() {
         if (current == null) {
             current = new Users();
-            //current.setTimezone(shortenTimeZone(TimeZone.getDefault().getDisplayName()));
-            
-            System.out.println("test");
-            
-            //current.setTimezone(getTimezone());
             
             selectedItemIndex = -1;
         }
         return current;
-    }
-    
-    
-    public String getTimezone(){
-        return current.getTimezone();
-    }
-    
-    public void onSetTimezone(){
-        
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        
-        String timezone = params.get("timezone");
-        
-        //String timezone = (String) FacesContext.getCurrentInstance().getAttributes().get("timezone");
-        System.out.println("Timezone: " + timezone);
-        getSelected().setTimezone(timezone);
-        //System.out.println("kwedjkedjekdjkedjekjdekjdekjdekd");
-        //Locale locale = request.getLocale();
-        //current.setTimezone(request.);
-    }
-    
-    public String shortenTimeZone(String name){
-        StringBuilder sB = new StringBuilder();
-        char[] arr = name.toCharArray();
-        for(char c : arr){
-            if(Character.isUpperCase(c)){
-                sB.append(c);
-            }
-        }
-        return sB.toString();
     }
     
     public void onTransfer(TransferEvent event) {

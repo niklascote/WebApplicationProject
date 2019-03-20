@@ -30,6 +30,12 @@ public class EventFacade extends AbstractFacade<Event> {
         super(Event.class);
     }    
     
+    /**
+     * Gets a list of events created by a specified user
+     * 
+     * @param userId The user's ID
+     * @return The list of events of a specified user
+     */
     public List<Event> getEventByOwner(Long userId) {
        List results = em.createNamedQuery("Event.findByOwner")
                .setParameter("ownerId", userId)

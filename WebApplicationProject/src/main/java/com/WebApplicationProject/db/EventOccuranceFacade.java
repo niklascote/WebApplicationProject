@@ -30,6 +30,12 @@ public class EventOccuranceFacade extends AbstractFacade<EventOccurance> {
         super(EventOccurance.class);
     }
     
+    /**
+     * Gets a list of event occurrences by the repeated event's ID
+     * 
+     * @param eventId The ID of the event
+     * @return The list of event occurrences of the event specified
+     */
     public List<EventOccurance> getEventOccurancesByEvent(Long eventId) {
        List results = em.createNamedQuery("EventOccurance.findByEvent")
                .setParameter("eventId", eventId)
