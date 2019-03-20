@@ -8,7 +8,8 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
-        <link href="../resources/css/default.css" rel="stylesheet" type="text/css"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="default.css"  />
         <title>Calendar</title>
     </h:head>
 
@@ -19,8 +20,8 @@
 
             <h:form>
                 <p:menubar style="background: black; color:white; margin:-9px; margin-bottom: 20px; border-radius:0px;">
-                    <p:menuitem value="#{eventView.user.firstname} #{eventView.user.lastname}" disabled="true" style="background: black; color:white; opacity:1.0;"/> 
-                    <p:menuitem value="Profile" action="#{profileController.showProfile}" style="background: black; color:white;"/>
+                    <p:menuitem value="#{calendarController.user.firstname} #{calendarController.user.lastname}" disabled="true" style="background: black; color:white; opacity:1.0;"/> 
+                    <p:menuitem value="Profile" action="#{profileController.profile}" style="background: black; color:white;"/>
                     <f:facet name="options">
                         <p:menuitem icon="fa fa-cog"/>            
                         <p:commandButton ajax="false" value="Logout" action="#{authController.logout()}"/>
@@ -44,6 +45,9 @@
 
                         <p:selectManyCheckbox id="calendarSelection" value="#{calendarView.selectedCalendars}" layout="grid" columns="1" widgetVar="calSelect">
                             <f:selectItems id="editable" value="#{calendarView.byUserAccess}" var="cal" itemLabel="#{cal.name}"/>
+<!--                            <f:selectItems id="editable" value="#{calendarView.editableCalendars}" var="cal" itemLabel="#{cal.name}"/>
+                            <f:selectItems id="nonEditable" value="#{calendarView.nonEditableCalendars}" var="cal" itemLabel="#{cal.name}"/>-->
+                            
                         </p:selectManyCheckbox>
 
 

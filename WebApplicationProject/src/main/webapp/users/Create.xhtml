@@ -56,7 +56,7 @@
 
                             console.log(new Date().getTimezoneOffset());
                             var input = document.getElementById('registerForm:timezone');
-                            input.value = "GMT +" + new Date().getTimezoneOffset() / (-60);
+                            input.value = "GMT+" + new Date().getTimezoneOffset() / (-60);
 
                             remote([
                                 {name: 'timezone', value: input.value}
